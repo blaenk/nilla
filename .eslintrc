@@ -1,6 +1,12 @@
 {
+  "env": {
+    "node": true,
+    "browser": true,
+    "es6": true,
+    "mocha": true
+  },
   "rules": {
-    "strict": 2,
+    "strict": ["error", "global"],
     "no-unused-vars": 2,
     "curly": 2
   }
