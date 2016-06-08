@@ -19,5 +19,21 @@
   "bugs": {
     "url": "https://github.com/blaenk/nilla/issues"
   },
-  "homepage": "https://github.com/blaenk/nilla#readme"
+  "homepage": "https://github.com/blaenk/nilla#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.3.0",
+    "mocha": "^2.5.3",
+    "sinon": "^1.17.4",
+    "sinon-chai": "^2.8.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.4.0",
+    "dotenv": "^2.0.0",
+    "lodash": "^4.13.1",
+    "moment": "^2.13.0",
+    "request": "^2.72.0",
+    "request-promise": "^3.0.0",
+    "xmlrpc": "/home/blaenk/code/js/node-xmlrpc"
+  }
 }
