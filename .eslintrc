@@ -1,0 +1,7 @@
+{
+  "rules": {
+    "strict": 2,
+    "no-unused-vars": 2,
+    "curly": 2
+  }
+}
