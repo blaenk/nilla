@@ -4,7 +4,8 @@
   "description": "An interface to rtorrent",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "mocha",
+    "test-watch": "mocha --recursive --watch test"
   },
   "repository": {
     "type": "git",
