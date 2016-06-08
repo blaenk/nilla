@@ -1,0 +1,23 @@
+{
+  "name": "nilla",
+  "version": "0.0.1",
+  "description": "An interface to rtorrent",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blaenk/nilla.git"
+  },
+  "keywords": [
+    "rtorrent",
+    "torrent"
+  ],
+  "author": "Jorge Israel Peña",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blaenk/nilla/issues"
+  },
+  "homepage": "https://github.com/blaenk/nilla#readme"
+}
