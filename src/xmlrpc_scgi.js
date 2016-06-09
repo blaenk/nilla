@@ -4,7 +4,6 @@ var stream = require('stream');
 var util = require('util');
 var events = require('events');
 
-var xmlrpc = require('xmlrpc');
 var Client = require('xmlrpc/lib/client');
 var Serializer = require('xmlrpc/lib/serializer');
 var Deserializer = require('xmlrpc/lib/deserializer');
@@ -63,15 +62,4 @@ class SCGITransport {
 
 util.inherits(SCGITransport, events.EventEmitter);
 
-const testit = () => {
-  var c = xmlrpc.createClient({path: '/home/blaenk/rtorrent/rpc.socket'});
-  c.methodCallWithTransport(SCGITransport, 'system.listMethods', [], (err, res) => {
-    console.log(err);
-    console.log(res);
-  });
-};
-
-module.exports = {
-  SCGITransport,
-  testit
-};
+module.exports = SCGITransport;
