@@ -35,6 +35,6 @@
     "moment": "^2.13.0",
     "request": "^2.72.0",
     "request-promise": "^3.0.0",
-    "xmlrpc": "/home/blaenk/code/js/node-xmlrpc"
+    "xmlrpc": "blaenk/node-xmlrpc#custom-transport"
   }
 }
