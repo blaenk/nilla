@@ -5,24 +5,23 @@ var process = require('process');
 var Bluebird = require('bluebird');
 var xmlrpc = require('xmlrpc');
 
-Bluebird.promisifyAll(xmlrpc);
+var SCGITransport = require('./xmlrpc_scgi.js');
 
 const call = (method, args, opts) => {
   opts = Object.assign({
-    path: process.env.RTORRET_SOCKET,
+    path: process.env.RTORRENT_SOCKET,
     host: process.env.RTORRENT_HOST,
     port: process.env.RTORRENT_PORT
   }, opts);
 
-  const client = xmlrpc.createClient(opts);
+  const client = Bluebird.promisifyAll(xmlrpc.createClient(opts));
 
-  return client.methodCall(method, args, (err, res) => {
-    if (err) {
-      return Bluebird.reject(err);
-    } else {
-      return Bluebird.resolve(res);
-    }
-  });
+  // If a socket path was specified, infer SCGI transport.
+  if (opts.path) {
+    return client.methodCallWithTransportAsync(SCGITransport, method, args);
+  } else {
+    return client.methodCallAsync(method, args);
+  }
 };
 
 // convert an array of name, params pairs into
