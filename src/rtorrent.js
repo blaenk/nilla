@@ -9,6 +9,7 @@ Bluebird.promisifyAll(xmlrpc);
 
 const call = (method, args, opts) => {
   opts = Object.assign({
+    path: process.env.RTORRET_SOCKET,
     host: process.env.RTORRENT_HOST,
     port: process.env.RTORRENT_PORT
   }, opts);

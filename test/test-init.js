@@ -1,5 +1,8 @@
 "use strict";
 
+// TODO
+// Possibly use a separate .env file to avoid mixups? They seem unlikely, but
+// better safe than sorry? If so pass {path: 'test/.env'}
 require('dotenv').config();
 
 global.chai = require('chai');
