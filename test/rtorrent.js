@@ -36,7 +36,7 @@ describe('RTorrent', function() {
           if (semver.gt(version, "0.9.0")) {
             return Bluebird.resolve();
           } else {
-            Bluebird.reject("Wrong rtorrent version. Got " +
+            return Bluebird.reject("Wrong rtorrent version. Got " +
               version + " but expected a version greater than 0.9.0."
             );
           }
