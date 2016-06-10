@@ -37,6 +37,7 @@
     "moment": "^2.13.0",
     "request": "^2.72.0",
     "request-promise": "^3.0.0",
+    "semver": "^5.1.0",
     "xmlrpc": "blaenk/node-xmlrpc#custom-transport"
   }
 }

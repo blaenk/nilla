@@ -4,6 +4,8 @@ var Bluebird = require('bluebird');
 
 var rtorrent = require('../src/rtorrent.js');
 
+var semver   = require('semver');
+
 const torrents = {
   arch: {
     path: 'magnet:?xt=urn:btih:01000e92d5c8cf2473e5978b445de9624c04d11a&dn=archlinux-2016.06.01-dual.iso&tr=udp://tracker.archlinux.org:6969',
@@ -30,7 +32,15 @@ describe('RTorrent', function() {
 
     return Bluebird.all([
       rtorrent.call("system.client_version", [])
-        .should.eventually.equal("0.9.6"),
+        .then(function(version) {
+          if (semver.gt(version, "0.9.0")) {
+            return Bluebird.resolve();
+          } else {
+            Bluebird.reject("Wrong rtorrent version. Got " +
+              version + " but expected a version greater than 0.9.0."
+            );
+          }
+        }),
 
       rtorrent.loadFile(torrents.ubuntu.path, [], false, true)
         .should.eventually.equal(torrents.ubuntu.hash),
