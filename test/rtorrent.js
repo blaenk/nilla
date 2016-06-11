@@ -30,24 +30,23 @@ describe('RTorrent', function() {
     // * session.path.set to set the session directory?
     // * directory.default.set to set download dir?
 
-    return Bluebird.all([
-      rtorrent.call("system.client_version", [])
+    return rtorrent.call("system.client_version", [])
         .then(function(version) {
           if (semver.gt(version, "0.9.0")) {
             return Bluebird.resolve();
           } else {
-            return Bluebird.reject("Wrong rtorrent version. Got " +
-              version + " but expected a version greater than 0.9.0."
+            return Bluebird.reject(
+              `RTorrent ${version}, but > 0.9.0 required.`
             );
           }
-        }),
+        })
+        .then(() => Bluebird.all([
+          rtorrent.loadFile(torrents.ubuntu.path, [], false, true)
+            .should.eventually.equal(torrents.ubuntu.hash),
 
-      rtorrent.loadFile(torrents.ubuntu.path, [], false, true)
-        .should.eventually.equal(torrents.ubuntu.hash),
-
-      rtorrent.loadMagnet(torrents.arch.path)
-        .should.eventually.equal(torrents.arch.hash)
-    ]);
+          rtorrent.loadMagnet(torrents.arch.path)
+            .should.eventually.equal(torrents.arch.hash)
+        ]));
   });
 
   context.skip('add and remove torrents', function() {
