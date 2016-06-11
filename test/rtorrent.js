@@ -41,10 +41,10 @@ describe('RTorrent', function() {
           }
         })
         .then(() => Bluebird.all([
-          rtorrent.loadFile(torrents.ubuntu.path, [], false, true)
+          rtorrent.load(torrents.ubuntu.path, {raw: true})
             .should.eventually.equal(torrents.ubuntu.hash),
 
-          rtorrent.loadMagnet(torrents.arch.path)
+          rtorrent.load(torrents.arch.path)
             .should.eventually.equal(torrents.arch.hash)
         ]));
   });

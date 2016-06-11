@@ -70,59 +70,63 @@ const torrents = (view, ...args) => {
   return call('d.multicall', [view, ...args]);
 };
 
-const infoHash = (buffer) => {
+const decodeInfoHash = (buffer) => {
   let decodedBuffer = bencode.decode(buffer);
   let encodedInfo = bencode.encode(decodedBuffer["info"]);
 
   return crypto.createHash('sha1').update(encodedInfo).digest('hex');
 };
 
-const disableFilesForNonStarted = (startNow, commands) => {
-  if (!startNow) {
-    return ["f.multicall=,,f.set_priority=0", "d.update_priorities="].concat(commands);
+const load = (filePath, options) => {
+  options = Object.assign({
+    start: false,
+    raw: false,
+    commands: [],
+    connection: {}
+  }, options);
+
+  if (!options.start) {
+    options.commands = [
+      "f.multicall=,,f.set_priority=0",
+      "d.update_priorities="
+    ].concat(options.commands || []);
   }
 
-  return commands;
-};
+  if (filePath.startsWith("magnet:")) {
+    var parsed = magnet.decode(filePath);
+    var infohash = parsed.infoHash;
 
-// commands:
-//
-// load.normal
-// load.start
-// load.raw
-// load.raw_start
+    var args = [filePath].concat(options.commands);
 
-// Load a .torrent file
-const loadFile = (filePath, commands, startNow, loadRaw, opts) => {
-  commands = disableFilesForNonStarted(startNow, commands || []);
+    return call("load", args, options.connection)
+      .then(() => Bluebird.resolve(infohash));
+  } else {
+    let method = 'load';
 
-  return fs.readFileAsync(filePath)
-    .then(buffer => {
-      let infohash = infoHash(buffer);
-      let method = 'load';
+    if (!options.raw && !options.start) {
+      method += '.normal';
+    }
 
-      if (loadRaw) {
-        method += '_raw';
-      }
+    if (options.raw) {
+      method += '_raw';
+    }
 
-      if (startNow) {
-        method += '_start';
-      }
+    if (options.start) {
+      method += options.raw ? '_' : '.' + 'start';
+    }
 
-      let args = [loadRaw ? buffer : path.resolve(filePath)].concat(commands);
+    return fs.readFileAsync(filePath)
+      .then(buffer => {
+        let infohash = decodeInfoHash(buffer);
 
-      return call(method, args, opts).then(() => Bluebird.resolve(infohash));
-    });
-};
+        let args = [
+          options.raw ? buffer : path.resolve(filePath)
+        ].concat(options.commands);
 
-const loadMagnet = (uri, startNow, commands, opts) => {
-  commands = disableFilesForNonStarted(startNow, commands || []);
-  let method = startNow ? "load_start" : "load";
-
-  var parsed = magnet.decode(uri);
-  var infohash = parsed.infoHash;
-
-  return call(method, [uri], commands, opts).then(() => Bluebird.resolve(infohash));
+        return call(method, args, options.connection)
+          .then(() => Bluebird.resolve(infohash));
+      });
+  }
 };
 
 const setTiedFile = (filepath) => call('d.tied_to_file.set', [filepath]);
@@ -137,8 +141,7 @@ module.exports = {
   torrent,
   torrents,
 
-  loadFile,
-  loadMagnet,
+  load,
 
   setTiedFile,
   removeTorrent
