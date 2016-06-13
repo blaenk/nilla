@@ -77,6 +77,10 @@ const decodeInfoHash = (buffer) => {
   return crypto.createHash('sha1').update(encodedInfo).digest('hex');
 };
 
+const decodeRatio = (ratio) => {
+  return ratio / 1000;
+};
+
 const load = (filePath, options) => {
   options = Object.assign({
     start: false,
@@ -142,6 +146,8 @@ module.exports = {
   torrents,
 
   load,
+
+  decodeRatio,
 
   setTiedFile,
   removeTorrent

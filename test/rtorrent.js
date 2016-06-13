@@ -82,6 +82,15 @@ describe('RTorrent', function() {
     });
   });
 
+  context('decode ratio', function() {
+    it('returns actual ratio from integer value', function() {
+      rtorrent.decodeRatio(1000).should.equal(1.0);
+      rtorrent.decodeRatio(750).should.equal(.750);
+      rtorrent.decodeRatio(100).should.equal(.100);
+      rtorrent.decodeRatio(0).should.equal(0);
+    });
+  });
+
   after('remove torrents', function() {
     return Bluebird.map([
       torrents.ubuntu.hash,
