@@ -67,6 +67,11 @@ describe('RTorrent', function() {
         should.eventually.equal(torrents.ubuntu.name);
     });
 
+    it('read the file size', function() {
+      return rtorrent.call('d.get_size_bytes', [torrents.ubuntu.hash]).
+        should.eventually.equal('1485881344');
+    });
+
     context('manage file properties', function() {
       it('set a file priority to 0');
     });
