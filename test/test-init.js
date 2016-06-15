@@ -1,9 +1,10 @@
 "use strict";
 
-// TODO
-// Possibly use a separate .env file to avoid mixups? They seem unlikely, but
-// better safe than sorry? If so pass {path: 'test/.env'}
-require('dotenv').config();
+// If this is a Travis build don't attempt to load a .env file. Instead the
+// environment variables will be passed via the .travis.yml file.
+require('dotenv').config({
+  silent: !!process.env.TRAVIS
+});
 
 global.chai = require('chai');
 
