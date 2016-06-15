@@ -7,7 +7,7 @@ var path = require('path');
 var fs = Bluebird.promisifyAll(require('fs'));
 
 var xmlrpc = require('xmlrpc');
-var SCGITransport = require('./xmlrpc_scgi.js');
+var SCGITransport = require('./scgi_transport.js');
 
 var bencode = require('bencode');
 var magnet = require('magnet-uri');

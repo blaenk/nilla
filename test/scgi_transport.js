@@ -1,7 +1,7 @@
 "use strict";
 
 var xmlrpc = require('xmlrpc');
-var SCGITransport = require('../src/xmlrpc_scgi.js');
+var SCGITransport = require('../src/scgi_transport.js');
 
 describe("SCGI XML-RPC Transport", function() {
   it("should establish a connection", function(done) {
