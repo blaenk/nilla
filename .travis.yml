@@ -12,8 +12,8 @@ before_install:
 before_script:
 - mkdir -p ~/rtorrent/{session,downloads,watch}/
 - cp .travis/.rtorrent.rc ~
+- sudo service rtorrent start
 script:
-- echo "socket: $RTORRENT_SOCKET"
 - eslint --no-inline-config .
 - npm test
 notifications:
