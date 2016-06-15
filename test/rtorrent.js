@@ -1,10 +1,9 @@
 "use strict";
 
 var Bluebird = require('bluebird');
+var semver   = require('semver');
 
 var rtorrent = require('../src/rtorrent.js');
-
-var semver   = require('semver');
 
 const torrents = {
   arch: {
@@ -13,6 +12,7 @@ const torrents = {
   },
   ubuntu: {
     name: 'ubuntu-16.04-desktop-amd64.iso',
+    size: '1485881344',
     path: './test/fixtures/ubuntu-16.04-desktop-amd64.iso.torrent',
     hash: '4344503b7e797ebf31582327a5baae35b11bda01'
   },
@@ -30,7 +30,7 @@ describe('RTorrent', function() {
     // * session.path.set to set the session directory?
     // * directory.default.set to set download dir?
 
-    return rtorrent.call("system.client_version", [])
+    return rtorrent.call("system.client_version")
         .then(function(version) {
           if (semver.gt(version, "0.9.0")) {
             return Bluebird.resolve();
@@ -63,13 +63,13 @@ describe('RTorrent', function() {
 
   context('manipulate torrents', function() {
     it('read the name', function() {
-      return rtorrent.call('d.get_name', [torrents.ubuntu.hash]).
+      return rtorrent.torrent('get_name', torrents.ubuntu.hash).
         should.eventually.equal(torrents.ubuntu.name);
     });
 
     it('read the file size', function() {
-      return rtorrent.call('d.get_size_bytes', [torrents.ubuntu.hash]).
-        should.eventually.equal('1485881344');
+      return rtorrent.torrent('get_size_bytes', torrents.ubuntu.hash).
+        should.eventually.equal(torrents.ubuntu.size);
     });
 
     context('manage file properties', function() {
@@ -91,11 +91,35 @@ describe('RTorrent', function() {
     });
   });
 
+  context('multicalls', function() {
+    it('should produce a multicall array', function() {
+      const multicall = rtorrent.createMulticall([
+        ['d.get_name', ['hash']],
+        ['d.get_hash', ['hash']]
+      ]);
+
+      multicall.should.deep.equal([
+        {methodName: "d.get_name", params: ['hash']},
+        {methodName: "d.get_hash", params: ['hash']},
+      ]);
+    });
+
+    it('should get the name and size simultaneously', function() {
+      return rtorrent.multicall([
+        ["d.get_name", [torrents.ubuntu.hash]],
+        ["d.get_size_bytes", [torrents.ubuntu.hash]]
+      ]).should.become([
+        [torrents.ubuntu.name],
+        [torrents.ubuntu.size],
+      ]);
+    });
+  });
+
   after('remove torrents', function() {
     return Bluebird.map([
       torrents.ubuntu.hash,
       torrents.arch.hash
-    ], rtorrent.removeTorrent);
+    ], hash => rtorrent.torrent("erase", hash));
   });
 });
 
