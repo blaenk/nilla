@@ -1,22 +1,21 @@
 language: node_js
 node_js:
-  - "6"
+  - '6'
 sudo: required
 dist: trusty
 env:
 - RTORRENT_SOCKET=$HOME/rtorrent/rpc.socket
 before_install:
 - sudo apt-get -qq update
-- sudo apt-get install -y rtorrent
+- sudo apt-get install -y rtorrent tmux
 - npm install -g eslint
 before_script:
 - mkdir -p ~/rtorrent/{session,downloads,watch}/
 - cp .travis/.rtorrent.rc ~
-- sudo service rtorrent start
+- tmux new-session -s rt -n rtorrent -d rtorrent
 script:
 - eslint --no-inline-config .
 - npm test
 notifications:
   slack:
-    room:
-      secure: FkqyxIpdWpeeb3NwnAgmqAuP6/GDQzYHIZ/x/UmOgaiCndsk9gGYQVnfWHynmrQ+KLTe3p3DQyI6XFwg0uaSA/F13JL6pADxA+LoouI3dgvj6GcIk1Xy4A6iMwuyNaIiBZ7x7Ux8/j90ad0UKOSvD2k8l0Psv68Ftyi6RIN9xi3DHDMuKbv6w1bzzc6nwVIglghQw3oEypE8oN8AwXjtpLEe9ZGxiDM2yA7ION0RdC9mdR8GICZOeFXAKOiCm2YRUyDHwMTn3Yp8ApAJP36nHEp8ocFeYwRs6ZA276Rkw0WYgyVaWNE/HS1tsIVXvpbgFueAWKpQBTeC5FgUYgWUcRsmfaLnP9Aa29GMUQtXIM6d4hOsbBlvLqa9znYE0C+F78BQXDvsLYH0rvTJj4QTHJ51dMf+UiywPWYX3SbbWtGK595e8KWUc5PxTLa7PznpAnJNVQSewdFcOct4fyJ/fE2pVbJzdzZGHcExZdweAP1a2LzYI8HfpYp7cOdQ2Stu6LWHFR9QU9fAsaHSUCBKu639oxlYr3AszXjQmGOzTU9Nj2Y66fJ4sw/NKxiWPzNpf5vSYkEXTQHeLlUe/NKbYCPjxuQ4/jHNI+z7S/oJf7ALoXylXdTILd52FqCjwrywvImCthTxmWnYcPaPnhVaPZBAe43LmvvZfu8VJXPOs4I=
+    secure: Hll33nzbv81Y/YRt0Hr0YoYUhozxuS4wqYGe0eGgvtxufscBI0eX+B5VQ01c75QfuZbGbhGvoyWaP4apFfx8z7tcSJDfszdLjTrUZTgMEOZm0eb3T5Hp0qjPtVd62Wmw35J2qRoGtx3RvnpF1iAlhy8GVnH8e8JtUOpPEHYPkcfwT7vybELS4lmCZ9p87kqxqTztn07huzD9rzU+csdQoXESJZnCtlS+UJo7wktTfpvBP8McDRmtIrduJ31+EQnp2fR1ygT5Tw1CFRFOPUEkk3F5yThk8ujdsdZoVOz35BOeVJs0qoKUY8cG/Jwl6YQRiG5f+x1RTK+0QwztiU1RFS5MgEajwJ8i3KMxjoTAOnp0PX8YplUkP2DpJ2J+HA1EJrA+r97QfbDFDFkvT9+3ktFVBTbpzahM/8OY68dRN/dk8229+3YlfEEM2Lc+j9UnpXJQj2dozRsrylTAOenuucfYxkKPhAuG8mci0Akt62dmQwgEqU/amSSW/gJskYWWpDbbcAYXMLys/OhISEj+6aMLFUuoY53ShcDDzjdamBQaEiPUyGR3tdZ6q26Qni+5GM6vIx/HAHuLfQUX9vY//qLiPOZjHjjiIuW2TqbRAQnvuG5wbmnb0sab/beY7DmAEoyYPokyRDMuZbqqsXc7l45P9vAxeJkNK4zq42oLG1k=
