@@ -1,0 +1,22 @@
+language: node_js
+node_js:
+  - "6"
+sudo: required
+dist: trusty
+env:
+- RTORRENT_SOCKET=$HOME/rtorrent/rpc.socket
+before_install:
+- sudo apt-get -qq update
+- sudo apt-get install -y rtorrent
+- npm install -g eslint
+before_script:
+- mkdir -p ~/rtorrent/{session,downloads,watch}/
+- cp .travis/.rtorrent.rc ~
+script:
+- echo "socket: $RTORRENT_SOCKET"
+- eslint --no-inline-config .
+- npm test
+notifications:
+  slack:
+    room:
+      secure: FkqyxIpdWpeeb3NwnAgmqAuP6/GDQzYHIZ/x/UmOgaiCndsk9gGYQVnfWHynmrQ+KLTe3p3DQyI6XFwg0uaSA/F13JL6pADxA+LoouI3dgvj6GcIk1Xy4A6iMwuyNaIiBZ7x7Ux8/j90ad0UKOSvD2k8l0Psv68Ftyi6RIN9xi3DHDMuKbv6w1bzzc6nwVIglghQw3oEypE8oN8AwXjtpLEe9ZGxiDM2yA7ION0RdC9mdR8GICZOeFXAKOiCm2YRUyDHwMTn3Yp8ApAJP36nHEp8ocFeYwRs6ZA276Rkw0WYgyVaWNE/HS1tsIVXvpbgFueAWKpQBTeC5FgUYgWUcRsmfaLnP9Aa29GMUQtXIM6d4hOsbBlvLqa9znYE0C+F78BQXDvsLYH0rvTJj4QTHJ51dMf+UiywPWYX3SbbWtGK595e8KWUc5PxTLa7PznpAnJNVQSewdFcOct4fyJ/fE2pVbJzdzZGHcExZdweAP1a2LzYI8HfpYp7cOdQ2Stu6LWHFR9QU9fAsaHSUCBKu639oxlYr3AszXjQmGOzTU9Nj2Y66fJ4sw/NKxiWPzNpf5vSYkEXTQHeLlUe/NKbYCPjxuQ4/jHNI+z7S/oJf7ALoXylXdTILd52FqCjwrywvImCthTxmWnYcPaPnhVaPZBAe43LmvvZfu8VJXPOs4I=
