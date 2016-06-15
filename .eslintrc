@@ -9,6 +9,8 @@
     "strict": ["error", "global"],
     "semi": ["error", "always"],
     "no-unused-vars": ["error"],
+    "require-jsdoc": ["error"],
+    "valid-jsdoc": ["error"],
     "curly": ["error"]
   }
 }
