@@ -1,9 +1,9 @@
 "use strict";
 
-var Bluebird = require('bluebird');
-var semver   = require('semver');
+const Bluebird = require('bluebird');
+const semver   = require('semver');
 
-var rtorrent = require('../src/rtorrent.js');
+const rtorrent = require('../src/rtorrent.js');
 
 const torrents = {
   arch: {

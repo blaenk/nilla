@@ -1,17 +1,17 @@
 "use strict";
 
-var Bluebird = require('bluebird');
+const Bluebird = require('bluebird');
 
-var process = require('process');
-var path = require('path');
-var fs = Bluebird.promisifyAll(require('fs'));
+const process = require('process');
+const path = require('path');
+const fs = Bluebird.promisifyAll(require('fs'));
 
-var xmlrpc = require('xmlrpc');
-var scgi = require('./scgi.js');
+const xmlrpc = require('xmlrpc');
+const scgi = require('./scgi.js');
 
-var bencode = require('bencode');
-var magnet = require('magnet-uri');
-var crypto = require('crypto');
+const bencode = require('bencode');
+const magnet = require('magnet-uri');
+const crypto = require('crypto');
 
 /**
  * Perform an XML-RPC request.
@@ -137,10 +137,10 @@ function load(filePath, options) {
   }
 
   if (filePath.startsWith("magnet:")) {
-    var parsed = magnet.decode(filePath);
-    var infohash = parsed.infoHash;
+    const parsed = magnet.decode(filePath);
+    const infohash = parsed.infoHash;
 
-    var args = [filePath].concat(options.commands);
+    const args = [filePath].concat(options.commands);
 
     return call("load", args, options.connection)
       .then(() => Bluebird.resolve(infohash));
@@ -161,9 +161,11 @@ function load(filePath, options) {
 
     return fs.readFileAsync(filePath)
       .then(buffer => {
-        let infohash = decodeInfoHash(buffer);
+        const infohash = decodeInfoHash(buffer);
 
-        let args = [options.raw ? buffer : path.resolve(filePath)].concat(options.commands);
+        const args = [
+          options.raw ? buffer : path.resolve(filePath)
+        ].concat(options.commands);
 
         return call(method, args, options.connection)
           .then(() => Bluebird.resolve(infohash));

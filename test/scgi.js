@@ -1,7 +1,7 @@
 "use strict";
 
-var xmlrpc = require('xmlrpc');
-var scgi = require('../src/scgi.js');
+const xmlrpc = require('xmlrpc');
+const scgi = require('../src/scgi.js');
 
 // examples taken from scgi protocol specification
 // https://python.ca/scgi/protocol.txt
@@ -43,7 +43,7 @@ describe("SCGI", function() {
 
   context("Transport", function() {
     it("should establish a connection", function(done) {
-      var client = xmlrpc.createClient({path: process.env.RTORRENT_SOCKET});
+      const client = xmlrpc.createClient({path: process.env.RTORRENT_SOCKET});
 
       client.methodCallWithTransport(scgi.Transport, 'system.client_version', [], done);
     });

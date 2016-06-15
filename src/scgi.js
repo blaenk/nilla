@@ -1,12 +1,12 @@
 "use strict";
 
-var events = require('events');
-var net = require('net');
-var stream = require('stream');
-var util = require('util');
+const events = require('events');
+const net = require('net');
+const stream = require('stream');
+const util = require('util');
 
-var Bluebird = require('bluebird');
-var _ = require('lodash');
+const Bluebird = require('bluebird');
+const _ = require('lodash');
 
 /**
  * Construct an SCGI request.
@@ -118,7 +118,7 @@ class Transport {
   end() {
     request(this.options, this.body)
       .then(response => {
-        var s = new stream.Readable();
+        const s = new stream.Readable();
         s._read = () => {};
         s.push(response.body);
         s.push(null);
