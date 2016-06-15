@@ -13,7 +13,7 @@ var bencode = require('bencode');
 var magnet = require('magnet-uri');
 var crypto = require('crypto');
 
-const call = (method, args, opts) => {
+function call(method, args, opts) {
   opts = Object.assign({
     path: process.env.RTORRENT_SOCKET,
     host: process.env.RTORRENT_HOST,
@@ -28,7 +28,7 @@ const call = (method, args, opts) => {
   } else {
     return client.methodCallAsync(method, args);
   }
-};
+}
 
 // convert an array of name, params pairs into
 // a proper multicall list
@@ -44,44 +44,45 @@ const call = (method, args, opts) => {
 //   {methodName: "d.get_name", params: ['hash']},
 //   {methodName: "d.get_hash", params: ['hash']},
 // ]
-const multicalls = (...calls) => {
+
+function multicalls(...calls) {
   return calls.map(([methodName, params]) => {
     return {
       methodName,
       params: params || []
     };
   });
-};
+}
 
 // multicall(
 //   ["d.get_name", ["hash", "thing"]],
 //   ["d.get_down_rate", ["hash", "thing"]]
 // );
 
-const multicall = (...calls) => {
+function multicall(...calls) {
   return call('system.multicall', multicalls(...calls));
-};
+}
 
-const torrent = (hash, ...args) => {
+function torrent(hash, ...args) {
   return call('d.', [hash, ...args]);
-};
+}
 
-const torrents = (view, ...args) => {
+function torrents(view, ...args) {
   return call('d.multicall', [view, ...args]);
-};
+}
 
-const decodeInfoHash = (buffer) => {
+function decodeInfoHash(buffer) {
   let decodedBuffer = bencode.decode(buffer);
   let encodedInfo = bencode.encode(decodedBuffer["info"]);
 
   return crypto.createHash('sha1').update(encodedInfo).digest('hex');
-};
+}
 
-const decodeRatio = (ratio) => {
+function decodeRatio(ratio) {
   return ratio / 1000;
-};
+}
 
-const load = (filePath, options) => {
+function load(filePath, options) {
   options = Object.assign({
     start: false,
     raw: false,
@@ -131,13 +132,15 @@ const load = (filePath, options) => {
           .then(() => Bluebird.resolve(infohash));
       });
   }
-};
+}
 
-const setTiedFile = (filepath) => call('d.tied_to_file.set', [filepath]);
+function setTiedFile(filepath) {
+  return call('d.tied_to_file.set', [filepath]);
+}
 
-const removeTorrent = (infohash) => {
+function removeTorrent(infohash) {
   return call('d.erase', [infohash]);
-};
+}
 
 module.exports = {
   call,

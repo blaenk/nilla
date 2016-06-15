@@ -5,16 +5,16 @@ var net = require('net');
 var Bluebird = require('bluebird');
 var _ = require('lodash');
 
-const parseResponse = (response) => {
+function parseResponse(response) {
   let [rawHeaders, body] = response.split("\r\n\r\n", 2);
 
   // create headers map
   let headers = _.fromPairs(rawHeaders.split("\r\n").map(h => h.split(": ")));
 
   return {headers, body};
-};
+}
 
-const buildRequest = (headers, body) => {
+function buildRequest(headers, body) {
   const scgiHeaders = {
     CONTENT_LENGTH: body.length,
     SCGI: 1
@@ -29,14 +29,14 @@ const buildRequest = (headers, body) => {
   }, '');
 
   return `${header.length}:${header},${body}`;
-};
+}
 
 // options can be anything that that socket.connect can take
 // port, host, path, etc.
 // as well as an optional 'headers' key specifying an object
 // of header-value pairs
 // https://nodejs.org/api/net.html#net_socket_connect_options_connectlistener
-const request = (options, body) => {
+function request(options, body) {
   return new Bluebird((resolve, reject) => {
     const connection = net.connect(options);
     let response = "";
@@ -56,7 +56,7 @@ const request = (options, body) => {
     connection.write(buildRequest(options.headers || {}, body));
     connection.end();
   });
-};
+}
 
 module.exports = {
   parseResponse,
