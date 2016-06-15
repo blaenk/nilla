@@ -7,7 +7,8 @@
   },
   "rules": {
     "strict": ["error", "global"],
-    "no-unused-vars": 2,
-    "curly": 2
+    "semi": ["error", "always"],
+    "no-unused-vars": ["error"],
+    "curly": ["error"]
   }
 }
