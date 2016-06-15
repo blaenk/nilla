@@ -18,7 +18,7 @@ before_script:
 - tmux new-session -s rt -n rtorrent -d rtorrent
 
 script:
-- eslint --no-inline-config .
+- npm run -s lint
 - npm test
 
 after_success:

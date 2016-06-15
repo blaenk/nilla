@@ -4,7 +4,8 @@
   "description": "An interface to rtorrent",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "lint": "eslint --no-inline-config src/ test/",
     "doc": "documentation build -o docs/ -f html -g src/",
     "jsdoc": "jsdoc -d docs/ src"
   },
