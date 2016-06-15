@@ -1,19 +1,20 @@
 "use strict";
 
+var events = require('events');
 var net = require('net');
+var stream = require('stream');
+var util = require('util');
 
 var Bluebird = require('bluebird');
 var _ = require('lodash');
 
-function parseResponse(response) {
-  let [rawHeaders, body] = response.split("\r\n\r\n", 2);
-
-  // create headers map
-  let headers = _.fromPairs(rawHeaders.split("\r\n").map(h => h.split(": ")));
-
-  return {headers, body};
-}
-
+/**
+ * Construct an SCGI request.
+ *
+ * @param {Object} headers Header map.
+ * @param {string} body The request body.
+ * @returns {string} SCGI-formatted request.
+ */
 function buildRequest(headers, body) {
   const scgiHeaders = {
     CONTENT_LENGTH: body.length,
@@ -31,11 +32,29 @@ function buildRequest(headers, body) {
   return `${header.length}:${header},${body}`;
 }
 
-// options can be anything that that socket.connect can take
-// port, host, path, etc.
-// as well as an optional 'headers' key specifying an object
-// of header-value pairs
-// https://nodejs.org/api/net.html#net_socket_connect_options_connectlistener
+/**
+ * Parse an SCGI response.
+ *
+ * @param {string} response The SCGI response.
+ * @returns {Object} The parsed response with keys for the headers and body.
+ */
+function parseResponse(response) {
+  let [rawHeaders, body] = response.split("\r\n\r\n", 2);
+
+  // create headers map
+  let headers = _.fromPairs(rawHeaders.split("\r\n").map(h => h.split(": ")));
+
+  return {headers, body};
+}
+
+/**
+ * Perform an SCGI request.
+ *
+ * @param {Object} options Options passed-through to socket.connect. Use this to
+ * pass headers via the headers key.
+ * @param {string} body The request body.
+ * @returns {Promise} The response.
+ */
 function request(options, body) {
   return new Bluebird((resolve, reject) => {
     const connection = net.connect(options);
@@ -58,8 +77,63 @@ function request(options, body) {
   });
 }
 
+/**
+ * An SCGI transport for use with xmlrpc.clientWithTransport.
+ */
+class Transport {
+  /**
+   * Return a new instance of Transport.
+   * @param {Object} options Options passed-through to socket.connect.
+   * @param {function} callback Function to call-back with the response.
+   * @returns {Transport} The instance.
+   */
+  static request(options, callback) {
+    return new Transport(options, callback);
+  }
+
+  /**
+   * Create the transport.
+   * @param {Object} options Options passed-through to socket.connect.
+   * @param {function} callback Function to call-back with the response.
+   */
+  constructor(options, callback) {
+    this.options = options;
+    this.callback = callback;
+    this.body = '';
+  }
+
+  /**
+   * Return a new instance of Transport.
+   * @param {string} body The body to write.
+   * @returns {void}
+   */
+  write(body) {
+    this.body = body;
+  }
+
+  /**
+   * Signal the end of the request writing.
+   * @returns {void}
+   */
+  end() {
+    request(this.options, this.body)
+      .then(response => {
+        var s = new stream.Readable();
+        s._read = () => {};
+        s.push(response.body);
+        s.push(null);
+
+        this.callback(s);
+      })
+      .catch(err => this.emit('error', err));
+  }
+}
+
+util.inherits(Transport, events.EventEmitter);
+
 module.exports = {
-  parseResponse,
   buildRequest,
-  request
+  parseResponse,
+  request,
+  Transport
 };

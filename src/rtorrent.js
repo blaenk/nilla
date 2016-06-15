@@ -7,7 +7,7 @@ var path = require('path');
 var fs = Bluebird.promisifyAll(require('fs'));
 
 var xmlrpc = require('xmlrpc');
-var SCGITransport = require('./scgi_transport.js');
+var scgi = require('./scgi.js');
 
 var bencode = require('bencode');
 var magnet = require('magnet-uri');
@@ -34,7 +34,7 @@ function call(method, args, options) {
 
   // If a socket path was specified, infer SCGI transport.
   if (options.path) {
-    return client.methodCallWithTransportAsync(SCGITransport, method, args);
+    return client.methodCallWithTransportAsync(scgi.Transport, method, args);
   } else {
     return client.methodCallAsync(method, args);
   }
