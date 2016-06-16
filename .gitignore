@@ -3,3 +3,4 @@ node_modules
 /.env
 /.dir-locals.el
 /docs/
+/public/assets/
