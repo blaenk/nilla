@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const xmlrpc = require('xmlrpc');
 const scgi = require('../src/scgi.js');

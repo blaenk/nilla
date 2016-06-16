@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const events = require('events');
 const net = require('net');
