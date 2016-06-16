@@ -4,3 +4,4 @@ node_modules
 /.dir-locals.el
 /docs/
 /public/assets/
+/coverage/
