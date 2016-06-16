@@ -5,6 +5,10 @@ import App from 'containers/App/App.js';
 import styles from 'styles/app.module.css';
 
 describe('<App />', function () {
+  it('should pass', function() {
+    assert.equal(true, true);
+  });
+
   let wrapper;
   beforeEach(function() {
     wrapper = shallow(<App />);
