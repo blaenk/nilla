@@ -13,11 +13,11 @@ const torrents = {
   ubuntu: {
     name: 'ubuntu-16.04-desktop-amd64.iso',
     size: '1485881344',
-    path: './test/fixtures/ubuntu-16.04-desktop-amd64.iso.torrent',
+    path: './server/test/fixtures/ubuntu-16.04-desktop-amd64.iso.torrent',
     hash: '4344503b7e797ebf31582327a5baae35b11bda01'
   },
   fedora: {
-    path: './test/fixtures/Fedora-Live-Workstation-x86_64-23.torrent',
+    path: './server/test/fixtures/Fedora-Live-Workstation-x86_64-23.torrent',
     hash: '796ab93bb81e2dbe072f3c07857675ee5c47b046'
   }
 };
@@ -100,7 +100,7 @@ describe('RTorrent', function() {
 
       multicall.should.deep.equal([
         {methodName: "d.get_name", params: ['hash']},
-        {methodName: "d.get_hash", params: ['hash']},
+        {methodName: "d.get_hash", params: ['hash']}
       ]);
     });
 
@@ -110,7 +110,7 @@ describe('RTorrent', function() {
         ["d.get_size_bytes", [torrents.ubuntu.hash]]
       ]).should.become([
         [torrents.ubuntu.name],
-        [torrents.ubuntu.size],
+        [torrents.ubuntu.size]
       ]);
     });
   });

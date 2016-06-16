@@ -1,22 +1,12 @@
 {
   "env": {
-    "node": true,
-    "browser": true,
-    "es6": true,
-    "mocha": true
+    "es6": true
   },
   "parserOptions": {
-    "ecmaVersion": 6,
-    "ecmaFeatures": {
-      "jsx": true
-    }
+    "ecmaVersion": 6
   },
-  "plugins": [
-    "react"
-  ],
   "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended"
+    "eslint:recommended"
   ],
   "rules": {
     "no-var": ["error"],

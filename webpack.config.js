@@ -1,36 +1,82 @@
 "use strict";
 
+const process = require('process');
 const webpack = require('webpack');
-const fs = require('fs');
 const path = require('path');
-
-const getConfig = require('hjs-webpack');
+const precss = require('precss');
+const autoprefixer = require('autoprefixer');
 
 const NODE_ENV = process.env.NODE_ENV;
-const isDev = NODE_ENV === 'development';
+const dotenv = require('dotenv');
 
-const root = path.resolve(__dirname);
-const src = path.join(root, 'src');
-// const modules = path.join(root, 'node_modules');
-const dest = path.join(root, 'dist');
+const root = __dirname;
 
-const config = getConfig({
-  isDev,
-  "in": path.join(src, 'app.js'),
-  out: dest,
-  clearBeforeBuild: true,
-  devServer: {
-    port: 4000,
-    hostname: "0.0.0.0"
-  },
-  modules: {
-    loaders: [
-      {
-        test: /\.scss$/,
-        loaders: ["style", "css", "sass"]
-      }
-    ]
+const globalEnvironment = dotenv.config({silent: true});
+const currentEnvironment = dotenv.config({
+  path: path.join(root, 'config', `${NODE_ENV}.config.js`),
+  silent: true
+});
+
+const environment = Object.assign({}, globalEnvironment, currentEnvironment);
+
+const modules = path.join(root, 'node_modules');
+const src = path.join(root, "client/src");
+
+const config = {};
+
+config.resolve = {};
+config.resolve.root = [src, modules];
+config.resolve.alias = {
+  'styles': path.join(src, 'styles'),
+  'containers': path.join(src, 'containers'),
+  'components': path.join(src, 'components')
+};
+
+config.entry = {
+  app: ['./client/src/app.js']
+};
+
+config.output = {
+  path: path.resolve(root, 'public/assets'),
+  publicPath: '/assets/',
+  filename: '[name].js'
+};
+
+config.module = {};
+config.module.loaders = [];
+
+config.module.loaders.push({
+  test: /\.js$/,
+  loader: 'babel',
+  query: {
+    presets: ['react', 'es2015', 'stage-0']
   }
 });
+
+config.module.loaders.push({
+  test: /\.module\.css$/,
+  loader: 'style!css?modules&localIdentName=[name]---[local]---[hash:base64:5]'
+});
+
+config.module.loaders.push({
+  test: /\.css$/,
+  include: [modules],
+  loader: 'style!css?sourceMap'
+});
+
+config.module.loaders.push({
+  test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/,
+  loader: 'url?limit=100000&name=[name].[ext]'
+});
+
+config.postcss = function() {
+  return [precss, autoprefixer];
+};
+
+config.plugins = [];
+
+config.plugins.push(new webpack.DefinePlugin({
+  __NODE_ENV__: JSON.stringify(NODE_ENV)
+}));
 
 module.exports = config;

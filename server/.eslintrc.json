@@ -1,0 +1,9 @@
+{
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "strict": ["error", "global"],
+    "no-console": "off"
+  }
+}
