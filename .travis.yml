@@ -22,7 +22,12 @@ script:
 - npm test
 
 after_success:
-  - 'istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage'
+  # server coverage (client coverage created by npm test)
+  - 'npm run coverage'
+  # submit to coveralls
+  - 'cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js'
+  # clean up
+  - 'rm -rf ./coverage'
 
 notifications:
   slack:
