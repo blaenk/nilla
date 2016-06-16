@@ -30,6 +30,8 @@ const config = {};
 
 config.plugins = [];
 
+config.cache = true;
+
 if (isTest) {
   config.externals = {
     'react/lib/ReactContext': true,
