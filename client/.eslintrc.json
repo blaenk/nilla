@@ -2,6 +2,9 @@
   "env": {
     "browser": true
   },
+  "globals": {
+    "__NODE_ENV__": true
+  },
   "parserOptions": {
     "sourceType": "module",
     "ecmaFeatures": {
