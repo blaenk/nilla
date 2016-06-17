@@ -5,9 +5,10 @@ const chaiEnzyme = require('chai-enzyme');
 
 chai.use(chaiEnzyme());
 
-const {expect, assert} = chai;
+global.expect = chai.expect;
+global.assert = chai.assert;
 
-var testContext = require.context('./client/test/', true, /\.spec\.js$/);
+const testContext = require.context('./client/test/', true, /\.spec\.js$/);
 testContext.keys().forEach(testContext);
 
 const sourceContext = require.context('./client/src/', true, /\.js$/);
