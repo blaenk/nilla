@@ -2,8 +2,8 @@ import React from 'react';
 
 import styles from 'styles/app.module.css';
 
-const App = React.createClass({
-  render: function() {
+class App extends React.Component {
+  render() {
     return (
       <div className={styles.wrapper}>
         <h1>
@@ -13,6 +13,6 @@ const App = React.createClass({
       </div>
     );
   }
-});
+}
 
 module.exports = App;
