@@ -1,7 +1,16 @@
+'use strict';
+
 const path = require('path');
 const webpackConfig = require('./webpack.config');
 
 webpackConfig.devtool = 'inline-source-map';
+
+webpackConfig.externals = Object.assign({}, webpackConfig.externals, {
+  'cheerio': 'window',
+  'react/addons': true,
+  'react/lib/ExecutionEnvironment': true,
+  'react/lib/ReactContext': true
+});
 
 webpackConfig.module.preLoaders = [
   // transpile all files except testing sources with babel as usual
