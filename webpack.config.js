@@ -74,7 +74,7 @@ config.module.loaders = [];
 
 config.module.loaders.push({
   test: /\.js$/,
-  exclude: /node_modules/,
+  include: path.resolve(root, 'client'),
   loader: 'babel',
   query: {
     presets: ['react', 'es2015']
