@@ -1,6 +1,5 @@
 'use strict';
 
-const path = require('path');
 const webpackConfig = require('./webpack.config');
 
 webpackConfig.devtool = 'inline-source-map';
@@ -12,33 +11,14 @@ webpackConfig.externals = Object.assign({}, webpackConfig.externals, {
   'react/lib/ReactContext': true
 });
 
-webpackConfig.module.preLoaders = [
-  // transpile all files except testing sources with babel as usual
-  {
-    test: /\.js$/,
-    exclude: [
-      path.resolve('client/src/'),
-      path.resolve('node_modules/')
-    ],
-    loader: 'babel'
-  },
-  // transpile and instrument only testing sources with isparta
-  {
-    test: /\.js$/,
-    include: path.resolve('client/src/'),
-    // exclude: path.resolve('client/src/app.js'),
-    loader: 'babel-istanbul'
-  }
-];
-
 module.exports = function(config) {
   config.set({
     frameworks: ['chai', 'mocha'],
     files: [
-      'tests.webpack.js'
+      'client/test/**/*.js'
     ],
     preprocessors: {
-      'tests.webpack.js': ['webpack', 'sourcemap']
+      'client/test/**/*.js': ['webpack', 'sourcemap']
     },
     coverageReporter: {
       type: 'lcovonly'

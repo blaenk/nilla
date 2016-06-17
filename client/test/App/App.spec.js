@@ -1,3 +1,11 @@
+import chai from 'chai';
+import chaiEnzyme from 'chai-enzyme';
+
+chai.use(chaiEnzyme());
+
+expect = chai.expect;
+assert = chai.assert;
+
 import React from 'react';
 import { shallow } from 'enzyme';
 
