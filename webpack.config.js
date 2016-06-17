@@ -7,21 +7,10 @@ const webpack = require('webpack');
 const path = require('path');
 const precss = require('precss');
 const autoprefixer = require('autoprefixer');
-const dotenv = require('dotenv');
 
 const NODE_ENV = process.env.NODE_ENV;
-const isDev = NODE_ENV == 'development';
-const isTest = NODE_ENV == 'test';
 
 const root = __dirname;
-
-const globalEnvironment = dotenv.config({silent: true});
-const currentEnvironment = dotenv.config({
-  path: path.join(root, 'config', `${NODE_ENV}.config.js`),
-  silent: true
-});
-
-const environment = Object.assign({}, globalEnvironment, currentEnvironment);
 
 const modules = path.join(root, 'node_modules');
 const src = path.join(root, "client/src");
