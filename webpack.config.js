@@ -7,6 +7,7 @@ const webpack = require('webpack');
 const path = require('path');
 const precss = require('precss');
 const autoprefixer = require('autoprefixer');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -39,6 +40,14 @@ config.output = {
   filename: '[name].js'
 };
 
+config.plugins.push(new webpack.DefinePlugin({
+  __NODE_ENV__: JSON.stringify(NODE_ENV)
+}));
+
+config.plugins.push(new ExtractTextPlugin('app.css', {
+  allChunks: true
+}));
+
 config.module = {};
 config.module.loaders = [];
 
@@ -58,23 +67,20 @@ config.module.loaders.push({
 
 config.module.loaders.push({
   test: /\.module\.less$/,
-  loaders: [
+  loader: ExtractTextPlugin.extract(
     'style?sourceMap',
-    'css?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
-    // 'resolve-url',
-    'less?sourceMap'
-  ]
-});
-
-config.module.loaders.push({
-  test: /\.module\.css$/,
-  loader: 'style!css?modules&localIdentName=[name]---[local]---[hash:base64:5]'
+    [
+      'css?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
+      // 'resolve-url',
+      'less?sourceMap'
+    ]
+  )
 });
 
 config.module.loaders.push({
   test: /\.css$/,
   include: [modules],
-  loader: 'style!css?sourceMap'
+  loader: ExtractTextPlugin.extract('style', 'css?sourceMap')
 });
 
 config.module.loaders.push({
@@ -85,9 +91,5 @@ config.module.loaders.push({
 config.postcss = function() {
   return [precss, autoprefixer];
 };
-
-config.plugins.push(new webpack.DefinePlugin({
-  __NODE_ENV__: JSON.stringify(NODE_ENV)
-}));
 
 module.exports = config;
