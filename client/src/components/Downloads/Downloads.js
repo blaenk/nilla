@@ -5,8 +5,6 @@ import Header from './Header';
 import Search from './Search';
 import Download from './Download';
 
-import { Navbar, Nav, NavItem } from 'react-bootstrap';
-
 import styles from './styles.module.less';
 
 const Downloads = React.createClass({

@@ -4,6 +4,10 @@ import CSSModules from 'react-css-modules';
 import styles from './styles.module.css';
 
 const ExpiresOrLocks = React.createClass({
+  propTypes: {
+    locks: React.PropTypes.Array.isRequired
+  },
+
   render: function() {
     if (this.props.locks) {
       return (
@@ -19,7 +23,9 @@ const ExpiresOrLocks = React.createClass({
 
 const Download = React.createClass({
   propTypes: {
-    name: React.PropTypes.string.isRequired
+    name: React.PropTypes.string.isRequired,
+    uploader: React.PropTypes.string.isRequired,
+    locks: React.PropTypes.array.isRequired
   },
   render: function() {
     return (

@@ -16,6 +16,13 @@ import {
 import styles from './search.module.less';
 
 const MarkedMenuItem = React.createClass({
+  propTypes: {
+    eventKey: React.PropTypes.func.isRequired,
+    children: React.PropTypes.node.isRequired,
+    onSelect: React.PropTypes.func.isRequired,
+    selected: React.PropTypes.string.isRequired
+  },
+
   markSelected: function() {
     if (this.props.eventKey == this.props.selected) {
       return 'dropdown-menu-selected';
@@ -34,6 +41,12 @@ const MarkedMenuItem = React.createClass({
 });
 
 const Search = React.createClass({
+  propTypes: {
+    initialScope: React.PropTypes.string.isRequired,
+    initialSortBy: React.PropTypes.string.isRequired,
+    count: React.PropTypes.number.isRequired
+  },
+
   getInitialState: function() {
     return {
       scope: this.props.initialScope || 'all',
@@ -41,7 +54,7 @@ const Search = React.createClass({
     };
   },
 
-  selectScope: function(key, event) {
+  selectScope: function(key, _event) {
     this.setState({scope: key});
   },
 
