@@ -52,6 +52,11 @@ config.module = {};
 config.module.loaders = [];
 
 config.module.loaders.push({
+  test: /isIterable/,
+  loader: 'imports?Symbol=>false'
+});
+
+config.module.loaders.push({
   test: /\.js$/,
   include: path.resolve(root, 'client'),
   loader: 'babel',
