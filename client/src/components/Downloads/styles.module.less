@@ -1,0 +1,113 @@
+@import "~bootstrap/less/variables";
+
+.downloads {
+  margin-top: 10px;
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.downloads .download:last-child, .downloads .download.last-child {
+  border-bottom: 1px solid #E1E1E1;
+}
+
+.download {
+  line-height: 25px;
+  background-color: #fefefe;
+
+  padding: 2px 0 2px 0;
+  border-style: solid;
+  border-color: #E1E1E1;
+  border-width: 1px 1px 1px 1px;
+  margin-bottom: 2px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex: 1;
+  flex: 1;
+}
+
+.lock-status {
+  width: 3px;
+  margin-top: -2px;
+  margin-bottom: -2px;
+  background-color: @brand-warning;
+}
+
+.name {
+  padding-left: 10px;
+  color: #555;
+  -webkit-flex: 1;
+  flex: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-right: 10px;
+  transition: color 0.3s ease-in;
+
+  &:hover {
+    color: #555;
+  }
+}
+
+.progress {
+  width: 3px;
+  overflow: hidden;
+  position: relative;
+  background-color: #e6e6e6;
+  margin-top: -2px;
+  margin-bottom: -2px;
+}
+
+.progress-inner {
+  width: 100%;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  transition: height .6s ease, background-color 0.6s ease-in-out 0s;
+}
+
+.progress-inner[aria-valuenow="0"] {
+  height: 100% !important;
+
+  background-image: linear-gradient(
+    to top,
+
+    transparent 20%,
+
+    rgba(255,255,255,.75) 20%,
+    rgba(255,255,255,.75) 40%,
+
+    transparent 40%,
+    transparent 60%,
+
+    rgba(255,255,255,.75) 60%,
+    rgba(255,255,255,.75) 80%,
+
+    transparent 80%,
+    transparent);
+}
+
+.progress-seeding {
+  composes: progress-inner;
+  background-color: @brand-info;
+}
+
+.progress-closed {
+  composes: progress-inner;
+  background-color: @gray-light;
+}
+
+.progress-downloading {
+  composes: progress-inner;
+  background-color: @brand-success;
+}
+
+.progress-hashing {
+  composes: progress-inner;
+  background-color: @brand-warning;
+}
+
+.progress-stopped {
+  composes: progress-inner;
+  background-color: @brand-danger;
+}

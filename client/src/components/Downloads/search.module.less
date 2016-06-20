@@ -1,0 +1,59 @@
+@import "~bootstrap/less/variables";
+
+.scope {
+  color: #5e5e5e;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-right: 0;
+
+  border-right: 0;
+  border-radius: 0;
+}
+
+.sort {
+  border-left: 0;
+  border-radius: 0;
+}
+
+.search {
+  :global button.dropdown-toggle {
+    background-color: #eee;
+    border-color: #ccc;
+  }
+
+  :global .input-group-addon {
+    border-radius: 0;
+  }
+}
+
+.item-count {
+  border-radius: 0;
+  cursor: default;
+}
+
+:global .dropdown-menu {
+  border-radius: 0;
+  background-color: #f8f8f8;
+}
+
+:global .dropdown-menu .dropdown-header {
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #666;
+  cursor: default;
+}
+
+:global .dropdown-menu > li > a {
+  text-transform: uppercase;
+  cursor: default;
+}
+
+:global .dropdown-menu > li > a:hover {
+  background-color: #e7e7e7;
+}
+
+:global .dropdown-menu .dropdown-menu-selected a,
+:global .dropdown-menu .dropdown-menu-selected a:hover {
+  background-color: #777;
+  color: white;
+}

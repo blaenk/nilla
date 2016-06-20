@@ -1,0 +1,487 @@
+@import "~bootstrap/less/variables";
+
+// new
+
+// old
+
+body {
+  background-color: #eee;
+  font-family: "Noto Sans";
+}
+
+.error-authorization {
+  padding-left: 15px;
+  font-size: 16px;
+}
+
+.file-search {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.badge {
+  border-radius: 0;
+  cursor: default;
+}
+
+.form-control {
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.form-control:focus {
+  border-color: #555;
+  box-shadow: none;
+}
+
+#root {
+  margin-bottom: 30px;
+}
+
+.download-progress {
+  height: 5px;
+  overflow: hidden;
+  position: relative;
+  background-color: #e6e6e6;
+}
+
+.download-header {
+  border: 1px solid #e1e1e1;
+}
+
+.download-name {
+  background-color: #fefefe;
+  color: #555;
+  padding: 12px;
+  margin-bottom: 0;
+  margin-top: 0;
+
+  @media (max-width: @screen-xs-max) {
+    font-size: 1em;
+  }
+}
+
+.download-meta {
+  background-color: #f8f8f8;
+
+  display: flex;
+  flex: 1;
+
+  .download-added {
+    flex: 1;
+    padding: 5px 12px;
+  }
+}
+
+.download-commands {
+  .btn-group {
+    float: right;
+  }
+}
+
+.download-stats {
+  margin-top: 10px;
+  background-color: #f8f8f8;
+  padding: 5px 12px;
+
+  .download-ratio, .download-uploaded {
+    display: inline-block;
+    margin-right: 10px;
+  }
+}
+
+.download-message {
+  padding: 5px;
+  text-align: center;
+  border-radius: 0;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+.download-progress .download-progress-inner {
+  height: 100%;
+  overflow: hidden;
+  transition: width .6s ease, background-color 0.6s ease-in-out 0s;
+}
+
+.download-progress .download-progress-inner[aria-valuenow="0"] {
+  width: 100% !important;
+
+  background-image: linear-gradient(
+    to right,
+
+    transparent 20%,
+
+    rgba(255,255,255,.75) 20%,
+    rgba(255,255,255,.75) 40%,
+
+    transparent 40%,
+    transparent 60%,
+
+    rgba(255,255,255,.75) 60%,
+    rgba(255,255,255,.75) 80%,
+
+    transparent 80%,
+    transparent);
+}
+
+.downloads-scope {
+  margin-top: 10px;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn {
+  border-radius: 0;
+  background-image: none;
+}
+
+.lock-button {
+  background-color: @gray-lighter;
+}
+
+.downloads-scope .btn {
+  padding: 2px 10px;
+}
+
+.upload {
+  margin-bottom: 10px;
+
+  .magnet {
+    .input-group-btn .send-magnet {
+      margin-left: 5px;
+    }
+
+    .input-group-addon {
+      border: none;
+      padding: 6px 10px;
+
+      .checkbox {
+        margin-top: 0;
+        margin-bottom: 0;
+        line-height: normal;
+
+        label {
+          line-height: 12px;
+        }
+      }
+    }
+  }
+
+  .upload-buttons {
+    margin-top: 10px;
+
+    .upload-file {
+      width: 49.5%;
+    }
+
+    .upload-all {
+      width: 49.5%;
+      float: right;
+    }
+  }
+
+  .uploads {
+    padding-left: 0;
+    list-style: none;
+    margin-top: 10px;
+
+    .file-upload {
+      background-color: #fefefe;
+      border: 1px solid #e1e1e1;
+      padding: 5px;
+      margin-bottom: 2px;
+
+      display: -webkit-flex;
+      display: flex;
+
+      -webkit-flex: 1;
+      flex: 1;
+
+      .file-name {
+        padding-top: 2px;
+
+        -webkit-flex: 1;
+        flex: 1;
+
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      .file-size.badge {
+        margin-right: 10px;
+        margin-left: 0;
+        line-height: normal;
+      }
+
+      .upload-progress.badge {
+        line-height: normal;
+        background-color: @brand-info;
+      }
+
+      .upload-controls {
+        display: inline-block;
+
+        .checkbox {
+          display: inline-block;
+          margin-top: 0;
+          margin-bottom: 0;
+          margin-right: 10px;
+        }
+
+        .btn-success {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
+
+.upload-overlay {
+  // background-color: #181817;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  // outline: 0 none;
+  display: none;
+  // opacity: 0.5;
+  // visibility: hidden; // visible
+}
+
+table.table.trackers, table.table.users {
+  tbody > tr > td {
+    vertical-align: inherit;
+  }
+
+  .btn {
+    padding: 3px 6px;
+  }
+}
+
+.files {
+  .file-edit {
+    padding: 0 4px;
+    color: white;
+    margin-right: 5px;
+    background-color: @brand-info;
+    cursor: default;
+  }
+
+  .file {
+    background-color: #fefefe;
+    border: 1px solid #e1e1e1;
+    margin-top: 5px;
+    padding: 5px;
+
+    display: -webkit-flex;
+    display: flex;
+
+    -webkit-flex: 1;
+    flex: 1;
+
+    .file-name {
+      color: #555;
+
+      -webkit-flex: 1;
+      flex: 1;
+
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .badge {
+      background-color: @brand-success;
+      cursor: default;
+      margin-left: 5px;
+    }
+
+    &.file-incomplete {
+      cursor: default;
+
+      .file-name {
+        color: #aaa;
+      }
+
+      .badge {
+        background-color: @brand-info;
+      }
+    }
+
+    &.file.file-disabled {
+      .badge {
+        background-color: @brand-danger;
+      }
+    }
+  }
+
+  .folder {
+    .folder-tab {
+      cursor: pointer;
+      background-color: #f8f8f8;
+      border: 1px solid #e1e1e1;
+      margin-top: 5px;
+      padding: 5px;
+
+      display: -webkit-flex;
+      display: flex;
+
+      -webkit-flex: 1;
+      flex: 1;
+
+      .folder-name {
+        color: black;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+
+        -webkit-flex: 1;
+        flex: 1;
+      }
+
+      .badge {
+        margin-left: 5px;
+      }
+    }
+
+    .entities {
+      & > .folder {
+        padding-left: 10px;
+      }
+
+      & > .file {
+        margin-left: 10px;
+      }
+    }
+  }
+
+  /* don't apply indents or show folder name for root */
+  & > .folder {
+    & > .folder-tab {
+      display: none;
+    }
+
+    & > .entities {
+      & > .folder {
+        padding-left: 0;
+      }
+
+      & > .file {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+.downloads {
+  margin-top: 10px;
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.downloads .download:last-child, .downloads .download.last-child {
+  border-bottom: 1px solid #E1E1E1; }
+
+.downloads .download {
+    line-height: 25px;
+    background-color: #fefefe;
+
+    padding: 2px 0 2px 0;
+    border-style: solid;
+    border-color: #E1E1E1;
+    border-width: 1px 1px 1px 1px;
+    margin-bottom: 2px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex: 1;
+    flex: 1;
+}
+
+.downloads .download .name {
+  padding-left: 10px;
+  color: #555;
+  -webkit-flex: 1;
+  flex: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-right: 10px;
+  transition: color 0.3s ease-in;
+}
+
+.spinner {
+  margin: 100px auto;
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.spinner > div {
+  height: 100%;
+  width: 7px;
+  margin: 0 3px 0 0;
+  display: inline-block;
+
+  -webkit-animation: stretchdelay 1.2s infinite ease-in-out, colors 4.8s infinite steps(1);
+  animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+@keyframes colors {
+  0% { background-color: #5cb85c; }
+  25% { background-color: #f0ad4e; }
+  50% { background-color: #5bc0de; }
+  75% { background-color: #d9534f; }
+}
+
+@-webkit-keyframes colors {
+  0% { background-color: #5cb85c; }
+  25% { background-color: #f0ad4e; }
+  50% { background-color: #5bc0de; }
+  75% { background-color: #d9534f; }
+}
+
+.spinner .rect2 {
+  -webkit-animation-delay: -1.1s, 0.1s;
+  animation-delay: -1.1s, 0.1s;
+}
+
+.spinner .rect3 {
+  -webkit-animation-delay: -1.0s, 0.2s;
+  animation-delay: -1.0s, 0.2s;
+}
+
+.spinner .rect4 {
+  -webkit-animation-delay: -0.9s, 0.3s;
+  animation-delay: -0.9s, 0.3s;
+}
+
+.spinner .rect5 {
+  -webkit-animation-delay: -0.8s, 0.4s;
+  animation-delay: -0.8s, 0.4s;
+}
+
+@-webkit-keyframes stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
+  20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes stretchdelay {
+  0%, 40%, 100% { 
+    -webkit-transform: scaleY(0.4);
+    transform: scaleY(0.4);
+  }  20% { 
+    -webkit-transform: scaleY(1.0);
+    transform: scaleY(1.0);
+  }
+}
+
+select,   textarea,   input[type="text"],   input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
+  font-size: 16px;
+}
+

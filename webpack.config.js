@@ -57,6 +57,16 @@ config.module.loaders.push({
 });
 
 config.module.loaders.push({
+  test: /\.module\.less$/,
+  loaders: [
+    'style?sourceMap',
+    'css?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
+    // 'resolve-url',
+    'less?sourceMap'
+  ]
+});
+
+config.module.loaders.push({
   test: /\.module\.css$/,
   loader: 'style!css?modules&localIdentName=[name]---[local]---[hash:base64:5]'
 });
