@@ -26,6 +26,14 @@ const Downloads = React.createClass({
     };
   },
 
+  onChangeScope: function() {
+    console.log('scope changed!');
+  },
+
+  onChangeOrder: function() {
+    console.log('order changed!');
+  },
+
   render: function() {
     let downloads = this.props.downloads.map(download => {
       // return React.createElement(Download, Object.assign({}, download));
@@ -42,7 +50,9 @@ const Downloads = React.createClass({
     return (
       <div>
         <Header />
-        <Search count={downloads.length} />
+        <Search count={downloads.length} scope='all' order='recent'
+                onChangeScope={this.onChangeScope}
+                onChangeOrder={this.onChangeOrder} />
         <ul styleName='downloads'>
           {downloads}
         </ul>

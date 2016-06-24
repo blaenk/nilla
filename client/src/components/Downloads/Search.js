@@ -15,61 +15,41 @@ import {
 
 import styles from './search.module.less';
 
-const MarkedMenuItem = React.createClass({
-  propTypes: {
-    eventKey: React.PropTypes.func.isRequired,
-    children: React.PropTypes.node.isRequired,
-    onSelect: React.PropTypes.func.isRequired,
-    selected: React.PropTypes.string.isRequired
-  },
+const MarkedMenuItem = (props) => {
+  return (
+    <MenuItem eventKey={props.eventKey}
+              className={props.eventKey == props.selected ? 'dropdown-menu-selected' : ''}
+              onSelect={props.onSelect}>
+      {props.children}
+    </MenuItem>
+  );
+};
 
-  markSelected: function() {
-    if (this.props.eventKey == this.props.selected) {
-      return 'dropdown-menu-selected';
-    } else {
-      return '';
-    }
-  },
-
-  render: function() {
-    return (
-      <MenuItem eventKey={this.props.eventKey} className={this.markSelected()} onSelect={this.props.onSelect}>
-        {this.props.children}
-      </MenuItem>
-    );
-  }
-});
+MarkedMenuItem.propTypes = {
+  eventKey: React.PropTypes.string.isRequired,
+  children: React.PropTypes.node.isRequired,
+  onSelect: React.PropTypes.func.isRequired,
+  selected: React.PropTypes.string.isRequired
+};
 
 const Search = React.createClass({
   propTypes: {
-    initialScope: React.PropTypes.string.isRequired,
-    initialSortBy: React.PropTypes.string.isRequired,
-    count: React.PropTypes.number.isRequired
-  },
+    count: React.PropTypes.number.isRequired,
+    scope: React.PropTypes.string.isRequired,
+    order: React.PropTypes.string.isRequired,
 
-  getInitialState: function() {
-    return {
-      scope: this.props.initialScope || 'all',
-      sortBy: this.props.initialSortBy || 'recent'
-    };
-  },
-
-  selectScope: function(key, _event) {
-    this.setState({scope: key});
+    onChangeScope: React.PropTypes.func.isRequired,
+    onChangeOrder: React.PropTypes.func.isRequired
   },
 
   render: function() {
-    const item = (name, key) => {
-      const onSelect = key => {
-        let state = {};
-        state[name] = key;
-        this.setState(state);
-      };
+    const item = (what, name) => {
+      const capitalName = what.charAt(0).toUpperCase() + what.slice(1);
 
       return (
-        <MarkedMenuItem eventKey={key} selected={this.state[name]}
-                        onSelect={onSelect} key={key}>
-          {key}
+        <MarkedMenuItem eventKey={name} selected={this.props[what]}
+                        onSelect={this.props[`onChange${capitalName}`]} key={name}>
+          {name}
         </MarkedMenuItem>
       );
     };
@@ -97,7 +77,7 @@ const Search = React.createClass({
                 </Dropdown.Toggle>
                 <Dropdown.Menu style={{left: 'auto', right: 0}}>
                   <MenuItem header>Sort By</MenuItem>
-                  {['name', 'recent'].map(n => item('sortBy', n))}
+                  {['name', 'recent'].map(n => item('order', n))}
                 </Dropdown.Menu>
               </Dropdown>
             </InputGroup.Button>
