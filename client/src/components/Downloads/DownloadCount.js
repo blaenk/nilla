@@ -12,4 +12,8 @@ const DownloadCount = (props) => {
   );
 };
 
+DownloadCount.propTypes = {
+  count: React.PropTypes.number.isRequired
+};
+
 export default CSSModules(DownloadCount, styles);

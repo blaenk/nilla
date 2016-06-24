@@ -26,4 +26,9 @@ const ScopeDropDown = (props) => {
   );
 };
 
+ScopeDropDown.propTypes = {
+  scope: React.PropTypes.string.isRequired,
+  onChangeScope: React.PropTypes.func.isRequired
+};
+
 export default CSSModules(ScopeDropDown, styles);

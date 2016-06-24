@@ -36,4 +36,9 @@ const OrderDropDown = (props) => {
   );
 };
 
+OrderDropDown.propTypes = {
+  order: React.PropTypes.string.isRequired,
+  onChangeOrder: React.PropTypes.func.isRequired
+};
+
 export default CSSModules(OrderDropDown, styles);

@@ -6,6 +6,8 @@ import { browserHistory } from 'react-router';
 import App from 'containers/App/App';
 import Reducer from './reducers';
 
+// TODO
+// second param is optional bootstrap data
 let store = createStore(Reducer);
 
 document.addEventListener("DOMContentLoaded", function() {

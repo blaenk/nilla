@@ -10,6 +10,10 @@ const DownloadFilter_ = (props) => {
   );
 };
 
+DownloadFilter_.propTypes = {
+  onChange: React.PropTypes.func.isRequired
+};
+
 const mapStateToProps = (state) => {
   return {
     filter: state.search.filter

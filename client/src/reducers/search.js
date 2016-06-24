@@ -1,3 +1,9 @@
+/**
+ * The search reducer.
+ * @param {Object} state The current search state.
+ * @param {Object} action The dispatched action.
+ * @returns {Object} The new search state.
+ */
 export default function search(state, action) {
   switch (action.type) {
     case 'SET_SCOPE':
