@@ -5,32 +5,13 @@ import {
   Col,
   Badge,
   InputGroup,
-  Button,
-  DropdownButton,
-  Dropdown,
-  Glyphicon,
-  MenuItem,
   FormControl
 } from 'react-bootstrap';
 
 import styles from './search.module.less';
 
-const MarkedMenuItem = (props) => {
-  return (
-    <MenuItem eventKey={props.eventKey}
-              className={props.eventKey == props.selected ? 'dropdown-menu-selected' : ''}
-              onSelect={props.onSelect}>
-      {props.children}
-    </MenuItem>
-  );
-};
-
-MarkedMenuItem.propTypes = {
-  eventKey: React.PropTypes.string.isRequired,
-  children: React.PropTypes.node.isRequired,
-  onSelect: React.PropTypes.func.isRequired,
-  selected: React.PropTypes.string.isRequired
-};
+import ScopeDropDown from './ScopeDropDown';
+import OrderDropDown from './OrderDropDown';
 
 const Search = React.createClass({
   propTypes: {
@@ -43,46 +24,20 @@ const Search = React.createClass({
   },
 
   render: function() {
-    const item = (what, name) => {
-      const capitalName = what.charAt(0).toUpperCase() + what.slice(1);
-
-      return (
-        <MarkedMenuItem eventKey={name} selected={this.props[what]}
-                        onSelect={this.props[`onChange${capitalName}`]} key={name}>
-          {name}
-        </MarkedMenuItem>
-      );
-    };
-
     return (
       <Row styleName='search'>
         <Col lg={12}>
           <InputGroup>
             {/* Scope Button */}
-            <InputGroup.Button>
-              <DropdownButton id="downloads_scope" title={this.props.scope} styleName='scope'>
-                <MenuItem header>Search Scope</MenuItem>
-                {['all', 'mine', 'system', 'locked', 'expiring'].map(n => item('scope', n))}
-              </DropdownButton>
-            </InputGroup.Button>
+            <ScopeDropDown scope={this.props.scope} onChangeScope={this.props.onChangeScope} />
 
             {/* Text */}
             <FormControl type='text' placeholder='Search' />
 
             {/* Sort */}
-            <InputGroup.Button>
-              <Dropdown id="sort_order">
-                <Dropdown.Toggle noCaret styleName='sort'>
-                  <Glyphicon glyph='sort' />
-                </Dropdown.Toggle>
-                <Dropdown.Menu style={{left: 'auto', right: 0}}>
-                  <MenuItem header>Sort By</MenuItem>
-                  {['name', 'recent'].map(n => item('order', n))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </InputGroup.Button>
+            <OrderDropDown order={this.props.order} onChangeOrder={this.props.onChangeOrder} />
 
-            {/* Sort */}
+            {/* Count */}
             <InputGroup.Addon>
               <Badge styleName='item-count'>{this.props.count}</Badge>
             </InputGroup.Addon>
