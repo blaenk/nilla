@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import DownloadList from 'components/Downloads/DownloadList';
+import Downloads from 'components/Downloads/Downloads';
 
 const getScopedDownloads = (downloads, scope) => {
   switch (scope) {
@@ -23,8 +23,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-const FilteredDownloadList = connect(
+const FilteredDownloads = connect(
   mapStateToProps
-)(DownloadList);
+)(Downloads);
 
-export default FilteredDownloadList;
+export default FilteredDownloads;

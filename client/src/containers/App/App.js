@@ -5,7 +5,7 @@ import CSSModules from 'react-css-modules';
 
 import { Provider } from 'react-redux';
 
-import Downloads from 'components/Downloads/Downloads';
+import FilteredDownloads from 'containers/Downloads/FilteredDownloads';
 
 import styles from 'styles/app.module.less';
 
@@ -20,7 +20,7 @@ const App = React.createClass({
       <Provider store={this.props.store}>
         <Grid>
           <Router history={this.props.history}>
-            <Route path="/downloads" component={Downloads} />
+            <Route path="/downloads" component={FilteredDownloads} />
             <Redirect from="*" to="/downloads" />
           </Router>
         </Grid>
