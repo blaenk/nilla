@@ -21,11 +21,11 @@ let Download = React.createClass({
 
   render: function() {
     const lockedTooltip = (
-      <Tooltip>locked</Tooltip>
+      <Tooltip id="tooltip_locked">locked</Tooltip>
     );
 
     const progressTooltip = (
-      <Tooltip>{this.props.state}</Tooltip>
+      <Tooltip id="tooltip_state">{this.props.state}</Tooltip>
     );
 
     const lockStatus = () => {

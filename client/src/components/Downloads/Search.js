@@ -80,7 +80,7 @@ const Search = React.createClass({
           <InputGroup>
             {/* Scope Button */}
             <InputGroup.Button>
-              <DropdownButton title={this.state.scope} styleName='scope'>
+              <DropdownButton id="downloads_scope" title={this.props.scope} styleName='scope'>
                 <MenuItem header>Search Scope</MenuItem>
                 {['all', 'mine', 'system', 'locked', 'expiring'].map(n => item('scope', n))}
               </DropdownButton>
@@ -91,7 +91,7 @@ const Search = React.createClass({
 
             {/* Sort */}
             <InputGroup.Button>
-              <Dropdown>
+              <Dropdown id="sort_order">
                 <Dropdown.Toggle noCaret styleName='sort'>
                   <Glyphicon glyph='sort' />
                 </Dropdown.Toggle>
