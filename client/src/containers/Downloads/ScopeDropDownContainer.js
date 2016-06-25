@@ -17,9 +17,9 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const SetScope = connect(
+const ScopeDropDownContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(ScopeDropDown);
 
-export default SetScope;
+export default ScopeDropDownContainer;

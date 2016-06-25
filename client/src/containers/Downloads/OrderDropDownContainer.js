@@ -17,9 +17,9 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const SetOrder = connect(
+const OrderDropDownContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(OrderDropDown);
 
-export default SetOrder;
+export default OrderDropDownContainer;
