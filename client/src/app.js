@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
 import { browserHistory } from 'react-router';
 
-import App from 'containers/App/App';
+import AppContainer from 'containers/App/AppContainer';
 import Reducer from './reducers';
 
 // TODO
@@ -13,6 +13,6 @@ let store = createStore(Reducer);
 document.addEventListener("DOMContentLoaded", function() {
   const mountNode = document.querySelector('#root');
   ReactDOM.render(
-    <App history={browserHistory} store={store} />,
+    <AppContainer history={browserHistory} store={store} />,
     mountNode);
 });

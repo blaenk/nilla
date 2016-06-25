@@ -9,7 +9,7 @@ assert = chai.assert;
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import App from 'containers/App/App.js';
+import App from 'containers/App/AppContainer.js';
 
 describe('<App />', function () {
   it('should pass', function() {

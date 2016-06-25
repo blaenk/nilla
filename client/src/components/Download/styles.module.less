@@ -1,0 +1,88 @@
+@import "~bootstrap/less/variables";
+
+.header {
+  border: 1px solid #e1e1e1;
+}
+
+.name {
+  background-color: #fefefe;
+  color: #555;
+  padding: 12px;
+  margin-bottom: 0;
+  margin-top: 0;
+
+  @media (max-width: @screen-xs-max) {
+    font-size: 1em;
+  }
+}
+
+.meta {
+  background-color: #f8f8f8;
+
+  display: flex;
+  flex: 1;
+
+  .date-added {
+    flex: 1;
+    padding: 5px 12px;
+  }
+}
+
+.progress {
+  height: 5px;
+  overflow: hidden;
+  position: relative;
+  background-color: #e6e6e6;
+}
+
+.progress-inner {
+  height: 100%;
+  overflow: hidden;
+  transition: width .6s ease, background-color 0.6s ease-in-out 0s;
+}
+
+.progress-inner[aria-valuenow="0"] {
+  width: 100% !important;
+
+  background-image: linear-gradient(
+    to right,
+
+    transparent 20%,
+
+    rgba(255,255,255,.75) 20%,
+    rgba(255,255,255,.75) 40%,
+
+    transparent 40%,
+    transparent 60%,
+
+    rgba(255,255,255,.75) 60%,
+    rgba(255,255,255,.75) 80%,
+
+    transparent 80%,
+    transparent);
+}
+
+.progress-seeding {
+  composes: progress-inner;
+  background-color: @brand-info;
+}
+
+.progress-closed {
+  composes: progress-inner;
+  background-color: @gray-light;
+}
+
+.progress-downloading {
+  composes: progress-inner;
+  background-color: @brand-success;
+}
+
+.progress-hashing {
+  composes: progress-inner;
+  background-color: @brand-warning;
+}
+
+.progress-stopped {
+  composes: progress-inner;
+  background-color: @brand-danger;
+}

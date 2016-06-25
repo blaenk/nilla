@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 import CSSModules from 'react-css-modules';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
@@ -48,9 +49,9 @@ let Download = React.createClass({
             </div>
           </div>
         </OverlayTrigger>
-        <a href={"/downloads/" + this.props.infohash} className={styles['name']}>
+        <Link to={`/download/${this.props.infohash}`} styleName='name'>
           {this.props.name}
-        </a>
+        </Link>
         {lockStatus()}
       </li>
     );

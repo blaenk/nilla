@@ -1,7 +1,5 @@
 @import "~bootstrap/less/variables";
 
-// new
-
 // old
 
 body {
@@ -40,41 +38,6 @@ body {
   margin-bottom: 30px;
 }
 
-.download-progress {
-  height: 5px;
-  overflow: hidden;
-  position: relative;
-  background-color: #e6e6e6;
-}
-
-.download-header {
-  border: 1px solid #e1e1e1;
-}
-
-.download-name {
-  background-color: #fefefe;
-  color: #555;
-  padding: 12px;
-  margin-bottom: 0;
-  margin-top: 0;
-
-  @media (max-width: @screen-xs-max) {
-    font-size: 1em;
-  }
-}
-
-.download-meta {
-  background-color: #f8f8f8;
-
-  display: flex;
-  flex: 1;
-
-  .download-added {
-    flex: 1;
-    padding: 5px 12px;
-  }
-}
-
 .download-commands {
   .btn-group {
     float: right;
@@ -98,33 +61,6 @@ body {
   border-radius: 0;
   margin-top: 10px;
   margin-bottom: 0;
-}
-
-.download-progress .download-progress-inner {
-  height: 100%;
-  overflow: hidden;
-  transition: width .6s ease, background-color 0.6s ease-in-out 0s;
-}
-
-.download-progress .download-progress-inner[aria-valuenow="0"] {
-  width: 100% !important;
-
-  background-image: linear-gradient(
-    to right,
-
-    transparent 20%,
-
-    rgba(255,255,255,.75) 20%,
-    rgba(255,255,255,.75) 40%,
-
-    transparent 40%,
-    transparent 60%,
-
-    rgba(255,255,255,.75) 60%,
-    rgba(255,255,255,.75) 80%,
-
-    transparent 80%,
-    transparent);
 }
 
 .downloads-scope {

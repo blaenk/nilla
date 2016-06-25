@@ -1,57 +1,71 @@
 import React from 'react';
 import CSSModules from 'react-css-modules';
+import moment from 'moment';
 
-import styles from './styles.module.css';
-
-const ExpiresOrLocks = React.createClass({
-  propTypes: {
-    locks: React.PropTypes.Array.isRequired
-  },
-
-  render: function() {
-    if (this.props.locks) {
-      return (
-        <span className="expiresAt">and expires in</span>
-      );
-    } else {
-      return (
-        <span className="locks">and locked by</span>
-      );
-    }
-  }
-});
+import styles from './styles.module.less';
 
 const Download = React.createClass({
   propTypes: {
+    infohash: React.PropTypes.string.isRequired,
+    dateAdded: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
+    state: React.PropTypes.string.isRequired,
+    progress: React.PropTypes.string.isRequired,
     uploader: React.PropTypes.string.isRequired,
     locks: React.PropTypes.array.isRequired
   },
+
   render: function() {
+    const dateAdded = new moment(this.props.dateAdded).utc().local();
+    const dateAddedShortFormat = dateAdded.clone().format("l");
+    const dateAddedLongFormat = dateAdded.clone()
+                                   .format("dddd, MMMM Do YYYY [at] h:mm:ss A");
+
+    const expiresDate = dateAdded.clone().add(2, "weeks");
+    const expiresShortFormat = expiresDate.clone().fromNow();
+    const expiresLongFormat = expiresDate.clone()
+                                   .format("dddd, MMMM Do YYYY [at] h:mm:ss A");
+
+    let expiresOrLocks;
+
+    if (this.props.locks.length) {
+      const lockedBy = this.props.locks.join(', ');
+
+      expiresOrLocks = <span className="locks">and locked by {lockedBy}</span>;
+    } else {
+      expiresOrLocks = (
+        <span className="expiresAt">
+          and expires
+          {' '}
+          <time title={expiresLongFormat}>{expiresShortFormat}</time>
+        </span>
+      );
+    }
+
     return (
       <div>
-        <div className={styles.header}>
-          <h4 className={styles.name}>
+        <div styleName='header'>
+          {/* Insert &#8203; before dots so long names wrap */}
+          <h4 styleName='name'>
             {this.props.name}
           </h4>
 
-          <div className={styles.progress}
-               dataToggle="tooltip"
-               dataOriginalTitle={this.state}
-               dataPlacement="top">
-            <div className={styles["state-" + this.state]}
+          <div styleName='progress'>
+            <div styleName={`progress-${this.props.state}`}
                  style={{width: "75%"}}
-                 ariaValuenow="75">
+                 aria-valuenow="75">
             </div>
           </div>
 
-          <div className="meta">
-            <div className="added">
-              added by {this.props.uploader} on
-              <time className="date-added" title="some date [longfmt]">
-                "some date [shortfmt]"
+          <div styleName="meta">
+            <div styleName="date-added">
+              added by <strong>{this.props.uploader}</strong> on
+              {' '}
+              <time title={dateAddedLongFormat}>
+                {dateAddedShortFormat}
               </time>
-              <ExpiresOrLocks locks={this.props.locks} />
+              {' '}
+              {expiresOrLocks}
             </div>
           </div>
         </div>

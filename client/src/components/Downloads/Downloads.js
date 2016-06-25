@@ -1,7 +1,6 @@
 import React from 'react';
 import CSSModules from 'react-css-modules';
 
-import Header from './Header';
 import Search from './Search';
 import Download from 'components/Downloads/Download';
 import DownloadList from 'components/Downloads/DownloadList';
@@ -16,7 +15,6 @@ const Downloads = React.createClass({
   render: function() {
     return (
       <div>
-        <Header />
         <Search count={this.props.downloads.length} />
         <DownloadList downloads={this.props.downloads} />
       </div>
