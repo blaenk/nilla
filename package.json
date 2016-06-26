@@ -86,6 +86,7 @@
     "bootstrap": "^3.3.6",
     "cookie-parser": "^1.4.3",
     "dotenv": "^2.0.0",
+    "filesize": "^3.3.0",
     "font-awesome": "^4.6.3",
     "lodash": "^4.13.1",
     "magnet-uri": "^5.1.3",

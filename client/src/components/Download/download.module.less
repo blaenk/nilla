@@ -1,0 +1,28 @@
+@import "~bootstrap/less/variables";
+
+.files {
+  .file-edit {
+    padding: 0 4px;
+    color: white;
+    margin-right: 5px;
+    background-color: @brand-info;
+    cursor: default;
+  }
+
+  /* don't apply indents or show folder name for root */
+  & > .folder {
+    & > .folder-tab {
+      display: none;
+    }
+
+    & > .entries {
+      & > .folder {
+        padding-left: 0;
+      }
+
+      & > .file {
+        margin-left: 0;
+      }
+    }
+  }
+}

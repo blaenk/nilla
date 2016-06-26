@@ -1,8 +1,16 @@
 import React from 'react';
 import CSSModules from 'react-css-modules';
-import moment from 'moment';
+import { Row, Col } from 'react-bootstrap';
 
-import styles from './styles.module.less';
+import Header from './Header';
+import FileTree from './FileTree';
+import File from './File';
+
+import styles from './download.module.less';
+
+const filesProps = File.propTypes;
+delete filesProps['isMultiFile'];
+delete filesProps['downloadName'];
 
 const Download = React.createClass({
   propTypes: {
@@ -10,65 +18,37 @@ const Download = React.createClass({
     dateAdded: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     state: React.PropTypes.string.isRequired,
-    progress: React.PropTypes.string.isRequired,
+    progress: React.PropTypes.number.isRequired,
+    isMultiFile: React.PropTypes.bool.isRequired,
     uploader: React.PropTypes.string.isRequired,
+    files: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
     locks: React.PropTypes.array.isRequired
   },
 
   render: function() {
-    const dateAdded = new moment(this.props.dateAdded).utc().local();
-    const dateAddedShortFormat = dateAdded.clone().format("l");
-    const dateAddedLongFormat = dateAdded.clone()
-                                   .format("dddd, MMMM Do YYYY [at] h:mm:ss A");
-
-    const expiresDate = dateAdded.clone().add(2, "weeks");
-    const expiresShortFormat = expiresDate.clone().fromNow();
-    const expiresLongFormat = expiresDate.clone()
-                                   .format("dddd, MMMM Do YYYY [at] h:mm:ss A");
-
-    let expiresOrLocks;
-
-    if (this.props.locks.length) {
-      const lockedBy = this.props.locks.join(', ');
-
-      expiresOrLocks = <span className="locks">and locked by {lockedBy}</span>;
-    } else {
-      expiresOrLocks = (
-        <span className="expiresAt">
-          and expires
-          {' '}
-          <time title={expiresLongFormat}>{expiresShortFormat}</time>
-        </span>
-      );
-    }
-
     return (
       <div>
-        <div styleName='header'>
-          {/* Insert &#8203; before dots so long names wrap */}
-          <h4 styleName='name'>
-            {this.props.name}
-          </h4>
+        <Row>
+          <Col lg={12}>
+            <Header infohash={this.props.infohash}
+                    dateAdded={this.props.dateAdded}
+                    name={this.props.name}
+                    state={this.props.state}
+                    progress={this.props.progress}
+                    uploader={this.props.uploader}
+                    locks={this.props.locks} />
+          </Col>
+        </Row>
 
-          <div styleName='progress'>
-            <div styleName={`progress-${this.props.state}`}
-                 style={{width: "75%"}}
-                 aria-valuenow="75">
+        <Row>
+          <Col lg={12}>
+            <div styleName='files'>
+              <FileTree isMultiFile={this.props.isMultiFile}
+                        downloadName={this.props.name}
+                        files={this.props.files} />
             </div>
-          </div>
-
-          <div styleName="meta">
-            <div styleName="date-added">
-              added by <strong>{this.props.uploader}</strong> on
-              {' '}
-              <time title={dateAddedLongFormat}>
-                {dateAddedShortFormat}
-              </time>
-              {' '}
-              {expiresOrLocks}
-            </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       </div>
     );
   }
