@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge } from 'react-bootstrap';
+import { Badge, Glyphicon } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 import _ from 'lodash';
 
@@ -87,6 +87,8 @@ const FileTree = CSSModules(React.createClass({
     if (this.props.depth != 0) {
       tab = (
         <div styleName='folder-tab' onClick={this.collapse}>
+          <Glyphicon styleName='collapse-mark'
+                     glyph={this.state.isCollapsed ? "chevron-down" : "chevron-up"} />
           <div styleName='folder-name'>
             {this.props.name}
           </div>
@@ -113,6 +115,7 @@ const FileTree = CSSModules(React.createClass({
         <FileTree name={folder.name}
                   key={folder.name}
                   depth={this.props.depth + 1}
+                  initialCollapsed={true}
                   isMultiFile={this.props.isMultiFile}
                   downloadName={this.props.downloadName}
                   files={folder.files} />
