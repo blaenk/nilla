@@ -43,8 +43,15 @@ config.output = {
 };
 
 config.plugins.push(new webpack.DefinePlugin({
+  "process.env": {
+    NODE_ENV: JSON.stringify(NODE_ENV)
+  },
   __NODE_ENV__: JSON.stringify(NODE_ENV)
 }));
+
+if (NODE_ENV == 'production') {
+  config.devtool = 'cheap-module-source-map';
+}
 
 config.plugins.push(new ExtractTextPlugin('app.css', {
   allChunks: true
