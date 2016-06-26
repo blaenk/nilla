@@ -11,7 +11,7 @@ const getScopedDownloads = (downloads, scope) => {
 };
 
 const filterDownloads = (downloads, filter) => {
-  return downloads.filter(d => d.name.includes(filter));
+  return downloads.filter(d => d.name.toLowerCase().includes(filter.toLowerCase()));
 };
 
 const mapStateToProps = (state) => {
