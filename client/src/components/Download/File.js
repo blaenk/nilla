@@ -7,6 +7,7 @@ import styles from './filetree.module.less';
 
 const File = React.createClass({
   propTypes: {
+    path: React.PropTypes.string.isRequired,
     pathComponents: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
     size: React.PropTypes.number.isRequired,
     id: React.PropTypes.number.isRequired,

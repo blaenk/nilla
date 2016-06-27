@@ -54,7 +54,7 @@ const FileTree = CSSModules(React.createClass({
     depth: React.PropTypes.number,
     isEnabled: React.PropTypes.bool,
 
-    initialCollapsed: React.PropTypes.bool,
+    initialCollapse: React.PropTypes.bool,
 
     downloadName: React.PropTypes.string.isRequired,
     isMultiFile: React.PropTypes.bool.isRequired
@@ -68,14 +68,21 @@ const FileTree = CSSModules(React.createClass({
 
   getInitialState: function() {
     return {
-      isCollapsed: this.props.initialCollapsed
+      isCollapsed: this.props.initialCollapse
     };
   },
 
-  shouldComponentUpdate: function(nextProps, nextState) {
-    return nextProps.files != this.props.files ||
-      this.state.isCollapsed != nextState.isCollapsed;
+  componentWillReceiveProps: function(nextProps) {
+    if (this.props.initialCollapse != nextProps.initialCollapse) {
+      this.setState({isCollapsed: nextProps.initialCollapse});
+    }
   },
+
+  // shouldComponentUpdate: function(nextProps, nextState) {
+  //   return this.props.files != nextProps.files ||
+  //     this.state.isCollapsed != nextState.isCollapsed ||
+  //     this.props.initialCollapse != nextProps.initialCollapse;
+  // },
 
   collapse: function(_event) {
     this.setState({isCollapsed: !this.state.isCollapsed});
@@ -100,7 +107,7 @@ const FileTree = CSSModules(React.createClass({
       );
     }
 
-    if (this.state.isCollapsed) {
+    if (this.props.depth != 0 && this.state.isCollapsed) {
       return (
         <div styleName={this.props.depth == 0 ? 'root-file-tree' : 'file-tree'}>
           {tab}
@@ -115,7 +122,7 @@ const FileTree = CSSModules(React.createClass({
         <FileTree name={folder.name}
                   key={folder.name}
                   depth={this.props.depth + 1}
-                  initialCollapsed={true}
+                  initialCollapse={this.state.isCollapsed}
                   isMultiFile={this.props.isMultiFile}
                   downloadName={this.props.downloadName}
                   files={folder.files} />
@@ -129,6 +136,7 @@ const FileTree = CSSModules(React.createClass({
               downloadName={this.props.downloadName}
               progress={file.progress}
               enabled={file.enabled}
+              path={file.path}
               pathComponents={file.pathComponents}
               id={file.id}
               key={file.id} />

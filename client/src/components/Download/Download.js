@@ -3,6 +3,7 @@ import CSSModules from 'react-css-modules';
 import { Row, Col } from 'react-bootstrap';
 
 import Header from './Header';
+import Search from './Search';
 import FileTree from './FileTree';
 import File from './File';
 
@@ -25,7 +26,27 @@ const Download = React.createClass({
     locks: React.PropTypes.array.isRequired
   },
 
+  getInitialState: function() {
+    return {
+      filter: '',
+      isCollapsed: true
+    };
+  },
+
+  onCollapse: function(_event) {
+    this.setState({isCollapsed: !this.state.isCollapsed});
+  },
+
+  onChangeFilter: function(event) {
+    this.setState({filter: event.target.value});
+  },
+
   render: function() {
+    const filter = this.state.filter || '';
+    const files = this.props.files.filter(file => {
+      return file.path.includes(filter);
+    });
+
     return (
       <div>
         <Row>
@@ -42,10 +63,19 @@ const Download = React.createClass({
 
         <Row>
           <Col lg={12}>
+            <Search count={files.length}
+                    onChangeFilter={this.onChangeFilter}
+                    onCollapse={this.onCollapse} />
+          </Col>
+        </Row>
+
+        <Row>
+          <Col lg={12}>
             <div styleName='files'>
               <FileTree isMultiFile={this.props.isMultiFile}
+                        initialCollapse={this.state.isCollapsed}
                         downloadName={this.props.name}
-                        files={this.props.files} />
+                        files={files} />
             </div>
           </Col>
         </Row>
