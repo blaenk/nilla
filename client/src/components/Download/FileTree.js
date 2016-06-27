@@ -78,11 +78,10 @@ const FileTree = CSSModules(React.createClass({
     }
   },
 
-  // shouldComponentUpdate: function(nextProps, nextState) {
-  //   return this.props.files != nextProps.files ||
-  //     this.state.isCollapsed != nextState.isCollapsed ||
-  //     this.props.initialCollapse != nextProps.initialCollapse;
-  // },
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return this.props.files != nextProps.files ||
+      this.state.isCollapsed != nextState.isCollapsed;
+  },
 
   collapse: function(_event) {
     this.setState({isCollapsed: !this.state.isCollapsed});
@@ -122,7 +121,7 @@ const FileTree = CSSModules(React.createClass({
         <FileTree name={folder.name}
                   key={folder.name}
                   depth={this.props.depth + 1}
-                  initialCollapse={this.state.isCollapsed}
+                  initialCollapse={this.props.initialCollapse}
                   isMultiFile={this.props.isMultiFile}
                   downloadName={this.props.downloadName}
                   files={folder.files} />

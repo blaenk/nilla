@@ -31,12 +31,12 @@ const Download = React.createClass({
   getInitialState: function() {
     return {
       filter: '',
-      isCollapsed: true
+      globalCollapse: true
     };
   },
 
-  onCollapse: function(_event) {
-    this.setState({isCollapsed: !this.state.isCollapsed});
+  onGlobalCollapse: function(_event) {
+    this.setState({globalCollapse: !this.state.globalCollapse});
   },
 
   onChangeFilter: function(event) {
@@ -68,7 +68,7 @@ const Download = React.createClass({
           <Col lg={12}>
             <Search count={files.length}
                     onChangeFilter={this.onChangeFilter}
-                    onCollapse={this.onCollapse} />
+                    onCollapse={this.onGlobalCollapse} />
           </Col>
         </Row>
 
@@ -76,7 +76,7 @@ const Download = React.createClass({
           <Col lg={12}>
             <div styleName='files'>
               <FileTree isMultiFile={this.props.isMultiFile}
-                        initialCollapse={this.state.isCollapsed}
+                        initialCollapse={this.state.globalCollapse}
                         downloadName={this.props.name}
                         files={files} />
             </div>
