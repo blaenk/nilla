@@ -8,6 +8,7 @@ const SearchFilter = props => {
   return (
     <FormControl type='text'
                  placeholder='Search'
+                 autoFocus={true}
                  onChange={props.onChange}
                  styleName='search-filter' />
   );

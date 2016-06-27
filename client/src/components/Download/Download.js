@@ -9,6 +9,8 @@ import File from './File';
 
 import styles from './download.module.less';
 
+import { fuzzyPattern } from 'common/util';
+
 const filesProps = File.propTypes;
 delete filesProps['isMultiFile'];
 delete filesProps['downloadName'];
@@ -42,9 +44,10 @@ const Download = React.createClass({
   },
 
   render: function() {
-    const filter = this.state.filter || '';
+    const filterRE = fuzzyPattern(this.state.filter);
+
     const files = this.props.files.filter(file => {
-      return file.path.includes(filter);
+      return filterRE.test(file.path);
     });
 
     return (

@@ -15,11 +15,11 @@ const filterDownloads = (downloads, filter) => {
 };
 
 const mapStateToProps = (state) => {
-  let scoped = getScopedDownloads(state.downloads, state.search.scope);
-  let filtered = filterDownloads(scoped, state.search.filter);
+  // let scoped = getScopedDownloads(state.downloads, state.search.scope);
+  // let filtered = filterDownloads(scoped, state.search.filter);
 
   return {
-    downloads: filtered
+    downloads: state.downloads
   };
 };
 

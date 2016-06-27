@@ -25,6 +25,7 @@ config.cache = true;
 config.resolve = {};
 config.resolve.root = [src, modules];
 config.resolve.alias = {
+  'common': path.join(src, 'common'),
   'reducers': path.join(src, 'reducers'),
   'actions': path.join(src, 'actions'),
   'styles': path.join(src, 'styles'),

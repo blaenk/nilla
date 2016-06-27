@@ -8,9 +8,9 @@ import {
 
 import styles from './search.module.less';
 
-import ScopeDropDownContainer from 'containers/Downloads/ScopeDropDownContainer';
-import OrderDropDownContainer from 'containers/Downloads/OrderDropDownContainer';
-import SearchFilterContainer from 'containers/Downloads/SearchFilterContainer';
+import ScopeDropDown from 'components/Downloads/ScopeDropDown';
+import OrderDropDown from 'components/Downloads/OrderDropDown';
+import SearchFilter from 'components/Downloads/SearchFilter';
 import DownloadCount from 'components/Downloads/DownloadCount';
 
 const Search = React.createClass({
@@ -23,9 +23,9 @@ const Search = React.createClass({
       <Row styleName='search'>
         <Col lg={12}>
           <InputGroup>
-            <ScopeDropDownContainer />
-            <SearchFilterContainer />
-            <OrderDropDownContainer />
+            <ScopeDropDown onChangeScope={this.props.onChangeScope} />
+            <SearchFilter onChange={this.props.onChangeFilter} />
+            <OrderDropDown onChangeOrder={this.props.onChangeOrder} />
             <DownloadCount count={this.props.count} />
           </InputGroup>
         </Col>

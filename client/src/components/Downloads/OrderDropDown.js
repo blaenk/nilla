@@ -11,33 +11,47 @@ import styles from './search.module.less';
 
 import MarkedMenuItem from './MarkedMenuItem';
 
-const OrderDropDown = (props) => {
-  const item = (name) => {
-    return (
-      <MarkedMenuItem eventKey={name} selected={props.order}
-                      onSelect={props.onChangeOrder} key={name}>
-        {name}
-      </MarkedMenuItem>
-    );
-  };
+const OrderDropDown = React.createClass({
+  getInitialState: function() {
+    return {
+      order: 'recent'
+    };
+  },
 
-  return (
-    <InputGroup.Button>
-      <Dropdown id="sort_order">
-        <Dropdown.Toggle noCaret styleName='sort'>
-          <Glyphicon glyph='sort' />
-        </Dropdown.Toggle>
-        <Dropdown.Menu style={{left: 'auto', right: 0}}>
-          <MenuItem header>Sort By</MenuItem>
-          {['name', 'recent'].map(item)}
-        </Dropdown.Menu>
-      </Dropdown>
-    </InputGroup.Button>
-  );
-};
+  onChangeOrder: function(eventKey, event) {
+    this.setState({order: eventKey});
+
+    this.props.onChangeOrder(eventKey, event);
+  },
+
+  render: function() {
+    const item = (name) => {
+      return (
+        <MarkedMenuItem eventKey={name} selected={this.state.order}
+                        onSelect={this.onChangeOrder} key={name}>
+          {name}
+        </MarkedMenuItem>
+      );
+    };
+
+    return (
+      <InputGroup.Button>
+        <Dropdown id="sort_order">
+          <Dropdown.Toggle noCaret styleName='sort'>
+            <Glyphicon glyph='sort' />
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu style={{left: 'auto', right: 0}}>
+            <MenuItem header>Sort By</MenuItem>
+            {['name', 'recent'].map(item)}
+          </Dropdown.Menu>
+        </Dropdown>
+      </InputGroup.Button>
+    );
+  }
+});
 
 OrderDropDown.propTypes = {
-  order: React.PropTypes.string.isRequired,
   onChangeOrder: React.PropTypes.func.isRequired
 };
 

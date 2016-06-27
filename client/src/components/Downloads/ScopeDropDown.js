@@ -6,28 +6,41 @@ import styles from './search.module.less';
 
 import MarkedMenuItem from './MarkedMenuItem';
 
-const ScopeDropDown = (props) => {
-  const item = (name) => {
-    return (
-      <MarkedMenuItem eventKey={name} selected={props.scope}
-                      onSelect={props.onChangeScope} key={name}>
-        {name}
-      </MarkedMenuItem>
-    );
-  };
+const ScopeDropDown = React.createClass({
+  getInitialState: function() {
+    return {
+      scope: 'all'
+    };
+  },
 
-  return (
-    <InputGroup.Button>
-      <DropdownButton id="downloads_scope" title={props.scope} styleName='scope'>
-        <MenuItem header>Search Scope</MenuItem>
-        {['all', 'mine', 'system', 'locked', 'expiring'].map(item)}
-      </DropdownButton>
-    </InputGroup.Button>
-  );
-};
+  onChangeScope: function(eventKey, event) {
+    this.setState({scope: eventKey});
+
+    this.props.onChangeScope(eventKey, event);
+  },
+
+  render: function() {
+    const item = (name) => {
+      return (
+        <MarkedMenuItem eventKey={name} selected={this.state.scope}
+                        onSelect={this.onChangeScope} key={name}>
+          {name}
+        </MarkedMenuItem>
+      );
+    };
+
+    return (
+      <InputGroup.Button>
+        <DropdownButton id="downloads_scope" title={this.state.scope} styleName='scope'>
+          <MenuItem header>Search Scope</MenuItem>
+          {['all', 'mine', 'system', 'locked', 'expiring'].map(item)}
+        </DropdownButton>
+      </InputGroup.Button>
+    );
+  }
+});
 
 ScopeDropDown.propTypes = {
-  scope: React.PropTypes.string.isRequired,
   onChangeScope: React.PropTypes.func.isRequired
 };
 
