@@ -39,8 +39,10 @@ let Download = React.createClass({
       } else { return null; }
     };
 
+    let maybeHide = this.props.isHidden ? {display: 'none'} : {};
+
     return (
-      <li styleName="download">
+      <li styleName="download" style={maybeHide}>
         <OverlayTrigger placement="right" overlay={progressTooltip}>
           <div styleName='progress'>
             <div styleName={`progress-${this.props.state}`}

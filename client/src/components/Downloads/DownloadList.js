@@ -11,6 +11,7 @@ const DownloadList = (props) => {
     // return React.createElement(Download, Object.assign({}, download));
     return (
       <Download key={download.infohash}
+                isHidden={download.isHidden}
                 infohash={download.infohash}
                 state={download.state}
                 progress={download.progress}

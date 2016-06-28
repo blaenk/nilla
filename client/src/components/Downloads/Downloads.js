@@ -37,13 +37,19 @@ const Downloads = React.createClass({
   render: function() {
     const filterRE = fuzzyPattern(this.state.filter);
 
-    let downloads = this.props.downloads.filter(download => {
-      return filterRE.test(download.name);
+    let visibleCount = 0;
+
+    let downloads = this.props.downloads.map(download => {
+      download.isHidden = !filterRE.test(download.name);
+
+      visibleCount += download.isHidden ? 0 : 1;
+
+      return download;
     });
 
     return (
       <div>
-        <Search count={downloads.length}
+        <Search count={visibleCount}
                 onChangeFilter={this.onChangeFilter}
                 onChangeOrder={this.onChangeOrder}
                 onChangeScope={this.onChangeScope}/>
