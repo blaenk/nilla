@@ -46,8 +46,14 @@ const Download = React.createClass({
   render: function() {
     const filterRE = fuzzyPattern(this.state.filter);
 
-    const files = this.props.files.filter(file => {
-      return filterRE.test(file.path);
+    let visibleCount = 0;
+
+    const files = this.props.files.map(file => {
+      file.isHidden = !filterRE.test(file.path);
+
+      visibleCount += file.isHidden ? 0 : 1;
+
+      return file;
     });
 
     return (
@@ -66,7 +72,7 @@ const Download = React.createClass({
 
         <Row>
           <Col lg={12}>
-            <Search count={files.length}
+            <Search count={visibleCount}
                     onChangeFilter={this.onChangeFilter}
                     onCollapse={this.onGlobalCollapse} />
           </Col>

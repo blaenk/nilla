@@ -88,6 +88,12 @@ const FileTree = CSSModules(React.createClass({
   },
 
   render: function() {
+    const visibleCount = this.props.files.reduce((acc, file) => {
+      return acc + (file.isHidden ? 0 : 1);
+    }, 0);
+
+    const maybeHide = (visibleCount > 0) ? {} : {display: 'none'};
+
     let tab;
 
     if (this.props.depth != 0) {
@@ -100,7 +106,7 @@ const FileTree = CSSModules(React.createClass({
           </div>
 
           <Badge styleName='entry-count'>
-            {this.props.files.length}
+            {visibleCount}
           </Badge>
         </div>
       );
@@ -108,7 +114,8 @@ const FileTree = CSSModules(React.createClass({
 
     if (this.props.depth != 0 && this.state.isCollapsed) {
       return (
-        <div styleName={this.props.depth == 0 ? 'root-file-tree' : 'file-tree'}>
+        <div styleName={this.props.depth == 0 ? 'root-file-tree' : 'file-tree'}
+             style={maybeHide}>
           {tab}
         </div>
       );
@@ -132,6 +139,7 @@ const FileTree = CSSModules(React.createClass({
       return (
         <File size={file.size}
               isMultiFile={this.props.isMultiFile}
+              isHidden={file.isHidden}
               downloadName={this.props.downloadName}
               progress={file.progress}
               enabled={file.enabled}
@@ -143,7 +151,8 @@ const FileTree = CSSModules(React.createClass({
     });
 
     return (
-      <div styleName={this.props.depth == 0 ? 'root-file-tree' : 'file-tree'}>
+      <div styleName={this.props.depth == 0 ? 'root-file-tree' : 'file-tree'}
+           style={maybeHide}>
         {tab}
 
         <ul styleName='entries'>

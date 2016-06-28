@@ -52,8 +52,10 @@ const File = React.createClass({
       badge = <Badge styleName={disabledOr('file-progress')}>{this.props.progress}</Badge>;
     }
 
+    let maybeHide = this.props.isHidden ? {display: 'none'} : {};
+
     return (
-      <li styleName='file'>
+      <li styleName='file' style={maybeHide}>
         {nameTag}
         {badge}
       </li>
