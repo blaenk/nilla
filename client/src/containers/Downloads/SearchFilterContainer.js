@@ -11,8 +11,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onChange: (event) => {
-      dispatch(setFilter(event.target.value));
+    onChangeFilter: (filter) => {
+      dispatch(setFilter(filter));
     }
   };
 };
