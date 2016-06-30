@@ -10,14 +10,13 @@ import styles from './search.module.less';
 
 import SearchFilterContainer from 'containers/Downloads/SearchFilterContainer';
 import ScopeDropDownContainer from 'containers/Downloads/ScopeDropDownContainer';
+import OrderDropDownContainer from 'containers/Downloads/OrderDropDownContainer';
 
-import OrderDropDown from 'components/Downloads/OrderDropDown';
 import DownloadCount from 'components/Downloads/DownloadCount';
 
 const Search = React.createClass({
   propTypes: {
-    count: React.PropTypes.number.isRequired,
-    onChangeOrder: React.PropTypes.func.isRequired
+    count: React.PropTypes.number.isRequired
   },
 
   render: function() {
@@ -27,7 +26,7 @@ const Search = React.createClass({
           <InputGroup>
             <ScopeDropDownContainer />
             <SearchFilterContainer />
-            <OrderDropDown onChangeOrder={this.props.onChangeOrder} />
+            <OrderDropDownContainer />
             <DownloadCount count={this.props.count} />
           </InputGroup>
         </Col>

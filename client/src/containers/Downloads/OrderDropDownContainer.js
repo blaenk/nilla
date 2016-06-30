@@ -11,8 +11,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onChangeOrder: (eventKey, _event) => {
-      dispatch(setOrder(eventKey));
+    onChangeOrder: (order) => {
+      dispatch(setOrder(order));
     }
   };
 };

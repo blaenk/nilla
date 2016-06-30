@@ -13,25 +13,18 @@ import MarkedMenuItem from './MarkedMenuItem';
 
 const OrderDropDown = React.createClass({
   propTypes: {
+    order: React.PropTypes.string.isRequired,
     onChangeOrder: React.PropTypes.func.isRequired
   },
 
-  getInitialState: function() {
-    return {
-      order: 'recent'
-    };
-  },
-
-  onChangeOrder: function(eventKey, event) {
-    this.setState({order: eventKey});
-
-    this.props.onChangeOrder(eventKey, event);
+  onChangeOrder: function(eventKey, _event) {
+    this.props.onChangeOrder(eventKey);
   },
 
   render: function() {
     const item = (name) => {
       return (
-        <MarkedMenuItem eventKey={name} selected={this.state.order}
+        <MarkedMenuItem eventKey={name} selected={this.props.order}
                         onSelect={this.onChangeOrder} key={name}>
           {name}
         </MarkedMenuItem>
