@@ -9,13 +9,13 @@ const SearchFilter = props => {
     <FormControl type='text'
                  placeholder='Search'
                  autoFocus={true}
-                 onChange={props.onChange}
+                 onChange={props.onChangeFilter}
                  styleName='search-filter' />
   );
 };
 
 SearchFilter.propTypes = {
-  onChange: React.PropTypes.func.isRequired
+  onChangeFilter: React.PropTypes.func.isRequired
 };
 
 export default CSSModules(SearchFilter, styles);

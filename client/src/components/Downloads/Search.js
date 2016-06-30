@@ -15,7 +15,10 @@ import DownloadCount from 'components/Downloads/DownloadCount';
 
 const Search = React.createClass({
   propTypes: {
-    count: React.PropTypes.number.isRequired
+    count: React.PropTypes.number.isRequired,
+    onChangeScope: React.PropTypes.func.isRequired,
+    onChangeOrder: React.PropTypes.func.isRequired,
+    onChangeFilter: React.PropTypes.func.isRequired
   },
 
   render: function() {
@@ -24,7 +27,7 @@ const Search = React.createClass({
         <Col lg={12}>
           <InputGroup>
             <ScopeDropDown onChangeScope={this.props.onChangeScope} />
-            <SearchFilter onChange={this.props.onChangeFilter} />
+            <SearchFilter onChangeFilter={this.props.onChangeFilter} />
             <OrderDropDown onChangeOrder={this.props.onChangeOrder} />
             <DownloadCount count={this.props.count} />
           </InputGroup>

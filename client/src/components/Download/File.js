@@ -13,6 +13,7 @@ const File = React.createClass({
     id: React.PropTypes.number.isRequired,
     progress: React.PropTypes.number.isRequired,
     enabled: React.PropTypes.bool.isRequired,
+    isHidden: React.PropTypes.bool.isRequired,
 
     // download-props
     downloadName: React.PropTypes.string.isRequired,

@@ -12,6 +12,10 @@ import styles from './search.module.less';
 import MarkedMenuItem from './MarkedMenuItem';
 
 const OrderDropDown = React.createClass({
+  propTypes: {
+    onChangeOrder: React.PropTypes.func.isRequired
+  },
+
   getInitialState: function() {
     return {
       order: 'recent'

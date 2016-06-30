@@ -17,7 +17,8 @@ let Download = React.createClass({
     ]).isRequired,
     progress: React.PropTypes.number.isRequired,
     name: React.PropTypes.string.isRequired,
-    locks: React.PropTypes.array.isRequired
+    locks: React.PropTypes.array.isRequired,
+    isHidden: React.PropTypes.bool.isRequired
   },
 
   render: function() {

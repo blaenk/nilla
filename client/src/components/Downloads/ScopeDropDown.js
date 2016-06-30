@@ -7,6 +7,10 @@ import styles from './search.module.less';
 import MarkedMenuItem from './MarkedMenuItem';
 
 const ScopeDropDown = React.createClass({
+  propTypes: {
+    onChangeScope: React.PropTypes.func.isRequired
+  },
+
   getInitialState: function() {
     return {
       scope: 'all'
