@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { fuzzyPattern } from 'common/util';
+import { fuzzyPattern } from 'common';
 
 const getDownloads = (state) => state.downloads;
 const getFilter = (state) => state.search.filter;

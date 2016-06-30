@@ -9,7 +9,7 @@ import File from './File';
 
 import styles from './download.module.less';
 
-import { fuzzyPattern } from 'common/util';
+import { fuzzyPattern } from 'common';
 
 const filesProps = File.propTypes;
 delete filesProps['isMultiFile'];
