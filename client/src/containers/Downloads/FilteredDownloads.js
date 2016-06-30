@@ -2,17 +2,17 @@ import { connect } from 'react-redux';
 
 import Downloads from 'components/Downloads/Downloads';
 
-const getScopedDownloads = (downloads, scope) => {
+function getScopedDownloads(downloads, scope) {
   switch (scope) {
     case 'all':
     default:
       return downloads;
   }
-};
+}
 
-const filterDownloads = (downloads, filter) => {
+function filterDownloads(downloads, filter) {
   return downloads.filter(d => d.name.toLowerCase().includes(filter.toLowerCase()));
-};
+}
 
 const mapStateToProps = (state) => {
   // let scoped = getScopedDownloads(state.downloads, state.search.scope);
