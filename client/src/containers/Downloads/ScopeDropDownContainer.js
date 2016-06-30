@@ -11,8 +11,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onChangeScope: (eventKey, _event) => {
-      dispatch(setScope(eventKey));
+    onChangeScope: (scope) => {
+      dispatch(setScope(scope));
     }
   };
 };

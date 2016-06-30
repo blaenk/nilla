@@ -8,25 +8,18 @@ import MarkedMenuItem from './MarkedMenuItem';
 
 const ScopeDropDown = React.createClass({
   propTypes: {
+    scope: React.PropTypes.string.isRequired,
     onChangeScope: React.PropTypes.func.isRequired
   },
 
-  getInitialState: function() {
-    return {
-      scope: 'all'
-    };
-  },
-
-  onChangeScope: function(eventKey, event) {
-    this.setState({scope: eventKey});
-
-    this.props.onChangeScope(eventKey, event);
+  onChangeScope: function(eventKey, _event) {
+    this.props.onChangeScope(eventKey);
   },
 
   render: function() {
     const item = (name) => {
       return (
-        <MarkedMenuItem eventKey={name} selected={this.state.scope}
+        <MarkedMenuItem eventKey={name} selected={this.props.scope}
                         onSelect={this.onChangeScope} key={name}>
           {name}
         </MarkedMenuItem>
@@ -35,7 +28,7 @@ const ScopeDropDown = React.createClass({
 
     return (
       <InputGroup.Button>
-        <DropdownButton id="downloads_scope" title={this.state.scope} styleName='scope'>
+        <DropdownButton id="downloads_scope" title={this.props.scope} styleName='scope'>
           <MenuItem header>Search Scope</MenuItem>
           {['all', 'mine', 'system', 'locked', 'expiring'].map(item)}
         </DropdownButton>
