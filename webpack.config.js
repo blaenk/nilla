@@ -27,6 +27,7 @@ config.resolve.root = [src, modules];
 config.resolve.alias = {
   'common': path.join(src, 'common'),
   'reducers': path.join(src, 'reducers'),
+  'selectors': path.join(src, 'selectors'),
   'actions': path.join(src, 'actions'),
   'styles': path.join(src, 'styles'),
   'containers': path.join(src, 'containers'),

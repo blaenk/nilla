@@ -1,30 +1,25 @@
 import { connect } from 'react-redux';
+import { getFilteredDownloads } from 'selectors';
+import { setScope, setFilter } from 'actions';
 
 import Downloads from 'components/Downloads/Downloads';
 
-function getScopedDownloads(downloads, scope) {
-  switch (scope) {
-    case 'all':
-    default:
-      return downloads;
-  }
-}
-
-function filterDownloads(downloads, filter) {
-  return downloads.filter(d => d.name.toLowerCase().includes(filter.toLowerCase()));
-}
-
 const mapStateToProps = (state) => {
-  // let scoped = getScopedDownloads(state.downloads, state.search.scope);
-  // let filtered = filterDownloads(scoped, state.search.filter);
-
   return {
-    downloads: state.downloads
+    downloads: getFilteredDownloads(state)
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onChangeScope: (scope) => dispatch(setScope(scope)),
+    onChangeFilter: (filter) => dispatch(setFilter(filter))
   };
 };
 
 const FilteredDownloads = connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Downloads);
 
 export default FilteredDownloads;
