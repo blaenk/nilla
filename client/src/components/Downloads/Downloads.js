@@ -33,10 +33,7 @@ const Downloads = React.createClass({
 
     return (
       <div>
-        <Search count={visibleCount}
-                onChangeFilter={this.props.onChangeFilter}
-                onChangeOrder={this.onChangeOrder}
-                onChangeScope={this.props.onChangeScope}/>
+        <Search count={visibleCount} />
         <DownloadList downloads={this.props.downloads} />
       </div>
     );
