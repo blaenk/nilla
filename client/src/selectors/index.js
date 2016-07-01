@@ -5,9 +5,47 @@ import moment from 'moment';
 const getDownloads = (state) => state.downloads;
 const getFilter = (state) => state.search.filter;
 const getScope = (state) => state.search.scope;
+const getOrder = (state) => state.search.order;
+
+export const getOrderedDownloads = createSelector(
+  [getDownloads, getOrder],
+  (downloads, order) => {
+    switch (order) {
+      case 'name': {
+        const sortedByName = downloads.slice();
+
+        sortedByName.sort((a, b) => {
+          return a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase());
+        });
+
+        return sortedByName;
+      }
+      case 'recent':
+      default: {
+        const sortedByDate = downloads.slice();
+
+        sortedByDate.sort((a, b) => {
+          // it's possible to simply string-compare uniform ISO 8601 timestamps
+          const left = a['date-added'];
+          const right = b['date-added'];
+
+          if (left > right) {
+            return -1;
+          } else if (right > left) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+
+        return sortedByDate;
+      }
+    }
+  }
+);
 
 export const getScopedDownloads = createSelector(
-  [getDownloads, getScope],
+  [getOrderedDownloads, getScope],
   (downloads, scope) => {
     switch (scope) {
       case 'mine':
@@ -44,10 +82,10 @@ export const getScopedDownloads = createSelector(
 
 export const getFilteredDownloads = createSelector(
   [getScopedDownloads, getFilter],
-  (scopedDownloads, filter) => {
+  (downloads, filter) => {
     const filterRE = fuzzyPattern(filter);
 
-    return scopedDownloads.map(download => {
+    return downloads.map(download => {
       download.isHidden = !filterRE.test(download.name);
 
       return download;
