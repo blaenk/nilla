@@ -12,29 +12,37 @@ export const getScopedDownloads = createSelector(
   (downloads, scope) => {
     switch (scope) {
       case 'mine':
-        return downloads.filter(download => {
+        return downloads.map(download => {
           // TODO
           // get username from auth
-          return download.uploader == 'blaenk';
+          return Object.assign({}, download, {
+            isHidden: download.uploader != 'blaenk'
+          });
         });
       case 'system':
-        return downloads.filter(download => {
-          return download.uploader == 'system';
+        return downloads.map(download => {
+          return Object.assign({}, download, {
+            isHidden: download.uploader != 'system'
+          });
         });
       case 'locked':
-        return downloads.filter(download => {
-          return download.locks.length > 0;
+        return downloads.map(download => {
+          return Object.assign({}, download, {
+            isHidden: download.locks.length == 0
+          });
         });
       case 'expiring':
         // get downloads expiring within the next 24 hours
-        return downloads.filter(download => {
+        return downloads.map(download => {
           // TODO
           // don't hard-code expiration time
           // perhaps store some TTL in metadata?
           const expiresAt =
                 moment(download['date-added']).add(2, 'weeks').subtract(1, 'day');
 
-          return moment().isSameOrAfter(expiresAt);
+          return Object.assign({}, download, {
+            isHidden: moment().isBefore(expiresAt)
+          });
         });
       case 'all':
       default:
@@ -86,9 +94,9 @@ export const getFilteredDownloads = createSelector(
     const filterRE = fuzzyPattern(filter);
 
     return downloads.map(download => {
-      download.isHidden = !filterRE.test(download.name);
-
-      return download;
+      return Object.assign({}, download, {
+        isHidden: download.isHidden || !filterRE.test(download.name)
+      });
     });
   }
 );
