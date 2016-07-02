@@ -42,10 +42,12 @@
 }
 
 .dragging {
+  composes: navbar;
+
   background-color: #777;
 
-  .navbar-header .navbar-brand,
-  .navbar-nav > li > a {
+  :global .navbar-header .navbar-brand,
+  :global .navbar-nav > li > a {
     color: #f8f8f8;
   }
 }

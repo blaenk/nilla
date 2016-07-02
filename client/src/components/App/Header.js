@@ -5,9 +5,9 @@ import { Navbar, Nav, NavItem } from 'react-bootstrap';
 
 import styles from './header.module.less';
 
-const Header = function() {
+const Header = function(props) {
   return (
-    <Navbar styleName='navbar'>
+    <Navbar styleName={props.isDragging ? 'dragging' : 'navbar'}>
       <Navbar.Header>
         <Navbar.Brand>
           <a href="https://github.com/blaenk/nilla">NILLA</a>
@@ -20,9 +20,7 @@ const Header = function() {
             <NavItem eventKey={1}>Download</NavItem>
           </LinkContainer>
 
-          <LinkContainer to={{pathname: '/upload'}} active={false}>
-            <NavItem eventKey={2}>Upload</NavItem>
-          </LinkContainer>
+          <NavItem eventKey={2} onClick={props.onUpload}>Upload</NavItem>
 
           <LinkContainer to={{pathname: '/trackers'}}>
             <NavItem eventKey={3}>Trackers</NavItem>
@@ -38,6 +36,11 @@ const Header = function() {
       </Navbar.Collapse>
     </Navbar>
   );
+};
+
+Header.propTypes = {
+  isDragging: React.PropTypes.bool.isRequired,
+  onUpload: React.PropTypes.func.isRequired
 };
 
 export default CSSModules(Header, styles);
