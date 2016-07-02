@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Alert,
   Button,
   Checkbox,
   Col,
@@ -7,10 +8,12 @@ import {
   FormControl,
   Grid,
   InputGroup,
-  Row
+  Row,
+  Table
 } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 import Dropzone from 'react-dropzone';
+import filesize from 'filesize';
 
 import Header from './Header';
 import styles from 'styles/app.module.less';
@@ -61,6 +64,7 @@ const App = React.createClass({
 
   onDropAccepted: function(files) {
     this.setState({
+      rejectedFiles: null,
       isDragging: false,
       isUploading: true
     });
@@ -69,16 +73,59 @@ const App = React.createClass({
   },
 
   onDropRejected: function(files) {
-    this.setState({isDragging: false});
+    this.setState({
+      isDragging: false,
+      rejectedFiles: files
+    });
+  },
 
-    let fileString = files.map(file => {
-      return `- ${file.name}`;
-    }).join("\n");
-
-    window.alert(`one or more files is not a torrent!\n\n${fileString}`);
+  dismissRejectionAlert: function() {
+    this.setState({rejectedFiles: null});
   },
 
   render: function() {
+    // TODO
+    // create a collection of errors that can be shown
+
+    let rejectionError;
+
+    if (this.state.rejectedFiles) {
+      let files = this.state.rejectedFiles.map(file => {
+        return (
+          <tr key={file.name}>
+            <td>{file.name}</td>
+            <td>{filesize(file.size)}</td>
+            <td>{file.type || 'unknown'}</td>
+          </tr>
+        );
+      });
+
+      rejectionError = (
+        <Alert bsStyle='danger' styleName='file-rejection-error'
+               onDismiss={this.dismissRejectionAlert}
+               closeLabel='dismiss'>
+          <h4>Unrecognized File!</h4>
+          <p>
+            One or more of the files you chose is not a torrent! Please try
+            again without the offending files.
+          </p>
+          <br />
+          <Table striped responsive styleName='rejected-files'>
+            <thead>
+              <tr>
+                <th>name</th>
+                <th>size</th>
+                <th>type</th>
+              </tr>
+            </thead>
+            <tbody>
+              {files}
+            </tbody>
+          </Table>
+        </Alert>
+      );
+    }
+
     return (
       <Dropzone onDropAccepted={this.onDropAccepted}
                 onDropRejected={this.onDropRejected}
@@ -90,12 +137,16 @@ const App = React.createClass({
                 accept={"application/x-bittorrent"}>
         <Grid>
           <Header onUpload={() => this.setState({isUploading: !this.state.isUploading})}
-                  isDragging={this.state.isDragging}/>
+                  isDragging={this.state.isDragging} />
+
+          {rejectionError}
+
           <Collapse in={this.state.isUploading}>
             <div>
               <Upload onClickFiles={() => this.refs.dropzone.open()} />
             </div>
           </Collapse>
+
           {this.props.children}
         </Grid>
       </Dropzone>
