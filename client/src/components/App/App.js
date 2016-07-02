@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  Grid,
   Button,
-  Row,
-  Col,
-  InputGroup,
   Checkbox,
-  FormControl
+  Col,
+  Collapse,
+  FormControl,
+  Grid,
+  InputGroup,
+  Row
 } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 import Dropzone from 'react-dropzone';
@@ -59,7 +60,10 @@ const App = React.createClass({
   },
 
   onDropAccepted: function(files) {
-    this.setState({isDragging: false});
+    this.setState({
+      isDragging: false,
+      isUploading: true
+    });
 
     console.log('received files', files);
   },
@@ -75,12 +79,6 @@ const App = React.createClass({
   },
 
   render: function() {
-    let upload;
-
-    if (this.state.isUploading) {
-      upload = (<Upload onClickFiles={() => this.refs.dropzone.open()} />);
-    }
-
     return (
       <Dropzone onDropAccepted={this.onDropAccepted}
                 onDropRejected={this.onDropRejected}
@@ -93,7 +91,11 @@ const App = React.createClass({
         <Grid>
           <Header onUpload={() => this.setState({isUploading: !this.state.isUploading})}
                   isDragging={this.state.isDragging}/>
-          {upload}
+          <Collapse in={this.state.isUploading}>
+            <div>
+              <Upload onClickFiles={() => this.refs.dropzone.open()} />
+            </div>
+          </Collapse>
           {this.props.children}
         </Grid>
       </Dropzone>
