@@ -58,11 +58,20 @@ const App = React.createClass({
     };
   },
 
-  onDrop: function(files) {
-    // TODO
-    // alert if files aren't torrents
+  onDropAccepted: function(files) {
+    this.setState({isDragging: false});
 
     console.log('received files', files);
+  },
+
+  onDropRejected: function(files) {
+    this.setState({isDragging: false});
+
+    let fileString = files.map(file => {
+      return `- ${file.name}`;
+    }).join("\n");
+
+    window.alert(`one or more files is not a torrent!\n\n${fileString}`);
   },
 
   render: function() {
@@ -73,7 +82,8 @@ const App = React.createClass({
     }
 
     return (
-      <Dropzone onDrop={this.onDrop}
+      <Dropzone onDropAccepted={this.onDropAccepted}
+                onDropRejected={this.onDropRejected}
                 onDragEnter={(_e) => this.setState({isDragging: true}) }
                 onDragLeave={(_e) => this.setState({isDragging: false}) }
                 style={{}}
