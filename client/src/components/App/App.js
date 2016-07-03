@@ -1,14 +1,7 @@
 import React from 'react';
 import {
-  Alert,
-  Button,
-  Checkbox,
-  Col,
   Collapse,
-  FormControl,
   Grid,
-  InputGroup,
-  Row,
   Table
 } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
@@ -16,9 +9,10 @@ import Dropzone from 'react-dropzone';
 import filesize from 'filesize';
 
 import Header from './Header';
-import styles from 'styles/app.module.less';
 import Upload from './Upload';
+import ErrorAlert from './ErrorAlert';
 
+import styles from 'styles/app.module.less';
 
 const App = React.createClass({
   propTypes: {
@@ -71,15 +65,15 @@ const App = React.createClass({
       });
 
       rejectionError = (
-        <Alert bsStyle='danger' styleName='file-rejection-error'
-               onDismiss={this.dismissRejectionAlert}
-               closeLabel='dismiss'>
-          <h4>Unrecognized File!</h4>
+        <ErrorAlert title="Unrecognized File!"
+                    onDismiss={this.dismissRejectionAlert}>
           <p>
             One or more of the files you chose is not a torrent! Please try
             again without the offending files.
           </p>
-          <br />
+
+          <p>Here are the files you attempted to upload:</p>
+
           <Table striped responsive styleName='rejected-files'>
             <thead>
               <tr>
@@ -92,7 +86,7 @@ const App = React.createClass({
               {files}
             </tbody>
           </Table>
-        </Alert>
+        </ErrorAlert>
       );
     }
 
