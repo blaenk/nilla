@@ -23,6 +23,16 @@
   background-color: #f8f8f8;
   border: 1px solid #ccc;
   border-top: 0;
+
+  table {
+    background-color: white;
+    color: #555;
+    margin-bottom: 0;
+
+    & > :global(tbody > tr:nth-of-type(odd)) {
+      background-color: #eee;
+    }
+  }
 }
 
 .error-close {
