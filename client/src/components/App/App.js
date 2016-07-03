@@ -17,38 +17,8 @@ import filesize from 'filesize';
 
 import Header from './Header';
 import styles from 'styles/app.module.less';
+import Upload from './Upload';
 
-const Upload = React.createClass({
-  render: function() {
-    return (
-      <div>
-        <Row styleName='search'>
-          <Col lg={12}>
-            <InputGroup>
-              <FormControl type='text'
-                           placeholder='Magnet URI'
-                           autoFocus={true}
-                           styleName='search-filter' />
-              <InputGroup.Addon>
-                <Checkbox inline>start</Checkbox>
-              </InputGroup.Addon>
-              <InputGroup.Button>
-                <Button onClick={this.props.onSubmitMagnet}>submit</Button>
-              </InputGroup.Button>
-            </InputGroup>
-          </Col>
-        </Row>
-
-        <Row styleName='search'>
-          <Col lg={12}>
-            <Button onClick={this.props.onClickFiles}>files</Button>
-            <Button onClick={this.props.onClickUpload}>upload all</Button>
-          </Col>
-        </Row>
-      </div>
-    );
-  }
-});
 
 const App = React.createClass({
   propTypes: {
@@ -143,7 +113,9 @@ const App = React.createClass({
 
           <Collapse in={this.state.isUploading}>
             <div>
-              <Upload onClickFiles={() => this.refs.dropzone.open()} />
+              <Upload onClickFiles={() => this.refs.dropzone.open()}
+                      onClickUpload={() => console.log('clicked upload')}
+                      onSubmitMagnet={() => console.log('submit magnet')} />
             </div>
           </Collapse>
 
