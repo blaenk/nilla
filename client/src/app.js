@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunkMiddleware from 'redux-thunk';
 import { browserHistory } from 'react-router';
 
 import AppContainer from 'containers/App/AppContainer';
@@ -8,7 +9,12 @@ import Reducer from './reducers';
 
 // TODO
 // second param is optional bootstrap data
-let store = createStore(Reducer);
+let store = createStore(
+  Reducer,
+  applyMiddleware(
+    thunkMiddleware
+  )
+);
 
 document.addEventListener("DOMContentLoaded", function() {
   const mountNode = document.querySelector('#root');

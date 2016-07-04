@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   Button,
   Checkbox,
@@ -16,6 +17,8 @@ import filesize from 'filesize';
 import styles from './upload.module.less';
 
 import ErrorAlert from './ErrorAlert';
+
+import { submitFile } from 'actions';
 
 const RejectedFilesErrorAlert = React.createClass({
   propTypes: {
@@ -74,33 +77,34 @@ const Upload = React.createClass({
     onDismissRejectionAlert: React.PropTypes.func.isRequired
   },
 
-  getInitialState: function() {
-    return {
-      files: [
-        {
-          name: 'ubuntu-16.04-desktop-amd64.iso.torrent',
-          size: '17.6 KB'
-        },
-        {
-          name: 'archlinux.torrent',
-          size: '32.9 MB'
-        }
-      ]
-    };
+  onClickUpload: function(event) {
+    console.log(event);
   },
 
   render: function() {
-    let files = this.state.files.map((file, index) => {
+    let UploadButton = (props) => {
+      return (
+        <Button bsStyle='success' bsSize='xsmall' styleName='file-button' title='upload'
+                onClick={() => props.dispatch(submitFile(props.index)) }>
+          <Glyphicon glyph='arrow-up' />
+        </Button>
+      );
+    };
+
+    UploadButton = connect()(UploadButton);
+
+    let files = this.props.files.map((file, index) => {
       return (
         <li styleName='file' key={index}>
           <span styleName='name'>{file.name}</span>
+
           <Label styleName='size'>{file.size}</Label>
+
           <Button bsStyle='danger' bsSize='xsmall' styleName='file-button' title='remove'>
             <Glyphicon glyph='remove' />
           </Button>
-          <Button bsStyle='success' bsSize='xsmall' styleName='file-button' title='upload'>
-            <Glyphicon glyph='arrow-up' />
-          </Button>
+
+          <UploadButton index={index} />
         </li>
       );
     });
@@ -142,7 +146,7 @@ const Upload = React.createClass({
 
           {/* TODO move this to bottom of download rows? */}
           <Col xs={6}>
-            <Button bsStyle='success' styleName='button' onClick={this.props.onClickUpload}>
+            <Button bsStyle='success' styleName='button' onClick={this.onClickUpload}>
               upload all
             </Button>
           </Col>

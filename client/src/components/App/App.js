@@ -7,13 +7,14 @@ import CSSModules from 'react-css-modules';
 import Dropzone from 'react-dropzone';
 
 import Header from './Header';
-import Upload from './Upload';
+import UploadContainer from 'containers/App/UploadContainer';
 
 import styles from 'styles/app.module.less';
 
 const App = React.createClass({
   propTypes: {
-    children: React.PropTypes.node.isRequired
+    children: React.PropTypes.node.isRequired,
+    onDropAccepted: React.PropTypes.func.isRequired
   },
 
   getInitialState: function() {
@@ -24,13 +25,13 @@ const App = React.createClass({
   },
 
   onDropAccepted: function(files) {
+    this.props.onDropAccepted(files);
+
     this.setState({
       rejectedFiles: null,
       isDragging: false,
       isUploading: true
     });
-
-    console.log('received files', files);
   },
 
   onDropRejected: function(files) {
@@ -61,11 +62,10 @@ const App = React.createClass({
 
           <Collapse in={this.state.isUploading}>
             <div>
-              <Upload rejectedFiles={this.state.rejectedFiles}
-                      onDismissRejectionAlert={this.dismissRejectionAlert}
-                      onClickFiles={() => this.refs.dropzone.open()}
-                      onClickUpload={() => console.log('clicked upload')}
-                      onSubmitMagnet={() => console.log('submit magnet')} />
+              <UploadContainer
+                rejectedFiles={this.state.rejectedFiles}
+                onDismissRejectionAlert={this.dismissRejectionAlert}
+                onClickFiles={() => this.refs.dropzone.open()} />
             </div>
           </Collapse>
 

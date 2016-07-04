@@ -6,6 +6,15 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const multer = require('multer');
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    // 10 megabytes in bytes
+    fileSize: 10000000
+  }
+});
 
 const app = express();
 
@@ -15,6 +24,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../../public')));
 
 app.set('port', process.env.PORT || 3000);
+
+app.post('/api/upload', upload.single('torrent'), (req, res) => {
+  console.log(req.file);
+  res.send({
+    success: true
+  });
+});
 
 app.get('*', function(req, res) {
   res.sendFile(path.resolve('public/index.html'));
