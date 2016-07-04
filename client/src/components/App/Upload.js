@@ -4,7 +4,9 @@ import {
   Checkbox,
   Col,
   FormControl,
+  Glyphicon,
   InputGroup,
+  Label,
   Row,
   Table
 } from 'react-bootstrap';
@@ -72,13 +74,43 @@ const Upload = React.createClass({
     onDismissRejectionAlert: React.PropTypes.func.isRequired
   },
 
+  getInitialState: function() {
+    return {
+      files: [
+        {
+          name: 'ubuntu-16.04-desktop-amd64.iso.torrent',
+          size: '17.6 KB'
+        },
+        {
+          name: 'archlinux.torrent',
+          size: '32.9 MB'
+        }
+      ]
+    };
+  },
+
   render: function() {
+    let files = this.state.files.map((file, index) => {
+      return (
+        <li styleName='file' key={index}>
+          <span styleName='name'>{file.name}</span>
+          <Label styleName='size'>{file.size}</Label>
+          <Button bsStyle='danger' bsSize='xsmall' styleName='file-button' title='remove'>
+            <Glyphicon glyph='remove' />
+          </Button>
+          <Button bsStyle='success' bsSize='xsmall' styleName='file-button' title='upload'>
+            <Glyphicon glyph='arrow-up' />
+          </Button>
+        </li>
+      );
+    });
+
     return (
-      <div>
+      <div styleName='upload'>
         <RejectedFilesErrorAlert rejectedFiles={this.props.rejectedFiles}
                                  onDismiss={this.props.onDismissRejectionAlert} />
 
-        <Row styleName='upload'>
+        <Row>
           <Col lg={12}>
             <InputGroup>
               <FormControl type='text'
@@ -86,21 +118,41 @@ const Upload = React.createClass({
                            autoFocus={true}
                            styleName='magnet-uri' />
 
-              <InputGroup.Addon>
+              <InputGroup.Addon styleName='start-magnet'>
                 <Checkbox inline>start</Checkbox>
               </InputGroup.Addon>
 
               <InputGroup.Button>
-                <Button onClick={this.props.onSubmitMagnet}>submit</Button>
+                <Button bsStyle='success' styleName='button' onClick={this.props.onSubmitMagnet}>
+                  submit
+                </Button>
               </InputGroup.Button>
             </InputGroup>
           </Col>
         </Row>
 
-        <Row styleName='buttons'>
+        <hr styleName='separator' />
+
+        <Row>
+          <Col xs={6} styleName='choose-files'>
+            <Button bsStyle='primary' styleName='button' onClick={this.props.onClickFiles}>
+              choose files
+            </Button>
+          </Col>
+
+          {/* TODO move this to bottom of download rows? */}
+          <Col xs={6}>
+            <Button bsStyle='success' styleName='button' onClick={this.props.onClickUpload}>
+              upload all
+            </Button>
+          </Col>
+        </Row>
+
+        <Row>
           <Col lg={12}>
-            <Button onClick={this.props.onClickFiles}>files</Button>
-            <Button onClick={this.props.onClickUpload}>upload all</Button>
+            <ul styleName='files'>
+              {files}
+            </ul>
           </Col>
         </Row>
       </div>

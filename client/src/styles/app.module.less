@@ -5,6 +5,10 @@ body {
   font-family: "Noto Sans";
 }
 
+:global #root {
+  margin-bottom: 30px;
+}
+
 :global .form-control {
   border-radius: 0;
   -webkit-box-shadow: none;
@@ -17,8 +21,14 @@ body {
   }
 }
 
-:global #root {
-  margin-bottom: 30px;
+:global .btn {
+  border-radius: 0;
+  background-image: none;
+}
+
+:global .badge {
+  border-radius: 0;
+  cursor: default;
 }
 
 :global {
@@ -37,11 +47,6 @@ body {
 .file-search {
   margin-top: 10px;
   margin-bottom: 10px;
-}
-
-.badge {
-  border-radius: 0;
-  cursor: default;
 }
 
 .download-commands {
@@ -73,11 +78,6 @@ body {
   margin-top: 10px;
   display: inline-block;
   text-align: center;
-}
-
-.btn {
-  border-radius: 0;
-  background-image: none;
 }
 
 .lock-button {

@@ -1,15 +1,78 @@
 @import "~bootstrap/less/variables";
 
 .upload {
-  color: red;
+  margin-bottom: 10px;
+}
+
+.separator {
+  padding: 0;
+  text-align: center;
+  width: 100%;
+  background-color: #efefef;
+  height: 1px;
+  border-color: #ccc;
+
+  &:after {
+    content: 'or';
+    cursor: default;
+    display: inline-block;
+    position: relative;
+    padding: 0 0.25em;
+    background: inherit;
+    top: -0.8em;
+  }
+}
+
+.start-magnet {
+  border-left: 0;
 }
 
 .magnet-uri {
   color: black;
 }
 
-.buttons {
-  color: blue;
+.button {
+  font-weight: bold;
+}
+
+.files {
+  margin-top: 15px;
+  padding-left: 0;
+}
+
+.file {
+  background-color: #fefefe;
+  border: 1px solid #e1e1e1;
+  margin-top: 5px;
+  padding: 5px;
+  display: flex;
+  flex: 1;
+}
+
+.name {
+  color: #555;
+  cursor: default;
+  flex: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-left: 5px;
+}
+
+.size {
+  margin-left: 10px;
+  border-radius: 0;
+  cursor: default;
+  padding-top: 6px;
+}
+
+.file-button {
+  composes: button;
+  margin-left: 10px;
+}
+
+.choose-files {
+  text-align: right;
 }
 
 // old
