@@ -38,7 +38,7 @@ const RejectedFilesErrorAlert = React.createClass({
                     onDismiss={this.props.onDismiss}>
           <p>
             One or more of the files you chose is not a torrent! Please try
-            again without the offending files.
+            again without those files.
           </p>
 
           <p>Here are the files you attempted to upload:</p>
