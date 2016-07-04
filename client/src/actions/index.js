@@ -80,6 +80,7 @@ export function submitFile(index) {
     .then(response => response.json())
     .then(json => console.log(json))
     .then(() => {
+      console.log(getState());
       dispatch(removeFile(index));
     })
     .then(() => {

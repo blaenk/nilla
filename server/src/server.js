@@ -7,6 +7,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const rtorrent = require('./rtorrent');
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -27,9 +28,14 @@ app.set('port', process.env.PORT || 3000);
 
 app.post('/api/upload', upload.single('torrent'), (req, res) => {
   console.log(req.file);
-  res.send({
-    success: true
-  });
+
+  rtorrent.load(req.file.buffer)
+    .then(infohash => {
+      res.send({
+        success: true,
+        infohash
+      });
+    });
 });
 
 app.get('*', function(req, res) {
