@@ -116,15 +116,17 @@ function decodeRatio(ratio) {
 /**
  * Load a torrent into rtorrent.
  *
- * @param {string} filePath Path to the torrent: file path, magnet URI, HTTP URL.
+ * @param {string} file Buffer of or path to the torrent: file path, magnet URI, HTTP URL.
  * @param {Object} options Whether to start the torrent, load it raw, commands
  * to run on-load, and connection options.
  * @returns {Promise} The response.
  */
-function load(filePath, options) {
+function load(file, options) {
+  const isBuffer = Buffer.isBuffer(file);
+
   options = Object.assign({
     start: false,
-    raw: false,
+    raw: isBuffer,
     commands: [],
     connection: {}
   }, options);
@@ -136,11 +138,11 @@ function load(filePath, options) {
     ].concat(options.commands || []);
   }
 
-  if (filePath.startsWith("magnet:")) {
-    const parsed = magnet.decode(filePath);
+  if (!isBuffer && file.startsWith("magnet:")) {
+    const parsed = magnet.decode(file);
     const infohash = parsed.infoHash;
 
-    const args = [filePath].concat(options.commands);
+    const args = [file].concat(options.commands);
 
     return call("load", args, options.connection)
       .then(() => Bluebird.resolve(infohash));
@@ -159,12 +161,14 @@ function load(filePath, options) {
       method += options.raw ? '_' : '.' + 'start';
     }
 
-    return fs.readFileAsync(filePath)
+    const buffer = isBuffer ? Bluebird.resolve(file) : fs.readFileAsync(file);
+
+    return buffer
       .then(buffer => {
         const infohash = decodeInfoHash(buffer);
 
         const args = [
-          options.raw ? buffer : path.resolve(filePath)
+          options.raw ? buffer : path.resolve(file)
         ].concat(options.commands);
 
         return call(method, args, options.connection)
