@@ -85,7 +85,7 @@ const Upload = React.createClass({
     let UploadButton = (props) => {
       return (
         <Button bsStyle='success' bsSize='xsmall' styleName='file-button' title='upload'
-                onClick={() => props.dispatch(submitFile(props.index)) }>
+                onClick={() => props.dispatch(submitFile(props.file)) }>
           <Glyphicon glyph='arrow-up' />
         </Button>
       );
@@ -104,7 +104,7 @@ const Upload = React.createClass({
             <Glyphicon glyph='remove' />
           </Button>
 
-          <UploadButton index={index} />
+          <UploadButton file={file} />
         </li>
       );
     });

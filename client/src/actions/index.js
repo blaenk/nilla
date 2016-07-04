@@ -44,28 +44,26 @@ export function addFile(file) {
   };
 }
 
-export function removeFile(index) {
+export function removeFile(file) {
   return {
     type: 'REMOVE_FILE',
-    index
+    file
   };
 }
 
-export function uploadFile(index) {
+export function uploadFile(file) {
   return {
     type: 'UPLOAD_FILE',
-    index
+    file
   };
 }
 
-export function submitFile(index) {
+export function submitFile(file) {
   return (dispatch, getState) => {
     // TODO
     // won't this be susceptible to race conditions?
-    console.log('getting index', index);
+    console.log('getting file', file);
     console.log('current files', getState().upload.files);
-
-    const file = getState().upload.files[index];
 
     console.log(file);
 
@@ -81,7 +79,7 @@ export function submitFile(index) {
     .then(json => console.log(json))
     .then(() => {
       console.log(getState());
-      dispatch(removeFile(index));
+      dispatch(removeFile(file));
     })
     .then(() => {
       console.log(getState());

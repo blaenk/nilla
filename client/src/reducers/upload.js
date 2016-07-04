@@ -1,7 +1,3 @@
-function removeFile(files, index) {
-  return files.slice(0, index).concat(files.slice(index + 1));
-}
-
 /**
  * The upload reducer.
  * @param {Object} state The current upload state.
@@ -17,7 +13,7 @@ export default function upload(state, action) {
     }
     case 'REMOVE_FILE': {
       return Object.assign({}, state, {
-        files: removeFile(state.files, action.index)
+        files: state.files.filter(f => f != action.file)
       });
     }
     case 'UPLOAD_FILE':
