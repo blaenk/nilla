@@ -1,4 +1,4 @@
-import fetch from 'isomorphic-fetch';
+import request from 'superagent';
 
 /**
  * Action to set the scope.
@@ -71,18 +71,13 @@ export function submitFile(file) {
     formData.append('torrent', file);
     formData.append('start', true);
 
-    return fetch('/api/upload', {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(json => console.log(json))
-    .then(() => {
-      console.log(getState());
-      dispatch(removeFile(file));
-    })
-    .then(() => {
-      console.log(getState());
-    });
+    return request.post('/api/upload')
+      .send(formData)
+      .then(json => {
+        console.log(json);
+        console.log(getState());
+        dispatch(removeFile(file));
+        console.log(getState());
+      });
   };
 }
