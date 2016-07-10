@@ -135,7 +135,7 @@ function load(file, options) {
     options.commands = [
       "f.multicall=,,f.set_priority=0",
       "d.update_priorities="
-    ].concat(options.commands || []);
+    ].concat(options.commands);
   }
 
   if (!isBuffer && file.startsWith("magnet:")) {
@@ -149,16 +149,12 @@ function load(file, options) {
   } else {
     let method = 'load';
 
-    if (!options.raw && !options.start) {
-      method += '.normal';
-    }
-
     if (options.raw) {
       method += '_raw';
     }
 
     if (options.start) {
-      method += options.raw ? '_' : '.' + 'start';
+      method +=  '_start';
     }
 
     const buffer = isBuffer ? Bluebird.resolve(file) : fs.readFileAsync(file);
