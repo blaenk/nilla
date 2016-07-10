@@ -9,14 +9,14 @@ import styles from './filetree.module.less';
 
 /**
  * Partitions a list of file objects into folders and files.
- * @param {Object[]} entries The list of file objects.
- * @param {string[]} entries[].pathComponents The file's path components.
- * @param {number} entries[].size The file's size.
- * @param {string} entries[].progress The file's download progress.
- * @param {number} entries[].id The file's rtorrent identifier.
- * @param {bool} entries[].enabled Whether the file is enabled.
- * @param {number} depth The current tree depth.
- * @returns {Array} The first element is an array of folders, second is array of
+ * @param {Object[]} entries - The list of file objects.
+ * @param {string[]} entries[].pathComponents - The file's path components.
+ * @param {number} entries[].size - The file's size.
+ * @param {string} entries[].progress - The file's download progress.
+ * @param {number} entries[].id - The file's rtorrent identifier.
+ * @param {bool} entries[].enabled - Whether the file is enabled.
+ * @param {number} depth - The current tree depth.
+ * @returns {Array} - The first element is an array of folders, second is array of
  * files.
  */
 function partitionFiles(entries, depth) {
