@@ -50,10 +50,10 @@ export function addFiles(files) {
   };
 }
 
-export function removeFile(backingFile) {
+export function removeFile(file) {
   return {
     type: 'REMOVE_FILE',
-    backingFile
+    file
   };
 }
 
@@ -99,10 +99,10 @@ export function setFileStart(file, start) {
   };
 }
 
-export function setFileProgress(backingFile, progress) {
+export function setFileProgress(file, progress) {
   return {
     type: 'SET_FILE_PROGRESS',
-    backingFile,
+    file,
     progress
   };
 }
@@ -117,7 +117,7 @@ export function submitAllFiles() {
 
 export function submitFile(file) {
   return (dispatch, getState) => {
-    const fileObject = getState().upload.files.find(f => f == file);
+    let fileObject = getState().upload.files.find(f => f == file);
 
     if (!file) {
       return Promise.reject(new Error(`file not found: ${file}`));
@@ -130,15 +130,21 @@ export function submitFile(file) {
     return request.post('/api/upload')
       .send(formData)
       .on('progress', event => {
-        dispatch(setFileProgress(fileObject.backingFile, event.percent));
+        dispatch(setFileProgress(fileObject, event.percent));
+
+        fileObject = getState().upload.files.find(f => f.backingFile == fileObject.backingFile);
       })
       .then(json => {
         console.log(json);
-        dispatch(removeFile(fileObject.backingFile));
+        dispatch(removeFile(fileObject));
+
+        fileObject = getState().upload.files.find(f => f.backingFile == fileObject.backingFile);
       })
       .catch(e => {
         console.error(e);
-        dispatch(removeFile(fileObject.backingFile));
+        dispatch(removeFile(fileObject));
+
+        fileObject = getState().upload.files.find(f => f.backingFile == fileObject.backingFile);
       });
   };
 }

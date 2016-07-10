@@ -132,7 +132,7 @@ FileUpload = connect(
         dispatch(submitFile(ownProps.file));
       },
       onRemove: function() {
-        dispatch(removeFile(ownProps.file.backingFile));
+        dispatch(removeFile(ownProps.file));
       }
     };
   }

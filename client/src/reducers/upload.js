@@ -13,7 +13,7 @@ export default function upload(state, action) {
     }
     case 'REMOVE_FILE': {
       return Object.assign({}, state, {
-        files: state.files.filter(f => f.backingFile != action.backingFile)
+        files: state.files.filter(f => f != action.file)
       });
     }
     case 'REJECT_FILE': {
@@ -53,7 +53,7 @@ export default function upload(state, action) {
     }
     case 'SET_FILE_PROGRESS': {
       const files = state.files.map(f => {
-        if (f.backingFile == action.backingFile) {
+        if (f == action.file) {
           return Object.assign({}, f, {
             progress: action.progress
           });
