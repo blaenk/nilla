@@ -27,7 +27,7 @@ const RejectedFilesErrorAlert = React.createClass({
   },
 
   render: function() {
-    if (this.props.rejectedFiles) {
+    if (this.props.rejectedFiles.length > 0) {
       let files = this.props.rejectedFiles.map(file => {
         return (
           <tr key={file.name}>

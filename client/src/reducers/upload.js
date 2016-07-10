@@ -6,14 +6,34 @@
  */
 export default function upload(state, action) {
   switch (action.type) {
-    case 'ADD_FILE': {
+    case 'ADD_FILES': {
       return Object.assign({}, state, {
-        files: state.files.concat([action.file])
+        files: state.files.concat(action.files)
       });
     }
     case 'REMOVE_FILE': {
       return Object.assign({}, state, {
         files: state.files.filter(f => f != action.file)
+      });
+    }
+    case 'REJECT_FILE': {
+      return Object.assign({}, state, {
+        rejectedFiles: state.rejectedFiles.concat(action.files)
+      });
+    }
+    case 'CLEAR_REJECTED_FILES': {
+      return Object.assign({}, state, {
+        rejectedFiles: []
+      });
+    }
+    case 'SET_DRAGGING': {
+      return Object.assign({}, state, {
+        isDragging: action.isDragging
+      });
+    }
+    case 'SET_UPLOADING': {
+      return Object.assign({}, state, {
+        isUploading: action.isUploading
       });
     }
     case 'UPLOAD_FILE':
@@ -22,6 +42,7 @@ export default function upload(state, action) {
     default:
       return {
         files: [],
+        rejectedFiles: [],
         isDragging: false,
         isUploading: false,
         showUpload: false

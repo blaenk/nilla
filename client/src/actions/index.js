@@ -37,10 +37,10 @@ export function setFilter(filter) {
   };
 }
 
-export function addFile(file) {
+export function addFiles(files) {
   return {
-    type: 'ADD_FILE',
-    file
+    type: 'ADD_FILES',
+    files
   };
 }
 
@@ -48,6 +48,33 @@ export function removeFile(file) {
   return {
     type: 'REMOVE_FILE',
     file
+  };
+}
+
+export function rejectFiles(files) {
+  return {
+    type: 'REJECT_FILE',
+    files
+  };
+}
+
+export function clearRejectedFiles(files) {
+  return {
+    type: 'CLEAR_REJECTED_FILES'
+  };
+}
+
+export function setDragging(isDragging) {
+  return {
+    type: 'SET_DRAGGING',
+    isDragging
+  };
+}
+
+export function setUploading(isUploading) {
+  return {
+    type: 'SET_UPLOADING',
+    isUploading
   };
 }
 

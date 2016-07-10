@@ -5,8 +5,6 @@ import CSSModules from 'react-css-modules';
 
 import { Provider } from 'react-redux';
 
-import { addFile } from 'actions';
-
 import FilteredDownloads from 'containers/Downloads/FilteredDownloads';
 import DownloadContainer from 'containers/Download/DownloadContainer';
 import App from 'components/App/App';
@@ -15,23 +13,12 @@ import styles from 'styles/app.module.less';
 
 const mapStateToProps = (state) => {
   return {
-    files: state.upload.files
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onDropAccepted: function(files) {
-      for (const file of files) {
-        dispatch(addFile(file));
-      }
-    }
+    isUploading: state.upload.isUploading
   };
 };
 
 const AppContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(App);
 
 const AppContainer_ = React.createClass({
