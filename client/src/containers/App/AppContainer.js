@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
 import { Router, Route, Redirect} from 'react-router';
 import CSSModules from 'react-css-modules';
 
@@ -11,17 +10,10 @@ import App from 'components/App/App';
 
 import styles from 'styles/app.module.less';
 
-const mapStateToProps = (state) => {
-  return {
-    isUploading: state.upload.isUploading
-  };
-};
+// TODO
+// make this Routes.js?
 
-const AppContainer = connect(
-  mapStateToProps
-)(App);
-
-const AppContainer_ = React.createClass({
+const AppContainer = React.createClass({
   propTypes: {
     history: PropTypes.object.isRequired,
     store: PropTypes.object.isRequired
@@ -33,7 +25,7 @@ const AppContainer_ = React.createClass({
         <Router history={this.props.history}>
           <Redirect from="/" to="/downloads" />
 
-          <Route path="/" component={AppContainer}>
+          <Route path="/" component={App}>
             <Route path="downloads" component={FilteredDownloads} />
             <Route path="download/:infohash" component={DownloadContainer} />
           </Route>
@@ -43,4 +35,4 @@ const AppContainer_ = React.createClass({
   }
 });
 
-export default CSSModules(AppContainer_, styles);
+export default CSSModules(AppContainer, styles);

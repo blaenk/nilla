@@ -1,10 +1,8 @@
 import React from 'react';
-import {
-  Collapse,
-  Grid
-} from 'react-bootstrap';
+import { Grid } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 
+import CollapseContainer from 'containers/App/CollapseContainer';
 import HeaderContainer from 'containers/App/HeaderContainer';
 import UploadContainer from 'containers/App/UploadContainer';
 import DropzoneContainer from 'containers/App/DropzoneContainer';
@@ -27,13 +25,12 @@ const App = React.createClass({
         <Grid>
           <HeaderContainer />
 
-          {/* TODO create CollapseContainer */}
-          <Collapse in={this.props.isUploading}>
+          <CollapseContainer>
             <div>
               <UploadContainer
                 onClickFiles={() => this.refs.dropzone.getWrappedInstance().open()} />
             </div>
-          </Collapse>
+          </CollapseContainer>
 
           {this.props.children}
         </Grid>
