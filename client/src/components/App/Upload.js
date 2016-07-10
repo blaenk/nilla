@@ -98,7 +98,7 @@ const Upload = React.createClass({
         <li styleName='file' key={index}>
           <span styleName='name'>{file.name}</span>
 
-          <Label styleName='size'>{file.size}</Label>
+          <Label styleName='size'>{filesize(file.size)}</Label>
 
           <Button bsStyle='danger' bsSize='xsmall' styleName='file-button' title='remove'>
             <Glyphicon glyph='remove' />
