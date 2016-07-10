@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 
 import FilteredDownloads from 'containers/Downloads/FilteredDownloads';
 import DownloadContainer from 'containers/Download/DownloadContainer';
-import App from 'components/App/App';
+import InternalPage from 'components/App/InternalPage';
 
 import styles from 'styles/app.module.less';
 
@@ -25,7 +25,7 @@ const AppContainer = React.createClass({
         <Router history={this.props.history}>
           <Redirect from="/" to="/downloads" />
 
-          <Route path="/" component={App}>
+          <Route path="/" component={InternalPage}>
             <Route path="downloads" component={FilteredDownloads} />
             <Route path="download/:infohash" component={DownloadContainer} />
           </Route>

@@ -11,8 +11,7 @@ import styles from 'styles/app.module.less';
 
 const App = React.createClass({
   propTypes: {
-    children: React.PropTypes.node.isRequired,
-    isUploading: React.PropTypes.bool.isRequired
+    children: React.PropTypes.node.isRequired
   },
 
   render: function() {
