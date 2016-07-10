@@ -27,9 +27,7 @@ app.use(express.static(path.join(__dirname, '../../public')));
 app.set('port', process.env.PORT || 3000);
 
 app.post('/api/upload', upload.single('torrent'), (req, res) => {
-  console.log(req.file);
-
-  rtorrent.load(req.file.buffer)
+  rtorrent.load(req.file.buffer, {start: req.body.start == 'true'})
     .then(infohash => {
       res.send({
         success: true,

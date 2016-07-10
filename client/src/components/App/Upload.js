@@ -18,7 +18,7 @@ import styles from './upload.module.less';
 
 import ErrorAlert from './ErrorAlert';
 
-import { removeFile, submitFile, submitAllFiles } from 'actions';
+import { removeFile, submitFile, submitAllFiles, setFileStart } from 'actions';
 
 const RejectedFilesErrorAlert = React.createClass({
   propTypes: {
@@ -68,13 +68,30 @@ const RejectedFilesErrorAlert = React.createClass({
   }
 });
 
+const StartCheckbox = connect(
+  null,
+  (dispatch, ownProps) => {
+    return {
+      onChange: function(event) {
+        dispatch(setFileStart(ownProps.file, event.target.checked));
+      }
+    };
+  }
+)(Checkbox);
+
 let FileUpload = React.createClass({
   render: function() {
     return (
       <li styleName='file'>
-        <span styleName='name'>{this.props.file.name}</span>
+        <span styleName='name'>{this.props.file.backingFile.name}</span>
 
-        <Label styleName='size'>{filesize(this.props.file.size)}</Label>
+        <Label styleName='size'>{filesize(this.props.file.backingFile.size)}</Label>
+
+        <StartCheckbox inline styleName='start-checkbox'
+                       file={this.props.file}
+                       checked={this.props.file.start}>
+          start
+        </StartCheckbox>
 
         <Button bsStyle='danger' bsSize='xsmall' styleName='file-button' title='remove'
                 onClick={this.props.onRemove}>
@@ -131,7 +148,9 @@ const Upload = React.createClass({
   },
 
   render: function() {
-    let files = this.props.files.map(file => <FileUpload file={file} key={file.name} />);
+    let files = this.props.files.map(file => (
+      <FileUpload file={file} key={file.backingFile.preview} />
+    ));
 
     return (
       <div styleName='upload'>

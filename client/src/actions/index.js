@@ -40,7 +40,12 @@ export function setFilter(filter) {
 export function addFiles(files) {
   return {
     type: 'ADD_FILES',
-    files
+    files: files.map(f => {
+      return {
+        start: true,
+        backingFile: f
+      };
+    })
   };
 }
 
@@ -85,6 +90,14 @@ export function uploadFile(file) {
   };
 }
 
+export function setFileStart(file, start) {
+  return {
+    type: 'SET_FILE_START',
+    file,
+    start
+  };
+}
+
 export function submitAllFiles() {
   return (dispatch, getState) => {
     for (const file of getState().upload.files) {
@@ -95,24 +108,21 @@ export function submitAllFiles() {
 
 export function submitFile(file) {
   return (dispatch, getState) => {
-    // TODO
-    // won't this be susceptible to race conditions?
-    console.log('getting file', file);
-    console.log('current files', getState().upload.files);
+    const fileObject = getState().upload.files.find(f => f == file);
 
-    console.log(file);
+    if (!file) {
+      return Promise.reject(new Error(`file not found: ${file}`));
+    }
 
     let formData = new window.FormData();
-    formData.append('torrent', file);
-    formData.append('start', true);
+    formData.append('torrent', fileObject.backingFile);
+    formData.append('start', fileObject.start);
 
     return request.post('/api/upload')
       .send(formData)
       .then(json => {
         console.log(json);
-        console.log(getState());
         dispatch(removeFile(file));
-        console.log(getState());
       });
   };
 }
