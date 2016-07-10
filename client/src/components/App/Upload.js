@@ -8,6 +8,7 @@ import {
   Glyphicon,
   InputGroup,
   Label,
+  ProgressBar,
   Row,
   Table
 } from 'react-bootstrap';
@@ -81,27 +82,41 @@ const StartCheckbox = connect(
 
 let FileUpload = React.createClass({
   render: function() {
+    let right;
+
+    if (this.props.file.progress > 0) {
+      right = (
+        <ProgressBar styleName='upload-progress'
+                     now={this.props.file.progress}
+                     label={`${this.props.file.progress}%`} />
+      );
+    } else {
+      right = (
+        <div>
+          <StartCheckbox inline file={this.props.file} checked={this.props.file.start}>
+            start
+          </StartCheckbox>
+
+          <Button bsStyle='danger' bsSize='xsmall' styleName='file-button' title='remove'
+                  onClick={this.props.onRemove}>
+            <Glyphicon glyph='remove' />
+          </Button>
+
+          <Button bsStyle='success' bsSize='xsmall' styleName='file-button' title='upload'
+                  onClick={this.props.onSubmit}>
+            <Glyphicon glyph='arrow-up' />
+          </Button>
+        </div>
+      );
+    }
+
     return (
       <li styleName='file'>
         <span styleName='name'>{this.props.file.backingFile.name}</span>
 
         <Label styleName='size'>{filesize(this.props.file.backingFile.size)}</Label>
 
-        <StartCheckbox inline styleName='start-checkbox'
-                       file={this.props.file}
-                       checked={this.props.file.start}>
-          start
-        </StartCheckbox>
-
-        <Button bsStyle='danger' bsSize='xsmall' styleName='file-button' title='remove'
-                onClick={this.props.onRemove}>
-          <Glyphicon glyph='remove' />
-        </Button>
-
-        <Button bsStyle='success' bsSize='xsmall' styleName='file-button' title='upload'
-                onClick={this.props.onSubmit}>
-          <Glyphicon glyph='arrow-up' />
-        </Button>
+        {right}
       </li>
     );
   }
@@ -117,7 +132,7 @@ FileUpload = connect(
         dispatch(submitFile(ownProps.file));
       },
       onRemove: function() {
-        dispatch(removeFile(ownProps.file));
+        dispatch(removeFile(ownProps.file.backingFile));
       }
     };
   }

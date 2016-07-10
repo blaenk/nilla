@@ -33,6 +33,13 @@ app.post('/api/upload', upload.single('torrent'), (req, res) => {
         success: true,
         infohash
       });
+    })
+    .catch(error => {
+      console.log(error);
+
+      res.status(500).send({
+        error: 'An unknown error occurred'
+      });
     });
 });
 

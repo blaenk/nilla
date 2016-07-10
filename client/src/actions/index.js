@@ -50,10 +50,10 @@ export function addFiles(files) {
   };
 }
 
-export function removeFile(file) {
+export function removeFile(backingFile) {
   return {
     type: 'REMOVE_FILE',
-    file
+    backingFile
   };
 }
 
@@ -99,10 +99,10 @@ export function setFileStart(file, start) {
   };
 }
 
-export function setFileProgress(file, progress) {
+export function setFileProgress(backingFile, progress) {
   return {
     type: 'SET_FILE_PROGRESS',
-    file,
+    backingFile,
     progress
   };
 }
@@ -130,11 +130,15 @@ export function submitFile(file) {
     return request.post('/api/upload')
       .send(formData)
       .on('progress', event => {
-        dispatch(setFileProgress(file, event.percent));
+        dispatch(setFileProgress(fileObject.backingFile, event.percent));
       })
       .then(json => {
         console.log(json);
-        dispatch(removeFile(file));
+        dispatch(removeFile(fileObject.backingFile));
+      })
+      .catch(e => {
+        console.error(e);
+        dispatch(removeFile(fileObject.backingFile));
       });
   };
 }
