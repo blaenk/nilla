@@ -68,6 +68,50 @@ const RejectedFilesErrorAlert = React.createClass({
   }
 });
 
+let UploadButton = React.createClass({
+  render: function() {
+      return (
+        <Button bsStyle='success' bsSize='xsmall' styleName='file-button' title='upload'
+                onClick={this.props.onClick}>
+          <Glyphicon glyph='arrow-up' />
+        </Button>
+      );
+    }
+});
+
+UploadButton = CSSModules(UploadButton, styles);
+
+UploadButton = connect(
+  null,
+  (dispatch, ownProps) => {
+    return {
+      onClick: function() {
+        dispatch(submitFile(ownProps.file));
+      }
+    };
+  }
+)(UploadButton);
+
+let FileUpload = React.createClass({
+  render: function() {
+    return (
+      <li styleName='file'>
+        <span styleName='name'>{this.props.file.name}</span>
+
+        <Label styleName='size'>{filesize(this.props.file.size)}</Label>
+
+        <Button bsStyle='danger' bsSize='xsmall' styleName='file-button' title='remove'>
+          <Glyphicon glyph='remove' />
+        </Button>
+
+        <UploadButton file={this.props.file} />
+      </li>
+    );
+  }
+});
+
+FileUpload = CSSModules(FileUpload, styles);
+
 const Upload = React.createClass({
   propTypes: {
     rejectedFiles: React.PropTypes.array,
@@ -82,32 +126,7 @@ const Upload = React.createClass({
   },
 
   render: function() {
-    let UploadButton = (props) => {
-      return (
-        <Button bsStyle='success' bsSize='xsmall' styleName='file-button' title='upload'
-                onClick={() => props.dispatch(submitFile(props.file)) }>
-          <Glyphicon glyph='arrow-up' />
-        </Button>
-      );
-    };
-
-    UploadButton = connect()(UploadButton);
-
-    let files = this.props.files.map((file, index) => {
-      return (
-        <li styleName='file' key={index}>
-          <span styleName='name'>{file.name}</span>
-
-          <Label styleName='size'>{filesize(file.size)}</Label>
-
-          <Button bsStyle='danger' bsSize='xsmall' styleName='file-button' title='remove'>
-            <Glyphicon glyph='remove' />
-          </Button>
-
-          <UploadButton file={file} />
-        </li>
-      );
-    });
+    let files = this.props.files.map(file => <FileUpload file={file} key={file.name} />);
 
     return (
       <div styleName='upload'>
