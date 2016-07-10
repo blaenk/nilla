@@ -11,14 +11,14 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mergeProps = (stateProps, dispatchProps, _ownProps) => {
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
   const { dispatch } = dispatchProps;
 
-  return {
+  return Object.assign({}, ownProps, stateProps, dispatchProps, {
     onUpload: function() {
       dispatch(setUploading(!stateProps.isUploading));
     }
-  };
+  });
 };
 
 const HeaderContainer = connect(
