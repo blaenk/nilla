@@ -18,7 +18,7 @@ import styles from './upload.module.less';
 
 import ErrorAlert from './ErrorAlert';
 
-import { submitFile } from 'actions';
+import { removeFile, submitFile } from 'actions';
 
 const RejectedFilesErrorAlert = React.createClass({
   propTypes: {
@@ -92,6 +92,30 @@ UploadButton = connect(
   }
 )(UploadButton);
 
+let RemoveButton = React.createClass({
+  render: function() {
+      return (
+        <Button bsStyle='danger' bsSize='xsmall' styleName='file-button' title='remove'
+                onClick={this.props.onClick}>
+          <Glyphicon glyph='remove' />
+        </Button>
+      );
+    }
+});
+
+RemoveButton = CSSModules(RemoveButton, styles);
+
+RemoveButton = connect(
+  null,
+  (dispatch, ownProps) => {
+    return {
+      onClick: function() {
+        dispatch(removeFile(ownProps.file));
+      }
+    };
+  }
+)(RemoveButton);
+
 let FileUpload = React.createClass({
   render: function() {
     return (
@@ -100,10 +124,7 @@ let FileUpload = React.createClass({
 
         <Label styleName='size'>{filesize(this.props.file.size)}</Label>
 
-        <Button bsStyle='danger' bsSize='xsmall' styleName='file-button' title='remove'>
-          <Glyphicon glyph='remove' />
-        </Button>
-
+        <RemoveButton file={this.props.file} />
         <UploadButton file={this.props.file} />
       </li>
     );
