@@ -68,54 +68,6 @@ const RejectedFilesErrorAlert = React.createClass({
   }
 });
 
-let UploadButton = React.createClass({
-  render: function() {
-      return (
-        <Button bsStyle='success' bsSize='xsmall' styleName='file-button' title='upload'
-                onClick={this.props.onClick}>
-          <Glyphicon glyph='arrow-up' />
-        </Button>
-      );
-    }
-});
-
-UploadButton = CSSModules(UploadButton, styles);
-
-UploadButton = connect(
-  null,
-  (dispatch, ownProps) => {
-    return {
-      onClick: function() {
-        dispatch(submitFile(ownProps.file));
-      }
-    };
-  }
-)(UploadButton);
-
-let RemoveButton = React.createClass({
-  render: function() {
-      return (
-        <Button bsStyle='danger' bsSize='xsmall' styleName='file-button' title='remove'
-                onClick={this.props.onClick}>
-          <Glyphicon glyph='remove' />
-        </Button>
-      );
-    }
-});
-
-RemoveButton = CSSModules(RemoveButton, styles);
-
-RemoveButton = connect(
-  null,
-  (dispatch, ownProps) => {
-    return {
-      onClick: function() {
-        dispatch(removeFile(ownProps.file));
-      }
-    };
-  }
-)(RemoveButton);
-
 let FileUpload = React.createClass({
   render: function() {
     return (
@@ -124,14 +76,35 @@ let FileUpload = React.createClass({
 
         <Label styleName='size'>{filesize(this.props.file.size)}</Label>
 
-        <RemoveButton file={this.props.file} />
-        <UploadButton file={this.props.file} />
+        <Button bsStyle='danger' bsSize='xsmall' styleName='file-button' title='remove'
+                onClick={this.props.onRemove}>
+          <Glyphicon glyph='remove' />
+        </Button>
+
+        <Button bsStyle='success' bsSize='xsmall' styleName='file-button' title='upload'
+                onClick={this.props.onSubmit}>
+          <Glyphicon glyph='arrow-up' />
+        </Button>
       </li>
     );
   }
 });
 
 FileUpload = CSSModules(FileUpload, styles);
+
+FileUpload = connect(
+  null,
+  (dispatch, ownProps) => {
+    return {
+      onSubmit: function() {
+        dispatch(submitFile(ownProps.file));
+      },
+      onRemove: function() {
+        dispatch(removeFile(ownProps.file));
+      }
+    };
+  }
+)(FileUpload);
 
 const Upload = React.createClass({
   propTypes: {
