@@ -85,6 +85,14 @@ export function uploadFile(file) {
   };
 }
 
+export function submitAllFiles() {
+  return (dispatch, getState) => {
+    for (const file of getState().upload.files) {
+      dispatch(submitFile(file));
+    }
+  };
+}
+
 export function submitFile(file) {
   return (dispatch, getState) => {
     // TODO

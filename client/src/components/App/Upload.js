@@ -18,7 +18,7 @@ import styles from './upload.module.less';
 
 import ErrorAlert from './ErrorAlert';
 
-import { removeFile, submitFile } from 'actions';
+import { removeFile, submitFile, submitAllFiles } from 'actions';
 
 const RejectedFilesErrorAlert = React.createClass({
   propTypes: {
@@ -106,6 +106,17 @@ FileUpload = connect(
   }
 )(FileUpload);
 
+const UploadAllButton = connect(
+  null,
+  (dispatch) => {
+    return {
+      onClick: function() {
+        dispatch(submitAllFiles());
+      }
+    };
+  }
+)(Button);
+
 const Upload = React.createClass({
   propTypes: {
     rejectedFiles: React.PropTypes.array,
@@ -159,9 +170,9 @@ const Upload = React.createClass({
 
           {/* TODO move this to bottom of download rows? */}
           <Col xs={6}>
-            <Button bsStyle='success' styleName='button' onClick={this.onClickUpload}>
+            <UploadAllButton bsStyle='success' styleName='button'>
               upload all
-            </Button>
+            </UploadAllButton>
           </Col>
         </Row>
 
