@@ -7,10 +7,12 @@ import Dropzone from 'react-dropzone';
 const mapDispatchToProps = (dispatch) => {
   return {
     onDropAccepted: function(files) {
+      dispatch(setDragging(false));
       dispatch(setUploading(true));
       dispatch(addFiles(files));
     },
     onDropRejected: function(files) {
+      dispatch(setDragging(false));
       dispatch(setUploading(true));
       dispatch(rejectFiles(files));
     },
