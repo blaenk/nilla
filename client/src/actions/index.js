@@ -43,7 +43,8 @@ export function addFiles(files) {
     files: files.map(f => {
       return {
         start: true,
-        backingFile: f
+        backingFile: f,
+        progress: 0
       };
     })
   };
@@ -98,6 +99,14 @@ export function setFileStart(file, start) {
   };
 }
 
+export function setFileProgress(file, progress) {
+  return {
+    type: 'SET_FILE_PROGRESS',
+    file,
+    progress
+  };
+}
+
 export function submitAllFiles() {
   return (dispatch, getState) => {
     for (const file of getState().upload.files) {
@@ -120,6 +129,9 @@ export function submitFile(file) {
 
     return request.post('/api/upload')
       .send(formData)
+      .on('progress', event => {
+        dispatch(setFileProgress(file, event.percent));
+      })
       .then(json => {
         console.log(json);
         dispatch(removeFile(file));

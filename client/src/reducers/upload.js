@@ -51,6 +51,21 @@ export default function upload(state, action) {
         files
       });
     }
+    case 'SET_FILE_PROGRESS': {
+      const files = state.files.map(f => {
+        if (f == action.file) {
+          return Object.assign({}, f, {
+            progress: action.progress
+          });
+        } else {
+          return f;
+        }
+      });
+
+      return Object.assign({}, state, {
+        files
+      });
+    }
     case 'UPLOAD_FILE':
     case 'UPLOAD_FILE_SUCCESS':
     case 'UPLOAD_FILE_FAILURE':
