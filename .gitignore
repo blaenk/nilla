@@ -6,3 +6,4 @@ node_modules
 /public/assets/
 /coverage/
 /.data/
+/db/nilla.db
