@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import {
   Button,
@@ -16,6 +17,7 @@ import CSSModules from 'react-css-modules';
 import filesize from 'filesize';
 
 import styles from './upload.module.less';
+import request from 'superagent';
 
 import ErrorAlert from './ErrorAlert';
 
@@ -93,7 +95,7 @@ let FileUpload = React.createClass({
     } else {
       right = (
         <div>
-          <StartCheckbox inline file={this.props.file} checked={this.props.file.start}>
+          <StartCheckbox inline file={this.props.file} defaultChecked={this.props.file.start}>
             start
           </StartCheckbox>
 
@@ -149,12 +151,58 @@ const UploadAllButton = connect(
   }
 )(Button);
 
+let MagnetURI = React.createClass({
+  onSubmitMagnet: function() {
+    request.post('/api/magnet')
+      .send({
+        uri: this.uriInput.value,
+        start: this.startCheckbox.checked
+      })
+      .then(json => {
+        this.uriInput.value = '';
+        this.startCheckbox.checked = true;
+
+        console.log(json);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  },
+
+  render: function() {
+    return (
+      <InputGroup>
+        <FormControl type='text'
+                     ref={ref => { this.uriInput = ReactDOM.findDOMNode(ref); }}
+                     placeholder='Magnet URI'
+                     autoFocus={true}
+                     styleName='magnet-uri' />
+
+        <InputGroup.Addon styleName='start-magnet'>
+          <Checkbox inline
+                    defaultChecked={true}
+                    styleName='start-magnet'
+                    inputRef={ref => { this.startCheckbox = ref; }}>
+            start
+          </Checkbox>
+        </InputGroup.Addon>
+
+        <InputGroup.Button>
+          <Button bsStyle='success' styleName='button' onClick={this.onSubmitMagnet}>
+            submit
+          </Button>
+        </InputGroup.Button>
+      </InputGroup>
+    );
+  }
+});
+
+MagnetURI = CSSModules(MagnetURI, styles);
+
 const Upload = React.createClass({
   propTypes: {
     rejectedFiles: React.PropTypes.array,
-    onSubmitMagnet: React.PropTypes.func.isRequired,
     onClickFiles: React.PropTypes.func.isRequired,
-    onClickUpload: React.PropTypes.func.isRequired,
     onDismissRejectionAlert: React.PropTypes.func.isRequired
   },
 
@@ -174,22 +222,7 @@ const Upload = React.createClass({
 
         <Row>
           <Col lg={12}>
-            <InputGroup>
-              <FormControl type='text'
-                           placeholder='Magnet URI'
-                           autoFocus={true}
-                           styleName='magnet-uri' />
-
-              <InputGroup.Addon styleName='start-magnet'>
-                <Checkbox inline>start</Checkbox>
-              </InputGroup.Addon>
-
-              <InputGroup.Button>
-                <Button bsStyle='success' styleName='button' onClick={this.props.onSubmitMagnet}>
-                  submit
-                </Button>
-              </InputGroup.Button>
-            </InputGroup>
+            <MagnetURI />
           </Col>
         </Row>
 

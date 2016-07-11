@@ -29,10 +29,21 @@ app.set('port', process.env.PORT || 3000);
 app.post('/api/upload', upload.single('torrent'), (req, res) => {
   rtorrent.load(req.file.buffer, {start: req.body.start == 'true'})
     .then(infohash => {
-      res.send({
-        success: true,
-        infohash
+      res.send({success: true, infohash});
+    })
+    .catch(error => {
+      console.log(error);
+
+      res.status(500).send({
+        error: 'An unknown error occurred'
       });
+    });
+});
+
+app.post('/api/magnet', (req, res) => {
+  rtorrent.load(req.body.uri, {start: req.body.start})
+    .then(infohash => {
+      res.send({success: true, infohash});
     })
     .catch(error => {
       console.log(error);
