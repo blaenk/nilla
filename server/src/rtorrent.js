@@ -141,10 +141,15 @@ function load(file, options) {
   if (!isBuffer && file.startsWith("magnet:")) {
     const parsed = magnet.decode(file);
     const infohash = parsed.infoHash;
+    let method = 'load';
 
     const args = [file].concat(options.commands);
 
-    return call("load", args, options.connection)
+    if (options.start) {
+      method +=  '_start';
+    }
+
+    return call(method, args, options.connection)
       .then(() => Bluebird.resolve(infohash));
   } else {
     let method = 'load';
