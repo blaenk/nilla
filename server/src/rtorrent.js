@@ -9,9 +9,7 @@ const fs = Bluebird.promisifyAll(require('fs'));
 const xmlrpc = require('xmlrpc');
 const scgi = require('./scgi.js');
 
-const bencode = require('bencode');
-const magnet = require('magnet-uri');
-const crypto = require('crypto');
+const parseTorrent = require('parse-torrent');
 
 /**
  * Perform an XML-RPC request.
@@ -90,19 +88,6 @@ function torrents(view, ...args) {
 }
 
 /**
- * Decode the infohash from a .torrent file.
- *
- * @param {Buffer} buffer The .torrent file.
- * @returns {string} The infohash.
- */
-function decodeInfoHash(buffer) {
-  let decodedBuffer = bencode.decode(buffer);
-  let encodedInfo = bencode.encode(decodedBuffer["info"]);
-
-  return crypto.createHash('sha1').update(encodedInfo).digest('hex');
-}
-
-/**
  * Decodes an integer-encoded ratio e.g. 750 to a floating-point ratio e.g.
  * 0.75.
  *
@@ -139,8 +124,8 @@ function load(file, options) {
   }
 
   if (!isBuffer && file.startsWith("magnet:")) {
-    const parsed = magnet.decode(file);
-    const infohash = parsed.infoHash;
+    const { infoHash } = parseTorrent(file);
+
     let method = 'load';
 
     const args = [file].concat(options.commands);
@@ -150,7 +135,7 @@ function load(file, options) {
     }
 
     return call(method, args, options.connection)
-      .then(() => Bluebird.resolve(infohash));
+      .then(() => Bluebird.resolve(infoHash));
   } else {
     let method = 'load';
 
@@ -166,14 +151,14 @@ function load(file, options) {
 
     return buffer
       .then(buffer => {
-        const infohash = decodeInfoHash(buffer);
+        const { infoHash } = parseTorrent(buffer);
 
         const args = [
           options.raw ? buffer : path.resolve(file)
         ].concat(options.commands);
 
         return call(method, args, options.connection)
-          .then(() => Bluebird.resolve(infohash));
+          .then(() => Bluebird.resolve(infoHash));
       });
   }
 }

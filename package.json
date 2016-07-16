@@ -82,7 +82,6 @@
   },
   "dependencies": {
     "bcrypt": "^0.8.7",
-    "bencode": "^0.10.0",
     "bluebird": "^3.4.0",
     "bootstrap": "^3.3.6",
     "cookie-parser": "^1.4.3",
@@ -94,9 +93,9 @@
     "font-awesome": "^4.6.3",
     "jsonwebtoken": "^7.0.1",
     "lodash": "^4.13.1",
-    "magnet-uri": "^5.1.3",
     "moment": "^2.13.0",
     "multer": "^1.1.0",
+    "parse-torrent": "^5.8.0",
     "react": "^15.1.0",
     "react-bootstrap": "^0.29.4",
     "react-css-modules": "^3.7.6",
