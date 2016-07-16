@@ -52,7 +52,7 @@ let Download = React.createClass({
             </div>
           </div>
         </OverlayTrigger>
-        <Link to={`/download/${this.props.infohash}`} styleName='name'>
+        <Link to={`/download/${this.props.infohash}/${this.props.name}`} styleName='name'>
           {this.props.name}
         </Link>
         {lockStatus()}

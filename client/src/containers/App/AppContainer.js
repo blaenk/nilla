@@ -27,7 +27,7 @@ const AppContainer = React.createClass({
 
           <Route path="/" component={InternalPage}>
             <Route path="downloads" component={FilteredDownloads} />
-            <Route path="download/:infohash" component={DownloadContainer} />
+            <Route path="download/:infohash(/:name)" component={DownloadContainer} />
           </Route>
         </Router>
       </Provider>
