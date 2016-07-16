@@ -3,7 +3,12 @@
 require('dotenv').config();
 
 const express = require('express');
+const expressHandlebars = require('express-handlebars');
+const csurf = require('csurf');
+
+const moment = require('moment');
 const path = require('path');
+const url = require('url');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const multer = require('multer');
@@ -19,17 +24,34 @@ const expressJWT = require('express-jwt');
 
 const app = express();
 
-const PUBLIC_DIR = path.join(__dirname, '../../public');
+const VIEWS_PATH = path.join(__dirname, 'views');
+
+console.log(VIEWS_PATH);
+
+app.set('views', VIEWS_PATH);
+
+const handlebars = expressHandlebars.create({
+  defaultLayout: 'main',
+  layoutsDir: path.join(VIEWS_PATH, 'layouts')
+});
+
+app.engine('handlebars', handlebars.engine);
+app.set('view engine', 'handlebars');
+
+const PUBLIC_PATH = path.join(__dirname, '../../public');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(express.static(PUBLIC_DIR));
+app.use(express.static(PUBLIC_PATH));
+
+const csrfProtection = csurf({cookie: true});
 
 const { JWT_SECRET } = process.env;
 
-const authenticate = expressJWT({
-  secret: JWT_SECRET
+const authenticateJWT = expressJWT({
+  secret: JWT_SECRET,
+  getToken: getJWTFromHeaderOrCookie
 });
 
 function getJWTFromHeaderOrCookie(req) {
@@ -46,11 +68,6 @@ function getJWTFromHeaderOrCookie(req) {
   return null;
 }
 
-const authenticateDownload = expressJWT({
-  secret: JWT_SECRET,
-  getToken: getJWTFromHeaderOrCookie
-});
-
 const TEN_MEGABYTES = 10000000;
 
 const upload = multer({
@@ -60,7 +77,7 @@ const upload = multer({
   }
 });
 
-app.get(/^\/file\/(.+)/, authenticateDownload, (req, res) => {
+app.get(/^\/file\/(.+)/, authenticateJWT, (req, res) => {
   const filePath = req.params[0];
   const name = path.basename(filePath);
 
@@ -104,52 +121,73 @@ function createJWT(user) {
   });
 }
 
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(PUBLIC_DIR, 'login.html'));
+function getRedirectPath(req) {
+  const query = req.query.redirect;
+  const header = req.header('Referer');
+
+  if (query) {
+    return query;
+  } else if (header) {
+    return url.parse(header).path;
+  } else {
+    return '/';
+  }
+}
+
+app.get('/login', csrfProtection, (req, res) => {
+  res.render('login', {
+    csrfToken: req.csrfToken(),
+    redirectTo: getRedirectPath(req)
+  });
 });
 
-app.post('/login', (req, res) => {
-  console.log(req.body);
-});
-
-app.post('/api/login', (req, res) => {
-  const { username, password } = req.body;
+app.post('/login', csrfProtection, (req, res) => {
+  const { username, password, _redirectTo } = req.body;
+  const failureRedirect = `/login?redirect=${_redirectTo}`;
 
   if (!username || !password) {
-    res.status(403).json({
-      success: false
-    });
-
+    res.redirect(failureRedirect);
     return;
   }
 
   getUserFromUsername(username, (error, user) => {
+    if (error) {
+      throw error;
+    }
+
+    if (!user) {
+      res.redirect(failureRedirect);
+      return;
+    }
+
     bcrypt.compare(password, user.password, (err, authenticated) => {
       if (err) {
         throw err;
       } else if (!authenticated) {
-        res.status(403).json({
-          success: false
-        });
+        res.redirect(failureRedirect);
+        return;
       } else {
         const token = createJWT(user);
+        const expiration = moment().utc().add(1, 'month').toDate();
+
+        console.log('expiration', expiration);
 
         // Save the JWT as a cookie as well. It's only ever used to authenticate file
         // downloads since it's much more convenient that way.
         res.cookie('token', token, {
-          httpOnly: true
+          httpOnly: true,
+          // TODO
+          // secure: true,
+          expires: expiration
         });
 
-        res.status(200).json({
-          user: username,
-          token: token
-        });
+        res.redirect(_redirectTo);
       }
     });
   });
 });
 
-app.post('/api/upload', authenticate, upload.single('torrent'), (req, res) => {
+app.post('/api/upload', authenticateJWT, upload.single('torrent'), (req, res) => {
   rtorrent.load(req.file.buffer, {start: req.body.start == 'true'})
     .then(infohash => {
       res.send({success: true, infohash});
@@ -163,7 +201,7 @@ app.post('/api/upload', authenticate, upload.single('torrent'), (req, res) => {
     });
 });
 
-app.post('/api/magnet', authenticate, (req, res) => {
+app.post('/api/magnet', authenticateJWT, (req, res) => {
   rtorrent.load(req.body.uri, {start: req.body.start})
     .then(infohash => {
       res.send({success: true, infohash});
@@ -177,20 +215,19 @@ app.post('/api/magnet', authenticate, (req, res) => {
     });
 });
 
-app.get('/api/user', authenticate, (req, res) => {
+app.get('/api/user', authenticateJWT, (req, res) => {
   res.status(200).json(req.user);
 });
 
-app.get('*', authenticate, (req, res) => {
+app.get('*', authenticateJWT, (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
 });
 
 function JWTErrorHandler(err, req, res, _next) {
   if (err.name == 'UnauthorizedError') {
-    res.status(401).json({
-      success: false,
-      message: 'Unable to authorize'
-    });
+    const redirectPath = req.path;
+    console.log('redirect', redirectPath);
+    res.redirect(`/login?redirect=${redirectPath}`);
   }
 }
 
