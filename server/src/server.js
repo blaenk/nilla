@@ -22,6 +22,14 @@ const db = new sqlite3.cached.Database('./db/nilla.db');
 const jwt = require('jsonwebtoken');
 const expressJWT = require('express-jwt');
 
+function JWTErrorHandler(err, req, res, _next) {
+  if (err.name == 'UnauthorizedError') {
+    const redirectPath = req.path;
+    console.log('redirect', redirectPath);
+    res.redirect(`/login?redirect=${redirectPath}`);
+  }
+}
+
 const app = express();
 
 const VIEWS_PATH = path.join(__dirname, 'views');
@@ -47,12 +55,29 @@ app.use(express.static(PUBLIC_PATH));
 
 const csrfProtection = csurf({cookie: true});
 
+function CSRFValidationError(err, req, res, next) {
+  console.log('csrfvalidationError');
+
+  if (err.code != 'EBADCSRFTOKEN') {
+    next(err);
+    return;
+  }
+
+  console.log('CSRF token tampered');
+
+  const { _redirectTo } = req.body;
+  const failureRedirect = `/login?redirect=${_redirectTo}`;
+  res.redirect(failureRedirect);
+}
+
 const { JWT_SECRET } = process.env;
 
 const authenticateJWT = expressJWT({
   secret: JWT_SECRET,
   getToken: getJWTFromHeaderOrCookie
 });
+
+const JWT = [authenticateJWT, JWTErrorHandler];
 
 function getJWTFromHeaderOrCookie(req) {
   if (req.headers.authorization) {
@@ -77,7 +102,7 @@ const upload = multer({
   }
 });
 
-app.get(/^\/file\/(.+)/, authenticateJWT, (req, res) => {
+app.get(/^\/file\/(.+)/, JWT, (req, res) => {
   const filePath = req.params[0];
   const name = path.basename(filePath);
 
@@ -134,14 +159,18 @@ function getRedirectPath(req) {
   }
 }
 
-app.get('/login', csrfProtection, (req, res) => {
+const CSRF = [csrfProtection, CSRFValidationError];
+
+app.get('/login', CSRF, (req, res) => {
   res.render('login', {
     csrfToken: req.csrfToken(),
     redirectTo: getRedirectPath(req)
   });
 });
 
-app.post('/login', csrfProtection, (req, res) => {
+app.post('/login', CSRF, (req, res) => {
+  console.log('post login');
+
   const { username, password, _redirectTo } = req.body;
   const failureRedirect = `/login?redirect=${_redirectTo}`;
 
@@ -187,7 +216,7 @@ app.post('/login', csrfProtection, (req, res) => {
   });
 });
 
-app.post('/api/upload', authenticateJWT, upload.single('torrent'), (req, res) => {
+app.post('/api/upload', JWT, upload.single('torrent'), (req, res) => {
   rtorrent.load(req.file.buffer, {start: req.body.start == 'true'})
     .then(infohash => {
       res.send({success: true, infohash});
@@ -201,7 +230,7 @@ app.post('/api/upload', authenticateJWT, upload.single('torrent'), (req, res) =>
     });
 });
 
-app.post('/api/magnet', authenticateJWT, (req, res) => {
+app.post('/api/magnet', JWT, (req, res) => {
   rtorrent.load(req.body.uri, {start: req.body.start})
     .then(infohash => {
       res.send({success: true, infohash});
@@ -215,23 +244,13 @@ app.post('/api/magnet', authenticateJWT, (req, res) => {
     });
 });
 
-app.get('/api/user', authenticateJWT, (req, res) => {
+app.get('/api/user', JWT, (req, res) => {
   res.status(200).json(req.user);
 });
 
-app.get('*', authenticateJWT, (req, res) => {
+app.get('*', JWT, (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
 });
-
-function JWTErrorHandler(err, req, res, _next) {
-  if (err.name == 'UnauthorizedError') {
-    const redirectPath = req.path;
-    console.log('redirect', redirectPath);
-    res.redirect(`/login?redirect=${redirectPath}`);
-  }
-}
-
-app.use(JWTErrorHandler);
 
 const { SERVER_HOST, SERVER_PORT } = process.env;
 
