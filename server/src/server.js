@@ -51,11 +51,12 @@ const authenticateDownload = expressJWT({
   getToken: getJWTFromHeaderOrCookie
 });
 
+const TEN_MEGABYTES = 10000000;
+
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    // 10 megabytes in bytes
-    fileSize: 10000000
+    fileSize: TEN_MEGABYTES
   }
 });
 
