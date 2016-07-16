@@ -19,10 +19,12 @@ const expressJWT = require('express-jwt');
 
 const app = express();
 
+const PUBLIC_DIR = path.join(__dirname, '../../public');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '../../public')));
+app.use(express.static(PUBLIC_DIR));
 
 const { JWT_SECRET } = process.env;
 
@@ -100,6 +102,14 @@ function createJWT(user) {
     expiresIn: '14 days'
   });
 }
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, 'login.html'));
+});
+
+app.post('/login', (req, res) => {
+  console.log(req.body);
+});
 
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
