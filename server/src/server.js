@@ -8,6 +8,11 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const rtorrent = require('./rtorrent');
+const sqlite3 = require('sqlite3');
+const crypto = require('crypto');
+const bcrypt = require('bcrypt');
+
+const db = new sqlite3.cached.Database('./db/nilla.db');
 
 const jwt = require('jsonwebtoken');
 const expressJWT = require('express-jwt');
@@ -25,9 +30,7 @@ const authenticate = expressJWT({
   secret: JWT_SECRET
 });
 
-function fromHeaderOrCookie(req) {
-  console.log('authenticating from header or cookie');
-
+function getJWTFromHeaderOrCookie(req) {
   if (req.headers.authorization) {
     let [scheme, token] = req.headers.authorization.split(' ');
 
@@ -43,7 +46,7 @@ function fromHeaderOrCookie(req) {
 
 const authenticateDownload = expressJWT({
   secret: JWT_SECRET,
-  getToken: fromHeaderOrCookie
+  getToken: getJWTFromHeaderOrCookie
 });
 
 const upload = multer({
@@ -53,7 +56,6 @@ const upload = multer({
     fileSize: 10000000
   }
 });
-
 
 app.get(/^\/file\/(.+)/, authenticateDownload, (req, res) => {
   const filePath = req.params[0];
@@ -74,13 +76,35 @@ app.get(/^\/file\/(.+)/, authenticateDownload, (req, res) => {
   res.end();
 });
 
+function getUserFromUsername(username, callback) {
+  db.get('SELECT * FROM users WHERE username = ?', username,
+         (error, row) => callback(error, row));
+}
+
+function createRefreshToken(callback) {
+  crypto.randomBytes(64, (err, buffer) => {
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, crypto.createHash('sha1').update(buffer).digest('hex'));
+    }
+  });
+}
+
+function createJWT(user) {
+  return jwt.sign({
+    id: user.id,
+    username: user.username,
+    permissions: user.permissions.split(',')
+  }, JWT_SECRET, {
+    expiresIn: '14 days'
+  });
+}
+
 app.post('/api/login', (req, res) => {
-  const userID = 1;
   const { username, password } = req.body;
 
-  console.log(username, password);
-
-  if (password != 'pass') {
+  if (!username || !password) {
     res.status(403).json({
       success: false
     });
@@ -88,21 +112,29 @@ app.post('/api/login', (req, res) => {
     return;
   }
 
-  const token = jwt.sign({
-    id: userID
-  }, JWT_SECRET, {
-    expiresIn: '14 days'
-  });
+  getUserFromUsername(username, (error, user) => {
+    bcrypt.compare(password, user.password, (err, authenticated) => {
+      if (err) {
+        throw err;
+      } else if (!authenticated) {
+        res.status(403).json({
+          success: false
+        });
+      } else {
+        const token = createJWT(user);
 
-  // Save the JWT as a cookie as well. It's only ever used to authenticate file
-  // downloads since it's much more convenient that way.
-  res.cookie('token', token, {
-    httpOnly: true
-  });
+        // Save the JWT as a cookie as well. It's only ever used to authenticate file
+        // downloads since it's much more convenient that way.
+        res.cookie('token', token, {
+          httpOnly: true
+        });
 
-  res.status(200).json({
-    user: username,
-    token: token
+        res.status(200).json({
+          user: username,
+          token: token
+        });
+      }
+    });
   });
 });
 
@@ -138,18 +170,10 @@ app.get('/api/user', authenticate, (req, res) => {
   res.status(200).json(req.user);
 });
 
-app.get('*', authenticate, function(req, res) {
+app.get('*', authenticate, (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
 });
 
-/**
- * Handle authentication failure.
- * @param {Error} err - The error
- * @param {Request} req - The request
- * @param {Response} res - The response
- * @param {Middleware} next - The next middleware
- * @returns {void}
- */
 function JWTErrorHandler(err, req, res, _next) {
   if (err.name == 'UnauthorizedError') {
     res.status(401).json({
@@ -163,6 +187,6 @@ app.use(JWTErrorHandler);
 
 const { SERVER_HOST, SERVER_PORT } = process.env;
 
-const server = app.listen(SERVER_PORT, SERVER_HOST, function() {
+const server = app.listen(SERVER_PORT, SERVER_HOST, () => {
   console.log('Express server listening on port ' + server.address().port);
 });
