@@ -216,6 +216,18 @@ app.post('/login', CSRF, (req, res) => {
   });
 });
 
+function rejectPlainTextRequest(req, res, next) {
+  const contentType = req.headers['Content-Type'];
+
+  if (contentType == 'text/plain') {
+    res.sendStatus(400);
+  } else {
+    next();
+  }
+}
+
+app.use('/api/', rejectPlainTextRequest);
+
 app.post('/api/upload', JWT, upload.single('torrent'), (req, res) => {
   rtorrent.load(req.file.buffer, {start: req.body.start == 'true'})
     .then(infohash => {
