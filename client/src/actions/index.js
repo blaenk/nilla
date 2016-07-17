@@ -1,4 +1,5 @@
 import request from 'superagent';
+import Cookies from 'js-cookie';
 
 /**
  * Action to set the scope.
@@ -125,7 +126,7 @@ export function submitFile(file) {
 
     return request.post('/api/upload')
       .accept('json')
-      .set('X-CSRF-TOKEN', window.csrf_token)
+      .set('X-CSRF-TOKEN', Cookies.get('csrf-token'))
       .attach('torrent', fileObject.backingFile)
       .field('start', fileObject.start)
       .on('progress', event => {

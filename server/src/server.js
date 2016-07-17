@@ -80,6 +80,21 @@ function CSRFValidationError(err, req, res, next) {
   });
 }
 
+const CSRF = [csrfProtection, CSRFValidationError];
+
+function setCSRFTokenCookie(req, res, next) {
+  res.cookie('csrf-token', req.csrfToken(), {
+    httpOnly: false,
+    // TODO
+    // secure: true,
+    expires: 0
+  });
+
+  next();
+}
+
+app.use(CSRF, setCSRFTokenCookie);
+
 const { JWT_SECRET } = process.env;
 
 const authenticateJWT = expressJWT({
@@ -168,8 +183,6 @@ function getRedirectPath(req) {
     return '/';
   }
 }
-
-const CSRF = [csrfProtection, CSRFValidationError];
 
 app.get('/login', CSRF, (req, res) => {
   res.render('login', {
@@ -272,8 +285,7 @@ app.get('/api/user', JWT, (req, res) => {
 
 app.get('*', JWT, CSRF, (req, res) => {
   res.render('internal', {
-    layout: false,
-    csrfToken: req.csrfToken()
+    layout: false
   });
 });
 
