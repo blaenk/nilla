@@ -64,7 +64,7 @@ export function rejectFiles(files) {
   };
 }
 
-export function clearRejectedFiles(files) {
+export function clearRejectedFiles() {
   return {
     type: 'CLEAR_REJECTED_FILES'
   };
@@ -123,27 +123,22 @@ export function submitFile(file) {
       return Promise.reject(new Error(`file not found: ${file}`));
     }
 
-    let formData = new window.FormData();
-    formData.append('torrent', fileObject.backingFile);
-    formData.append('start', fileObject.start);
-
     return request.post('/api/upload')
-      .set('X-CSRF-TOKEN', window.csrf_token)
-      .send(formData)
       .accept('json')
+      .set('X-CSRF-TOKEN', window.csrf_token)
+      .attach('torrent', fileObject.backingFile)
+      .field('start', fileObject.start)
       .on('progress', event => {
         dispatch(setFileProgress(fileObject, event.percent));
 
         fileObject = getState().upload.files.find(f => f.backingFile == fileObject.backingFile);
       })
-      .then(response => {
-        console.log(response.body);
+      .then(_response => {
         dispatch(removeFile(fileObject));
 
         fileObject = getState().upload.files.find(f => f.backingFile == fileObject.backingFile);
       })
-      .catch(e => {
-        console.error(e);
+      .catch(_error => {
         dispatch(removeFile(fileObject));
 
         fileObject = getState().upload.files.find(f => f.backingFile == fileObject.backingFile);
