@@ -65,9 +65,19 @@ function CSRFValidationError(err, req, res, next) {
 
   console.log('CSRF token tampered');
 
-  const { _redirectTo } = req.body;
-  const failureRedirect = `/login?redirect=${_redirectTo}`;
-  res.redirect(failureRedirect);
+  res.format({
+    html: () => {
+      const { _redirectTo } = req.body;
+      const failureRedirect = `/login?redirect=${_redirectTo}`;
+      res.redirect(failureRedirect);
+    },
+    json: () => {
+      res.status(400).json({
+        success: false,
+        message: 'invalid CSRF token'
+      });
+    }
+  });
 }
 
 const { JWT_SECRET } = process.env;
@@ -228,7 +238,7 @@ function rejectPlainTextRequest(req, res, next) {
 
 app.use('/api/', rejectPlainTextRequest);
 
-app.post('/api/upload', JWT, upload.single('torrent'), (req, res) => {
+app.post('/api/upload', JWT, upload.single('torrent'), CSRF, (req, res) => {
   rtorrent.load(req.file.buffer, {start: req.body.start == 'true'})
     .then(infohash => {
       res.send({success: true, infohash});
@@ -260,8 +270,11 @@ app.get('/api/user', JWT, (req, res) => {
   res.status(200).json(req.user);
 });
 
-app.get('*', JWT, (req, res) => {
-  res.sendFile(path.resolve('public/index.html'));
+app.get('*', JWT, CSRF, (req, res) => {
+  res.render('internal', {
+    layout: false,
+    csrfToken: req.csrfToken()
+  });
 });
 
 const { SERVER_HOST, SERVER_PORT } = process.env;

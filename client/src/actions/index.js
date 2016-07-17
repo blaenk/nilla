@@ -128,14 +128,16 @@ export function submitFile(file) {
     formData.append('start', fileObject.start);
 
     return request.post('/api/upload')
+      .set('X-CSRF-TOKEN', window.csrf_token)
       .send(formData)
+      .accept('json')
       .on('progress', event => {
         dispatch(setFileProgress(fileObject, event.percent));
 
         fileObject = getState().upload.files.find(f => f.backingFile == fileObject.backingFile);
       })
-      .then(json => {
-        console.log(json);
+      .then(response => {
+        console.log(response.body);
         dispatch(removeFile(fileObject));
 
         fileObject = getState().upload.files.find(f => f.backingFile == fileObject.backingFile);
