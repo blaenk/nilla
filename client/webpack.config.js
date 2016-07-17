@@ -13,8 +13,8 @@ const NODE_ENV = process.env.NODE_ENV;
 
 const root = __dirname;
 
-const modules = path.join(root, 'node_modules');
-const src = path.join(root, "client/src");
+const src = path.join(root, 'src');
+const test = path.join(root, 'test');
 
 const config = {};
 
@@ -23,7 +23,6 @@ config.plugins = [];
 config.cache = true;
 
 config.resolve = {};
-config.resolve.root = [src, modules];
 config.resolve.alias = {
   'common': path.join(src, 'common'),
   'reducers': path.join(src, 'reducers'),
@@ -35,17 +34,17 @@ config.resolve.alias = {
 };
 
 config.entry = {
-  app: ['./client/src/app.js']
+  app: ['./src/app.js']
 };
 
 config.output = {
-  path: path.resolve(root, 'public/assets'),
+  path: path.resolve(root, 'build/assets'),
   publicPath: '/assets/',
   filename: '[name].js'
 };
 
 config.plugins.push(new webpack.DefinePlugin({
-  "process.env": {
+  'process.env': {
     NODE_ENV: JSON.stringify(NODE_ENV)
   },
   __NODE_ENV__: JSON.stringify(NODE_ENV)
@@ -69,7 +68,7 @@ config.module.loaders.push({
 
 config.module.loaders.push({
   test: /\.js$/,
-  include: path.resolve(root, 'client'),
+  include: [src, test],
   loader: 'babel',
   query: {
     presets: ['react', 'es2015']
@@ -95,7 +94,6 @@ config.module.loaders.push({
 
 config.module.loaders.push({
   test: /\.css$/,
-  include: [modules],
   loader: ExtractTextPlugin.extract('style', 'css?sourceMap')
 });
 

@@ -15,10 +15,10 @@ module.exports = function(config) {
   config.set({
     frameworks: ['chai', 'mocha'],
     files: [
-      'client/test/**/*.js'
+      'test/**/*.js'
     ],
     preprocessors: {
-      'client/test/**/*.js': ['webpack', 'sourcemap']
+      'test/**/*.js': ['webpack', 'sourcemap']
     },
     coverageReporter: {
       type: 'lcovonly'

@@ -9,16 +9,16 @@ assert = chai.assert;
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import App from 'containers/App/AppContainer.js';
+import AppContainer from 'containers/App/AppContainer';
 
-describe('<App />', function () {
+describe('<AppContainer />', function () {
   it('should pass', function() {
     assert.equal(true, true);
   });
 
   let wrapper;
   beforeEach(function() {
-    wrapper = shallow(<App />);
+    wrapper = shallow(<AppContainer />);
   });
 
   it('has a Router component', function() {
