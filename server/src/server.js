@@ -25,7 +25,6 @@ const expressJWT = require('express-jwt');
 function JWTErrorHandler(err, req, res, _next) {
   if (err.name == 'UnauthorizedError') {
     const redirectPath = req.path;
-    console.log('redirect', redirectPath);
     res.redirect(`/login?redirect=${redirectPath}`);
   }
 }
@@ -33,8 +32,6 @@ function JWTErrorHandler(err, req, res, _next) {
 const app = express();
 
 const VIEWS_PATH = path.join(__dirname, 'views');
-
-console.log(VIEWS_PATH);
 
 app.set('views', VIEWS_PATH);
 
@@ -46,7 +43,7 @@ const handlebars = expressHandlebars.create({
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 
-const PUBLIC_PATH = path.join(__dirname, '../../public');
+const PUBLIC_PATH = path.join(__dirname, '../../client/build');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -192,8 +189,6 @@ app.get('/login', CSRF, (req, res) => {
 });
 
 app.post('/login', CSRF, (req, res) => {
-  console.log('post login');
-
   const { username, password, _redirectTo } = req.body;
   const failureRedirect = `/login?redirect=${_redirectTo}`;
 
@@ -221,8 +216,6 @@ app.post('/login', CSRF, (req, res) => {
       } else {
         const token = createJWT(user);
         const expiration = moment().utc().add(1, 'month').toDate();
-
-        console.log('expiration', expiration);
 
         // Save the JWT as a cookie as well. It's only ever used to authenticate file
         // downloads since it's much more convenient that way.

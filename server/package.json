@@ -1,0 +1,64 @@
+{
+  "name": "nilla-server",
+  "version": "0.0.1",
+  "description": "An interface to rtorrent - server",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "lint": "eslint --no-inline-config",
+    "test": "NODE_ENV=test mocha test/",
+    "coverage": "istanbul cover --dir ./coverage/server ./node_modules/mocha/bin/_mocha test/ --report lcovonly -- -R spec",
+    "doc": "documentation build -o docs/ -f html -g src/",
+    "jsdoc": "jsdoc -d docs/ src/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blaenk/nilla.git"
+  },
+  "keywords": [
+    "rtorrent",
+    "torrent"
+  ],
+  "author": "Jorge Israel Peña",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blaenk/nilla/issues"
+  },
+  "homepage": "https://github.com/blaenk/nilla#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.3.0",
+    "chai-enzyme": "^0.5.0",
+    "coveralls": "^2.11.9",
+    "documentation": "^4.0.0-beta5",
+    "eslint": "^2.12.0",
+    "expect": "^1.20.1",
+    "istanbul": "^0.4.3",
+    "jsdoc": "^3.4.0",
+    "mocha": "^2.5.3",
+    "mocha-lcov-reporter": "^1.2.0",
+    "sinon": "^1.17.4",
+    "sinon-chai": "^2.8.0"
+  },
+  "dependencies": {
+    "bcrypt": "^0.8.7",
+    "bluebird": "^3.4.0",
+    "cookie-parser": "^1.4.3",
+    "csurf": "^1.9.0",
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
+    "express-handlebars": "^3.0.0",
+    "express-jwt": "^3.4.0",
+    "filesize": "^3.3.0",
+    "jsonwebtoken": "^7.0.1",
+    "lodash": "^4.13.1",
+    "moment": "^2.13.0",
+    "multer": "^1.1.0",
+    "parse-torrent": "^5.8.0",
+    "request": "^2.72.0",
+    "request-promise": "^3.0.0",
+    "semver": "^5.1.0",
+    "sqlite3": "^3.1.4",
+    "superagent": "^2.0.0",
+    "xmlrpc": "blaenk/node-xmlrpc#custom-transport"
+  }
+}

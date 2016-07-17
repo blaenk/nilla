@@ -13,11 +13,11 @@ const torrents = {
   ubuntu: {
     name: 'ubuntu-16.04-desktop-amd64.iso',
     size: '1485881344',
-    path: './server/test/fixtures/ubuntu-16.04-desktop-amd64.iso.torrent',
+    path: './test/fixtures/ubuntu-16.04-desktop-amd64.iso.torrent',
     hash: '4344503b7e797ebf31582327a5baae35b11bda01'
   },
   fedora: {
-    path: './server/test/fixtures/Fedora-Live-Workstation-x86_64-23.torrent',
+    path: './test/fixtures/Fedora-Live-Workstation-x86_64-23.torrent',
     hash: '796ab93bb81e2dbe072f3c07857675ee5c47b046'
   }
 };
