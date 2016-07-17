@@ -154,6 +154,7 @@ const UploadAllButton = connect(
 let MagnetURI = React.createClass({
   onSubmitMagnet: function() {
     request.post('/api/magnet')
+      .type('json')
       .send({
         uri: this.uriInput.value,
         start: this.startCheckbox.checked
