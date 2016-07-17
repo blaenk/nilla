@@ -1,9 +1,8 @@
 node_modules
-/.tern-port
-/.env
-/.dir-locals.el
+.tern-port
+.dir-locals.el
 /docs/
-/public/assets/
-/coverage/
 /.data/
-/db/nilla.db
+/server/.env
+/server/db/nilla.db
+/client/build/
