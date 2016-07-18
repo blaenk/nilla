@@ -1,5 +1,6 @@
 import React from 'react';
 import CSSModules from 'react-css-modules';
+import { Row, Col, Glyphicon } from 'react-bootstrap';
 
 import Search from './Search';
 import Download from 'components/Downloads/Download';
@@ -17,10 +18,26 @@ const Downloads = React.createClass({
       return acc + (next.isHidden ? 0 : 1);
     }, 0);
 
+    let body;
+
+    if (visibleCount > 0) {
+      body = (
+        <DownloadList downloads={this.props.downloads} />
+      );
+    } else {
+      body = (
+        <Row>
+          <Col lg={12} styleName='empty-downloads'>
+            <Glyphicon glyph="ban-circle" />
+          </Col>
+        </Row>
+      );
+    }
+
     return (
       <div>
         <Search count={visibleCount} />
-        <DownloadList downloads={this.props.downloads} />
+        {body}
       </div>
     );
   }
