@@ -17,9 +17,9 @@ function decodeBase64(string) {
   return new Buffer(string, 'base64').toString('ascii');
 }
 
-function getProgress(torrent) {
-  if (torrent.sizeBytes != 0) {
-    const fractionComplete = torrent.completedBytes / torrent.sizeBytes;
+function getProgress(completed, totalSize) {
+  if (totalSize != 0) {
+    const fractionComplete = completed / totalSize;
     const percentageComplete = fractionComplete * 100;
 
     return percentageComplete.toFixed(2);
@@ -78,18 +78,50 @@ const DOWNLOADS_METHODS = [
   }
 ];
 
-function getAll() {
+function getDownloads() {
   return rtorrent.torrents('main', DOWNLOADS_METHODS)
     .then(torrents => {
       return torrents.map(torrent => {
         torrent.state = getState(torrent);
-        torrent.progress = getProgress(torrent);
+        torrent.progress = getProgress(torrent.completedBytes, torrent.sizeBytes);
         return torrent;
       });
     });
 }
 
+const FILE_METHODS = [
+  { method: 'get_path', as: 'path' },
+  { method: 'get_path_components', as: 'pathComponents' },
+  {
+    method: 'get_priority',
+    as: 'priority',
+    map: priority => {
+      switch (priority) {
+        case '0': return 'off';
+        case '1': return 'normal';
+        case '2': return 'high';
+        default: throw new Error('unknown priority');
+      }
+    }
+  },
+  { method: 'get_completed_chunks', as: 'completedChunks' },
+  { method: 'get_size_chunks', as: 'sizeChunks' },
+  { method: 'get_size_bytes', as: 'size' }
+];
+
+function getFiles(infoHash) {
+  return rtorrent.files(infoHash, FILE_METHODS)
+    .then(files => {
+      return files.map(file => {
+        file.progress = getProgress(file.completedChunks, file.sizeChunks);
+        file.name = file.pathComponents[file.pathComponents.length - 1];
+        return file;
+      });
+    });
+}
+
 module.exports = {
-  getAll,
+  getDownloads,
+  getFiles,
   decodeRatio
 };

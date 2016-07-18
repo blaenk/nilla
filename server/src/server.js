@@ -267,7 +267,7 @@ app.get('/api/user', JWT, (req, res) => {
 });
 
 app.get('/api/downloads', JWT, (req, res) => {
-  downloads.getAll()
+  downloads.getDownloads()
     .then(downloads => res.json(downloads));
 });
 

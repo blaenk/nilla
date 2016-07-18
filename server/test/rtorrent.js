@@ -51,13 +51,13 @@ describe('RTorrent', function() {
 
   context('manipulate torrents', function() {
     it('read the name', function() {
-      return rtorrent.torrent('get_name', torrents.ubuntu.hash).
-        should.eventually.equal(torrents.ubuntu.name);
+      return rtorrent.torrent(torrents.ubuntu.hash, ['get_name']).
+        should.eventually.become({ 'get_name': torrents.ubuntu.name });
     });
 
     it('read the file size', function() {
-      return rtorrent.torrent('get_size_bytes', torrents.ubuntu.hash).
-        should.eventually.equal(torrents.ubuntu.size);
+      return rtorrent.torrent(torrents.ubuntu.hash, ['get_size_bytes']).
+        should.eventually.become({ 'get_size_bytes': torrents.ubuntu.size });
     });
 
     context('manage file properties', function() {
@@ -71,26 +71,24 @@ describe('RTorrent', function() {
   });
 
   context('multicalls', function() {
-    it('should produce a multicall array', function() {
-      const multicall = rtorrent.createMulticall([
-        ['d.get_name', ['hash']],
-        ['d.get_hash', ['hash']]
-      ]);
-
-      multicall.should.deep.equal([
-        {methodName: "d.get_name", params: ['hash']},
-        {methodName: "d.get_hash", params: ['hash']}
-      ]);
-    });
-
     it('should get the name and size simultaneously', function() {
       return rtorrent.multicall([
-        ["d.get_name", [torrents.ubuntu.hash]],
-        ["d.get_size_bytes", [torrents.ubuntu.hash]]
+        {methodName: "d.get_name", params: [torrents.ubuntu.hash]},
+        {methodName: "d.get_size_bytes", params: [torrents.ubuntu.hash]}
       ]).should.become([
         [torrents.ubuntu.name],
         [torrents.ubuntu.size]
       ]);
+    });
+
+    it('should use a helper to get the name and size simultaneously', function() {
+      return rtorrent.torrent(torrents.ubuntu.hash, [
+        { method: 'get_name', as: 'name' },
+        { method: 'get_size_bytes', as: 'sizeBytes' }
+      ]).should.become({
+        'name': torrents.ubuntu.name,
+        'sizeBytes': torrents.ubuntu.size
+      });
     });
   });
 
@@ -122,7 +120,7 @@ describe('RTorrent', function() {
     return Bluebird.map([
       torrents.ubuntu.hash,
       torrents.arch.hash
-    ], hash => rtorrent.torrent("erase", hash));
+    ], hash => rtorrent.torrent(hash, ["erase"]));
   });
 });
 
