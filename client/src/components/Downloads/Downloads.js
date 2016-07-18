@@ -9,21 +9,7 @@ import styles from './styles.module.less';
 
 const Downloads = React.createClass({
   propTypes: {
-    downloads: React.PropTypes.arrayOf(React.PropTypes.shape(Download.propTypes)),
-    onChangeFilter: React.PropTypes.func.isRequired,
-    onChangeScope: React.PropTypes.func.isRequired
-  },
-
-  getInitialState: function() {
-    return {
-      filter: '',
-      scope: 'all',
-      order: 'recent'
-    };
-  },
-
-  onChangeOrder: function(eventKey, _event) {
-    this.setState({order: eventKey});
+    downloads: React.PropTypes.arrayOf(React.PropTypes.shape(Download.propTypes))
   },
 
   render: function() {
