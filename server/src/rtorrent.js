@@ -11,6 +11,8 @@ const scgi = require('./scgi.js');
 
 const parseTorrent = require('parse-torrent');
 
+const _ = require('lodash');
+
 /**
  * Perform an XML-RPC request.
  *
@@ -76,26 +78,117 @@ function torrent(method, infohash, ...args) {
   return call('d.' + method, [infohash, ...args]);
 }
 
-/**
- * Wrapper function to invoke view-wide methods.
- *
- * @param {string} view The view to target.
- * @param {...methods} args The methods to invoke.
- * @returns {Promise} The response.
- */
-function torrents(view, ...args) {
-  return call('d.multicall', [view, ...args]);
+function createMulticallMethodObject(methods, index) {
+  if (_.isString(methods[index])) {
+    methods[index] = { method: methods[index] };
+  }
 }
 
-/**
- * Decodes an integer-encoded ratio e.g. 750 to a floating-point ratio e.g.
- * 0.75.
- *
- * @param {number} ratio The integer-encoded ratio.
- * @returns {number} The floating-point ratio.
- */
-function decodeRatio(ratio) {
-  return ratio / 1000;
+function prependPrefixIfNotPresent(prefix, methods, index) {
+  if (!methods[index].method.startsWith(prefix)) {
+    methods[index].method = prefix += methods[index].method;
+  }
+}
+
+function appendEqualsIfNotPresent(methods, index) {
+  if (!methods[index].method.includes('=')) {
+    methods[index].method += '=';
+  }
+}
+
+function normalizeMulticallMethods(methods) {
+  for (let i = 0; i < methods.length; i++) {
+    createMulticallMethodObject(methods, i);
+    prependPrefixIfNotPresent('d.', methods, i);
+    appendEqualsIfNotPresent(methods, i);
+  }
+}
+
+// in:  d.multicall ['main', 'd.get_name=', 'd.get_ratio=']
+// out: [[hash1, ratio1], [hash2, ratio2]]
+function torrentMulticall(view, methods) {
+  return call('d.multicall', [view, ...methods]);
+}
+
+function transformKey(options) {
+  if (_.isString(options.as)) {
+    return options.as;
+  } else if (_.isFunction(options.as)) {
+    return options.as(options.method);
+  } else {
+    return options.method;
+  }
+}
+
+function transformValue(options, result) {
+  if (_.isFunction(options.map)) {
+    return options.map(result);
+  } else {
+    return result;
+  }
+}
+
+const rename = {
+  toCamelCase(name) {
+    return name.replace(/_([a-z])/g, match => match[1].toUpperCase());
+  },
+
+  pretty(name) {
+    let matches;
+
+    const isPrefix = /^[dfpt]\.is_(.+)=/;
+    const getPrefix = /^[dfpt]\.get_(.+)=/;
+    const metaPrefix = /[dfpt]\.(.+)=(.+)/;
+
+    matches = getPrefix.exec(name);
+
+    if (matches) {
+      return matches[1];
+    }
+
+    matches = isPrefix.exec(name);
+
+    if (matches) {
+      return matches[1];
+    }
+
+    matches = metaPrefix.exec(name);
+
+    if (matches) {
+      return matches[2];
+    }
+
+    return name;
+  }
+};
+
+function torrents(view, methods) {
+  // normalize strings to objects
+  normalizeMulticallMethods(methods);
+
+  const results = torrentMulticall(view, methods.map(method => method.method));
+
+  return results.map(itemResult => {
+    let transformed = {};
+
+    itemResult.map((methodResult, index) => {
+      const options = methods[index];
+      const nameBody = /^[dfpt]\.(.+)=?$/;
+
+      let key = nameBody.exec(options.method)[1];
+      key = transformKey(options);
+
+      let mapped = transformValue(options, methodResult);
+
+      transformed[key] = mapped;
+    });
+
+    return transformed;
+  });
+}
+
+function toBoolean(string) {
+  return string == '1';
 }
 
 /**
@@ -173,5 +266,5 @@ module.exports = {
 
   load,
 
-  decodeRatio
+  toBoolean
 };

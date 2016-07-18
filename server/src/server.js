@@ -2,6 +2,8 @@
 
 require('dotenv').config();
 
+const downloads = require('./models/downloads');
+
 const express = require('express');
 const expressHandlebars = require('express-handlebars');
 const csurf = require('csurf');
@@ -277,6 +279,11 @@ app.post('/api/magnet', JWT, (req, res) => {
 
 app.get('/api/user', JWT, (req, res) => {
   res.status(200).json(req.user);
+});
+
+app.get('/api/downloads', JWT, (req, res) => {
+  downloads.getAll()
+    .then(downloads => res.json(downloads));
 });
 
 app.get('*', JWT, CSRF, (req, res) => {

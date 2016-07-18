@@ -70,15 +70,6 @@ describe('RTorrent', function() {
     });
   });
 
-  context('decode ratio', function() {
-    it('returns actual ratio from integer value', function() {
-      rtorrent.decodeRatio(1000).should.equal(1.0);
-      rtorrent.decodeRatio(750).should.equal(.750);
-      rtorrent.decodeRatio(100).should.equal(.100);
-      rtorrent.decodeRatio(0).should.equal(0);
-    });
-  });
-
   context('multicalls', function() {
     it('should produce a multicall array', function() {
       const multicall = rtorrent.createMulticall([
@@ -99,6 +90,30 @@ describe('RTorrent', function() {
       ]).should.become([
         [torrents.ubuntu.name],
         [torrents.ubuntu.size]
+      ]);
+    });
+  });
+
+  context('helpers', function() {
+    it("should make a torrent multicall", function() {
+      return rtorrent.torrents(
+        'main', [
+          { method: 'get_name', as: 'name' },
+          {
+            method: 'get_completed_bytes',
+            map: parseInt,
+            as: 'completedBytes'
+          }
+        ]
+      ).should.become([
+        {
+          name: '01000E92D5C8CF2473E5978B445DE9624C04D11A.meta',
+          completedBytes: 0
+        },
+        {
+          name: 'ubuntu-16.04-desktop-amd64.iso',
+          completedBytes: 0
+        }
       ]);
     });
   });
