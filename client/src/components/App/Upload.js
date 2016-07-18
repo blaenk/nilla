@@ -83,6 +83,12 @@ const StartCheckbox = connect(
 )(Checkbox);
 
 let FileUpload = React.createClass({
+  propTypes: {
+    file: React.PropTypes.object.isRequired,
+    onRemove: React.PropTypes.func.isRequired,
+    onSubmit: React.PropTypes.func.isRequired
+  },
+
   render: function() {
     let right;
 
@@ -159,14 +165,12 @@ let MagnetURI = React.createClass({
         uri: this.uriInput.value,
         start: this.startCheckbox.checked
       })
-      .then(json => {
+      .then(_json => {
         this.uriInput.value = '';
         this.startCheckbox.checked = true;
-
-        console.log(json);
       })
       .catch(error => {
-        console.error(error);
+        throw error;
       });
   },
 
@@ -202,13 +206,10 @@ MagnetURI = CSSModules(MagnetURI, styles);
 
 const Upload = React.createClass({
   propTypes: {
+    files: React.PropTypes.array,
     rejectedFiles: React.PropTypes.array,
     onClickFiles: React.PropTypes.func.isRequired,
     onDismissRejectionAlert: React.PropTypes.func.isRequired
-  },
-
-  onClickUpload: function(event) {
-    console.log(event);
   },
 
   render: function() {
