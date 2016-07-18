@@ -16,6 +16,7 @@ const rtorrent = require('./rtorrent');
 const sqlite3 = require('sqlite3');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+const helmet = require('helmet');
 
 const db = new sqlite3.cached.Database('./db/nilla.db');
 
@@ -30,6 +31,8 @@ function JWTErrorHandler(err, req, res, _next) {
 }
 
 const app = express();
+
+app.use(helmet());
 
 const VIEWS_PATH = path.join(__dirname, 'views');
 
