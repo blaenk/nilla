@@ -3,6 +3,7 @@
 require('dotenv').config();
 
 const downloads = require('./models/downloads');
+const users = require('./models/users');
 
 const express = require('express');
 const expressHandlebars = require('express-handlebars');
@@ -16,7 +17,6 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const rtorrent = require('./rtorrent');
 const sqlite3 = require('sqlite3');
-const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const helmet = require('helmet');
 
@@ -148,21 +148,6 @@ app.get(/^\/file\/(.+)/, JWT, (req, res) => {
   res.end();
 });
 
-function getUserFromUsername(username, callback) {
-  db.get('SELECT * FROM users WHERE username = ?', username,
-         (error, row) => callback(error, row));
-}
-
-function createRefreshToken(callback) {
-  crypto.randomBytes(64, (err, buffer) => {
-    if (err) {
-      callback(err);
-    } else {
-      callback(null, crypto.createHash('sha1').update(buffer).digest('hex'));
-    }
-  });
-}
-
 function createJWT(user) {
   return jwt.sign({
     id: user.id,
@@ -202,7 +187,7 @@ app.post('/login', CSRF, (req, res) => {
     return;
   }
 
-  getUserFromUsername(username, (error, user) => {
+  users.getUserFromUsername(db, username, (error, user) => {
     if (error) {
       throw error;
     }
