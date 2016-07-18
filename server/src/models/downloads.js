@@ -13,7 +13,7 @@ function decodeRatio(ratio) {
   return (ratio / 1000).toFixed(2);
 }
 
-function base64Decode(string) {
+function decodeBase64(string) {
   return new Buffer(string, 'base64').toString('ascii');
 }
 
@@ -65,16 +65,16 @@ const DOWNLOADS_METHODS = [
 
   { method: 'get_up_total', as: 'totalUploaded', map: parseInt },
 
-  { method: 'get_custom=levee-uploader', as: 'uploader', map: base64Decode },
+  { method: 'get_custom=levee-uploader', as: 'uploader', map: decodeBase64 },
   {
     method: 'get_custom=levee-locks',
     as: 'locks',
-    map: data => JSON.parse(base64Decode(data))
+    map: data => JSON.parse(decodeBase64(data))
   },
   {
     method: 'get_custom=levee-date-added',
     as: 'dateAdded',
-    map: data => new Date(base64Decode(data))
+    map: data => new Date(decodeBase64(data))
   }
 ];
 
