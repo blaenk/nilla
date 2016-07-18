@@ -214,7 +214,7 @@ function file(infoHash, fileID, methods) {
 }
 
 function files(infoHash, methods) {
-  return resource('files', [infoHash, 0], methods);
+  return resource('files', [infoHash], methods);
 }
 
 function toBoolean(string) {
@@ -293,6 +293,9 @@ module.exports = {
 
   torrent,
   torrents,
+
+  file,
+  files,
 
   load,
 
