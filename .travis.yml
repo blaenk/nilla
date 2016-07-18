@@ -1,35 +1,45 @@
 language: node_js
 node_js:
   - '6'
+
 cache:
   directories:
     - node_modules
+
 sudo: required
 dist: trusty
 
 env:
-- RTORRENT_SOCKET=$HOME/rtorrent/rpc.socket
+  - RTORRENT_SOCKET=$HOME/rtorrent/rpc.socket
 
 before_install:
-- sudo apt-get -qq update
-- sudo apt-get install -y rtorrent tmux
+  - sudo apt-get -qq update
+  - sudo apt-get install -y rtorrent tmux
 
 before_script:
-- mkdir -p ~/rtorrent/{session,downloads,watch}/
-- cp .travis/.rtorrent.rc ~
-- tmux new-session -s rt -n rtorrent -d rtorrent
+  - mkdir -p ~/rtorrent/{session,downloads,watch}/
+  - cp .travis/.rtorrent.rc ~
+  - tmux new-session -s rt -n rtorrent -d rtorrent
 
 script:
-- npm run -s lint
-- npm test
+  - pushd server
+  - npm run -s lint
+  - npm test
+  - popd
+  - pushd client
+  - npm run -s lint
+  - npm test
+  - popd
 
 after_success:
-  # server coverage (client coverage created by npm test)
-  - 'npm run coverage'
+  # server coverage (client coverage is created by npm test)
+  - pushd server
+  - npm run coverage
   # submit to coveralls
-  - 'cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js'
+  - cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js
   # clean up
-  - 'rm -rf ./coverage'
+  - rm -rf ./coverage
+  - popd
 
 notifications:
   slack:
