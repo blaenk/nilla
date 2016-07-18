@@ -49,18 +49,6 @@ describe('RTorrent', function() {
         ]));
   });
 
-  context.skip('add and remove torrents', function() {
-    it('add a torrent from a file', function() {
-      return rtorrent.loadFile(torrents.fedora.path)
-        .should.eventually.equal(torrents.fedora.hash);
-    });
-
-    it('add a torrent from a magnet link', function() {
-      return rtorrent.loadMagnet(torrents.arch.path)
-        .should.eventually.equal(torrents.arch.hash);
-    });
-  });
-
   context('manipulate torrents', function() {
     it('read the name', function() {
       return rtorrent.torrent('get_name', torrents.ubuntu.hash).
