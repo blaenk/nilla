@@ -4,7 +4,7 @@
   "description": "An interface to rtorrent - server",
   "scripts": {
     "start": "node ./src/server.js",
-    "lint": "eslint --no-inline-config",
+    "lint": "eslint --no-inline-config src/ test/",
     "test": "NODE_ENV=test mocha test/",
     "coverage": "istanbul cover --dir ./coverage/server ./node_modules/mocha/bin/_mocha test/ --report lcovonly -- -R spec",
     "doc": "documentation build -o docs/ -f html -g src/",

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "An interface to rtorrent - client",
   "scripts": {
-    "lint": "eslint --no-inline-config",
+    "lint": "eslint --no-inline-config src/ test/",
     "webpack": "NODE_ENV=production webpack --progress --colors -p",
     "webpack-watch": "NODE_ENV=development webpack --progress --colors --watch -d",
     "test": "NODE_ENV=test karma start karma.conf.js"
