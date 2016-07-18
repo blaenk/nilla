@@ -15,6 +15,7 @@ env:
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y rtorrent tmux
+  - npm install -g nsp
 
 before_script:
   - mkdir -p ~/rtorrent/{session,downloads,watch}/
@@ -25,10 +26,12 @@ script:
   - pushd server
   - npm run -s lint
   - npm test
+  - nsp check
   - popd
   - pushd client
   - npm run -s lint
   - npm test
+  - nsp check
   - popd
 
 after_success:
