@@ -128,40 +128,6 @@ function transformValue(options, result) {
   }
 }
 
-const rename = {
-  toCamelCase(name) {
-    return name.replace(/_([a-z])/g, match => match[1].toUpperCase());
-  },
-
-  pretty(name) {
-    let matches;
-
-    const isPrefix = /^[dfpt]\.is_(.+)=/;
-    const getPrefix = /^[dfpt]\.get_(.+)=/;
-    const metaPrefix = /[dfpt]\.(.+)=(.+)/;
-
-    matches = getPrefix.exec(name);
-
-    if (matches) {
-      return matches[1];
-    }
-
-    matches = isPrefix.exec(name);
-
-    if (matches) {
-      return matches[1];
-    }
-
-    matches = metaPrefix.exec(name);
-
-    if (matches) {
-      return matches[2];
-    }
-
-    return name;
-  }
-};
-
 function torrents(view, methods) {
   // normalize strings to objects
   normalizeMulticallMethods(methods);
