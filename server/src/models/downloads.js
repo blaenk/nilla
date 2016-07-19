@@ -166,24 +166,18 @@ function getExtractedFiles(infoHash) {
       return recursiveReaddirAsync(obj.extractDirectory)
         .map(file => {
           return fs.statAsync(file).then(stats => {
+            const relativePath = path.relative(obj.extractDirectory, file);
+            const pathComponents = relativePath.split(path.sep);
+
             return {
-              path: file,
-              stats
+              path: relativePath,
+              pathComponents: pathComponents,
+              name: pathComponents[pathComponents.length - 1],
+              size: stats.size,
+              progress: obj.isExtracting ? 0 : 100,
+              enabled: true
             };
           });
-        })
-        .map(file => {
-          const relativePath = path.relative(obj.extractDirectory, file.path);
-          const pathComponents = relativePath.split(path.sep);
-
-          return {
-            path: relativePath,
-            pathComponents: pathComponents,
-            name: pathComponents[pathComponents.length - 1],
-            size: file.stats.size,
-            progress: obj.isExtracting ? 0 : 100,
-            enabled: true
-          };
         });
     } else {
       return Bluebird.resolve([]);
