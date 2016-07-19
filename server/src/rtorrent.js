@@ -138,21 +138,6 @@ function transformValue(options, result) {
   }
 }
 
-const resources = {
-  torrent: {
-    prefix: 'd',
-    method: torrentCall
-  },
-  torrents: {
-    prefix: 'd',
-    method: torrentMulticall
-  },
-  files: {
-    prefix: 'f',
-    method: fileMulticall
-  }
-};
-
 function transformMulticallResult(itemResult, methods) {
   let transformed = {};
 
@@ -173,9 +158,27 @@ function transformMulticallResult(itemResult, methods) {
 // optimize for methods is not array, in which case make a direct call?
 // resource('torrent', [infoHash], 'get_name')
 // invokes: call('d.get_name', infoHash)
-function resource(target, args, methods) {
-  const resource = resources[target];
-  const isMulticall = target.endsWith('s');
+function getResource(target, args, methods) {
+  const RESOURCES = {
+    torrent: {
+      prefix: 'd',
+      method: torrentCall,
+      isMulticall: false
+    },
+    torrents: {
+      prefix: 'd',
+      method: torrentMulticall,
+      isMulticall: true
+    },
+    files: {
+      prefix: 'f',
+      method: fileMulticall,
+      isMulticall: true
+    }
+  };
+
+  const resource = RESOURCES[target];
+  const { isMulticall } = resource;
 
   normalizeMethods(resource.prefix, isMulticall, methods);
 
@@ -201,20 +204,20 @@ function resource(target, args, methods) {
 }
 
 function torrent(infoHash, methods) {
-  return resource('torrent', [infoHash], methods);
+  return getResource('torrent', [infoHash], methods);
 }
 
 function torrents(view, methods) {
-  return resource('torrents', [view], methods);
+  return getResource('torrents', [view], methods);
 }
 
 // Same signatures for trackers and peers.
 function file(infoHash, fileID, methods) {
-  return resource('file', [infoHash, fileID], methods);
+  return getResource('file', [infoHash, fileID], methods);
 }
 
 function files(infoHash, methods) {
-  return resource('files', [infoHash], methods);
+  return getResource('files', [infoHash], methods);
 }
 
 function toBoolean(string) {
