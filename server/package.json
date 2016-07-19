@@ -55,6 +55,7 @@
     "moment": "^2.13.0",
     "multer": "^1.1.0",
     "parse-torrent": "^5.8.0",
+    "recursive-readdir": "^2.0.0",
     "request": "^2.72.0",
     "request-promise": "^3.0.0",
     "semver": "^5.1.0",

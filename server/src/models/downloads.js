@@ -1,6 +1,11 @@
 'use strict';
 
 const rtorrent = require('../rtorrent');
+const Bluebird = require('bluebird');
+
+const recursiveReaddirAsync = Bluebird.promisify(require('recursive-readdir'));
+const path = Bluebird.promisifyAll(require('path'));
+const fs = Bluebird.promisifyAll(require('fs'));
 
 /**
  * Decodes an integer-encoded ratio e.g. 750 to a floating-point ratio e.g.
@@ -120,8 +125,75 @@ function getFiles(infoHash) {
     });
 }
 
+function getExtractedFiles(infoHash) {
+  return rtorrent.multicall([
+    {methodName: 'get_directory', params: []},
+    {methodName: 'd.get_name', params: [infoHash]},
+    {methodName: 'd.is_multi_file', params: [infoHash]}
+  ]).then(results => {
+    const [[basePath], [name], [isMultiFile]] = results;
+
+    const directory = path.join(basePath, name);
+    const extractDirectory = path.join(directory, 'extract');
+
+    return {
+      directory,
+      extractDirectory,
+      isMultiFile: isMultiFile == '1'
+    };
+  }).then(obj => {
+    return fs.statAsync(path.join(obj.directory, '.extracting'))
+      .then(_stats => {
+        obj.isExtracting = true;
+        return obj;
+      })
+      .catch(_error => {
+        obj.isExtracting = false;
+        return obj;
+      });
+  }).then(obj => {
+    return fs.statAsync(obj.extractDirectory)
+      .then(_stats => {
+        obj.extractDirectoryExists = true;
+        return obj;
+      })
+      .catch(_error => {
+        obj.extractDirectoryExists = false;
+        return obj;
+      });
+  }).then(obj => {
+    if (obj.extractDirectoryExists && obj.isMultiFile) {
+      return recursiveReaddirAsync(obj.extractDirectory)
+        .map(file => {
+          return fs.statAsync(file).then(stats => {
+            return {
+              path: file,
+              stats
+            };
+          });
+        })
+        .map(file => {
+          const relativePath = path.relative(obj.extractDirectory, file.path);
+          const pathComponents = relativePath.split(path.sep);
+
+          return {
+            path: relativePath,
+            pathComponents: pathComponents,
+            name: pathComponents[pathComponents.length - 1],
+            size: file.stats.size,
+            progress: obj.isExtracting ? 0 : 100,
+            enabled: true
+          };
+        });
+    } else {
+      return Bluebird.resolve([]);
+    }
+  });
+}
+
 module.exports = {
   getDownloads,
   getFiles,
+  getExtractedFiles,
   decodeRatio
 };
