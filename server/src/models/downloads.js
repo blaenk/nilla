@@ -141,11 +141,9 @@ function getExtractedFiles(infoHash) {
       extractDirectory,
       isMultiFile: isMultiFile == '1',
       extractDirectoryExists: fs.statAsync(extractDirectory)
-        .then(_stats => true)
-        .catch(_error => false),
+                                .then(() => true).catch(() => false),
       isExtracting: fs.statAsync(path.join(directory, '.extracting'))
-        .then(_stats => true)
-        .catch(_error => false)
+                      .then(() => true).catch(() => false)
     });
   }).then(obj => {
     if (!(obj.extractDirectoryExists && obj.isMultiFile)) {
