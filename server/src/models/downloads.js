@@ -125,11 +125,20 @@ function getFiles(infoHash) {
     });
 }
 
+function fileExists(path) {
+  return fs.statAsync(path).then(() => true).catch(() => false);
+}
+
 function getExtractedFiles(infoHash) {
   return rtorrent.system([
     {methodName: 'get_directory', params: [], as: 'basePath'},
     {methodName: 'd.get_name', params: [infoHash], as: 'name'},
-    {methodName: 'd.is_multi_file', params: [infoHash], as: 'isMultiFile', map: rtorrent.toBoolean}
+    {
+      methodName: 'd.is_multi_file',
+      params: [infoHash],
+      as: 'isMultiFile',
+      map: rtorrent.toBoolean
+    }
   ]).then(result => {
     const { basePath, name, isMultiFile } = result;
 
@@ -140,10 +149,8 @@ function getExtractedFiles(infoHash) {
       directory,
       extractDirectory,
       isMultiFile,
-      extractDirectoryExists: fs.statAsync(extractDirectory)
-                                .then(() => true).catch(() => false),
-      isExtracting: fs.statAsync(path.join(directory, '.extracting'))
-                      .then(() => true).catch(() => false)
+      extractDirectoryExists: fileExists(extractDirectory),
+      isExtracting: fileExists(path.join(directory, '.extracting'))
     });
   }).then(obj => {
     if (!(obj.extractDirectoryExists && obj.isMultiFile)) {
