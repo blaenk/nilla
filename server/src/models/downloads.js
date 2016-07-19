@@ -11,8 +11,8 @@ const fs = Bluebird.promisifyAll(require('fs'));
  * Decodes an integer-encoded ratio e.g. 750 to a floating-point ratio e.g.
  * 0.75.
  *
- * @param {number} ratio The integer-encoded ratio.
- * @returns {number} The floating-point ratio.
+ * @param {Number} ratio The integer-encoded ratio.
+ * @returns {String} The floating-point ratio.
  */
 function decodeRatio(ratio) {
   return (ratio / 1000).toFixed(2);
@@ -126,12 +126,12 @@ function getFiles(infoHash) {
 }
 
 function getExtractedFiles(infoHash) {
-  return rtorrent.multicall([
-    {methodName: 'get_directory', params: []},
-    {methodName: 'd.get_name', params: [infoHash]},
-    {methodName: 'd.is_multi_file', params: [infoHash]}
-  ]).then(results => {
-    const [[basePath], [name], [isMultiFile]] = results;
+  return rtorrent.system([
+    {methodName: 'get_directory', params: [], as: 'basePath'},
+    {methodName: 'd.get_name', params: [infoHash], as: 'name'},
+    {methodName: 'd.is_multi_file', params: [infoHash], as: 'isMultiFile', map: rtorrent.toBoolean}
+  ]).then(result => {
+    const { basePath, name, isMultiFile } = result;
 
     const directory = path.join(basePath, name);
     const extractDirectory = path.join(directory, 'extract');
@@ -139,7 +139,7 @@ function getExtractedFiles(infoHash) {
     return Bluebird.props({
       directory,
       extractDirectory,
-      isMultiFile: isMultiFile == '1',
+      isMultiFile,
       extractDirectoryExists: fs.statAsync(extractDirectory)
                                 .then(() => true).catch(() => false),
       isExtracting: fs.statAsync(path.join(directory, '.extracting'))
