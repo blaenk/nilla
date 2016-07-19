@@ -145,10 +145,9 @@ function transformMulticallResult(itemResult, methods) {
     const options = methods[index];
 
     const key = transformKey(options);
+    const value = transformValue(options, methodResult);
 
-    let mapped = transformValue(options, methodResult);
-
-    transformed[key] = mapped;
+    transformed[key] = value;
   });
 
   return transformed;
@@ -211,7 +210,6 @@ function torrents(view, methods) {
   return getResource('torrents', [view], methods);
 }
 
-// Same signatures for trackers and peers.
 function file(infoHash, fileID, methods) {
   return getResource('file', [infoHash, fileID], methods);
 }
