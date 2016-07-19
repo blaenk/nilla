@@ -136,52 +136,38 @@ function getExtractedFiles(infoHash) {
     const directory = path.join(basePath, name);
     const extractDirectory = path.join(directory, 'extract');
 
-    return {
+    return Bluebird.props({
       directory,
       extractDirectory,
-      isMultiFile: isMultiFile == '1'
-    };
+      isMultiFile: isMultiFile == '1',
+      extractDirectoryExists: fs.statAsync(extractDirectory)
+        .then(_stats => true)
+        .catch(_error => false),
+      isExtracting: fs.statAsync(path.join(directory, '.extracting'))
+        .then(_stats => true)
+        .catch(_error => false)
+    });
   }).then(obj => {
-    return fs.statAsync(path.join(obj.directory, '.extracting'))
-      .then(_stats => {
-        obj.isExtracting = true;
-        return obj;
-      })
-      .catch(_error => {
-        obj.isExtracting = false;
-        return obj;
-      });
-  }).then(obj => {
-    return fs.statAsync(obj.extractDirectory)
-      .then(_stats => {
-        obj.extractDirectoryExists = true;
-        return obj;
-      })
-      .catch(_error => {
-        obj.extractDirectoryExists = false;
-        return obj;
-      });
-  }).then(obj => {
-    if (obj.extractDirectoryExists && obj.isMultiFile) {
-      return recursiveReaddirAsync(obj.extractDirectory)
-        .map(file => {
-          return fs.statAsync(file).then(stats => {
-            const relativePath = path.relative(obj.extractDirectory, file);
-            const pathComponents = relativePath.split(path.sep);
-
-            return {
-              path: relativePath,
-              pathComponents: pathComponents,
-              name: pathComponents[pathComponents.length - 1],
-              size: stats.size,
-              progress: obj.isExtracting ? 0 : 100,
-              enabled: true
-            };
-          });
-        });
-    } else {
+    if (!(obj.extractDirectoryExists && obj.isMultiFile)) {
       return Bluebird.resolve([]);
     }
+
+    return recursiveReaddirAsync(obj.extractDirectory)
+      .map(file => {
+        return fs.statAsync(file).then(stats => {
+          const relativePath = path.relative(obj.extractDirectory, file);
+          const pathComponents = relativePath.split(path.sep);
+
+          return {
+            path: relativePath,
+            pathComponents: pathComponents,
+            name: pathComponents[pathComponents.length - 1],
+            size: stats.size,
+            progress: obj.isExtracting ? 0 : 100,
+            enabled: true
+          };
+        });
+      });
   });
 }
 
