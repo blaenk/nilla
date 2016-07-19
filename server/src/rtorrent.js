@@ -69,19 +69,25 @@ function createMethodObject(methods, index) {
   if (_.isString(methods[index])) {
     methods[index] = { method: methods[index] };
   }
+
+  if (!methods[index].methodName && methods[index].method) {
+    methods[index].methodName = methods[index].method;
+  }
+
+  if (!methods[index].params) {
+    methods[index].params = [];
+  }
 }
 
 function prependPrefixIfNotPresent(prefix, methods, index) {
-  const namespace = prefix + '.';
-
-  if (!methods[index].method.startsWith(namespace)) {
-    methods[index].method = namespace + methods[index].method;
+  if (!methods[index].methodName.startsWith(prefix)) {
+    methods[index].methodName = prefix + methods[index].methodName;
   }
 }
 
 function appendEqualsIfNotPresent(methods, index) {
-  if (!methods[index].method.includes('=')) {
-    methods[index].method += '=';
+  if (!methods[index].methodName.includes('=')) {
+    methods[index].methodName += '=';
   }
 }
 
@@ -120,7 +126,7 @@ function transformKey(options) {
     return options.as;
   }  else {
     const nameBody = /^[dfpt]\.(.+)=?$/;
-    let key = nameBody.exec(options.method)[1];
+    let key = nameBody.exec(options.methodName)[1];
 
     if (_.isFunction(options.as)) {
       return options.as(key);
@@ -159,18 +165,23 @@ function transformMulticallResult(itemResult, methods) {
 // invokes: call('d.get_name', infoHash)
 function getResource(target, args, methods) {
   const RESOURCES = {
+    system: {
+      prefix: '',
+      method: multicall,
+      isMulticall: false
+    },
     torrent: {
-      prefix: 'd',
+      prefix: 'd.',
       method: torrentCall,
       isMulticall: false
     },
     torrents: {
-      prefix: 'd',
+      prefix: 'd.',
       method: torrentMulticall,
       isMulticall: true
     },
     files: {
-      prefix: 'f',
+      prefix: 'f.',
       method: fileMulticall,
       isMulticall: true
     }
@@ -181,7 +192,15 @@ function getResource(target, args, methods) {
 
   normalizeMethods(resource.prefix, isMulticall, methods);
 
-  return resource.method(...args, methods.map(method => method.method))
+  let callMethods;
+
+  if (target == 'system') {
+    callMethods = methods.map(method => _.pick(method, ['methodName', 'params']));
+  } else {
+    callMethods = methods.map(method => method.methodName);
+  }
+
+  return resource.method(...args, callMethods)
     .then(results => {
       // If we're performing a system multicall, fake this response as if it
       // were a regular multicall with a single result, i.e. go from:
@@ -200,6 +219,10 @@ function getResource(target, args, methods) {
       // object not an array of a single object.
       return isMulticall ? ret : ret[0];
     });
+}
+
+function system(methods) {
+  return getResource('system', [], methods);
 }
 
 function torrent(infoHash, methods) {
@@ -291,6 +314,8 @@ module.exports = {
   call,
   multicall,
   createMulticall,
+
+  system,
 
   torrent,
   torrents,

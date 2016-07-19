@@ -1,7 +1,8 @@
 'use strict';
 
 const Bluebird = require('bluebird');
-const semver   = require('semver');
+const semver = require('semver');
+const path = require('path');
 
 const rtorrent = require('../src/rtorrent.js');
 
@@ -88,6 +89,18 @@ describe('RTorrent', function() {
       ]).should.become({
         'name': torrents.ubuntu.name,
         'sizeBytes': torrents.ubuntu.size
+      });
+    });
+
+    it('should support system multicalls', function() {
+      return rtorrent.system([
+        {methodName: 'get_directory', as: 'baseDirectory'},
+        {methodName: 'd.get_name', params: [torrents.ubuntu.hash], as: 'name'},
+        {methodName: 'd.get_complete', params: [torrents.ubuntu.hash], as: 'isComplete', map: rtorrent.toBoolean }
+      ]).should.become({
+        baseDirectory: process.env.RTORRENT_DOWNLOADS_DIRECTORY,
+        name: torrents.ubuntu.name,
+        isComplete: false
       });
     });
   });
