@@ -292,7 +292,7 @@ app.get('/api/downloads/:infoHash/files', JWT, (req, res) => {
     }));
 });
 
-app.get('/api/downloads/:infoHash/extracted_files', JWT, (req, res) => {
+app.get('/api/downloads/:infoHash/extracted-files', JWT, (req, res) => {
   downloads.getExtractedFiles(req.params.infoHash)
     .then(downloads => res.json(downloads))
     .catch(_error => res.status(500).json({
