@@ -235,8 +235,10 @@ function rejectPlainTextRequest(req, res, next) {
 app.use('/api/', rejectPlainTextRequest);
 
 app.post('/api/upload', JWT, upload.single('torrent'), CSRF, (req, res) => {
-  rtorrent.load(req.file.buffer, {start: req.body.start == 'true'})
-    .then(infohash => {
+  rtorrent.load(req.file.buffer, {
+    start: req.body.start == 'true',
+    commands: [downloads.onLoadSetUploader(req.user.username)]
+  }).then(infohash => {
       res.send({success: true, infohash});
     })
     .catch(error => {
@@ -249,8 +251,10 @@ app.post('/api/upload', JWT, upload.single('torrent'), CSRF, (req, res) => {
 });
 
 app.post('/api/magnet', JWT, (req, res) => {
-  rtorrent.load(req.body.uri, {start: req.body.start})
-    .then(infohash => {
+  rtorrent.load(req.body.uri, {
+    start: req.body.start,
+    commands: [downloads.onLoadSetUploader(req.user.username)]
+  }).then(infohash => {
       res.send({success: true, infohash});
     })
     .catch(error => {
@@ -274,16 +278,15 @@ app.get('/api/downloads', JWT, (req, res) => {
 app.get('/api/downloads/:infoHash', JWT, (req, res) => {
   downloads.getDownload(req.params.infoHash)
     .then(downloads => res.json(downloads))
-    .catch(_error => res.status(400).json({
-      success: false,
-      message: 'no such torrent'
+    .catch(_error => res.status(500).json({
+      error: 'no such torrent'
     }));
 });
 
 app.get('/api/downloads/:infoHash/files', JWT, (req, res) => {
   downloads.getFiles(req.params.infoHash)
     .then(downloads => res.json(downloads))
-    .catch(_error => res.status(400).json({
+    .catch(_error => res.status(500).json({
       success: false,
       message: 'no such torrent'
     }));
@@ -292,7 +295,7 @@ app.get('/api/downloads/:infoHash/files', JWT, (req, res) => {
 app.get('/api/downloads/:infoHash/extracted_files', JWT, (req, res) => {
   downloads.getExtractedFiles(req.params.infoHash)
     .then(downloads => res.json(downloads))
-    .catch(_error => res.status(400).json({
+    .catch(_error => res.status(500).json({
       success: false,
       message: 'no such torrent'
     }));

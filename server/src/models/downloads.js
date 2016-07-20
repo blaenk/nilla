@@ -18,6 +18,10 @@ function decodeRatio(ratio) {
   return (ratio / 1000).toFixed(2);
 }
 
+function encodeBase64(string) {
+  return new Buffer(string).toString('base64');
+}
+
 function decodeBase64(string) {
   return new Buffer(string, 'base64').toString('ascii');
 }
@@ -45,6 +49,10 @@ function getState(torrent) {
   } else {
     return 'seeding';
   }
+}
+
+function onLoadSetUploader(uploader) {
+  return "d.custom.set=levee-uploader," + encodeBase64(uploader);
 }
 
 const DOWNLOADS_METHODS = [
@@ -188,6 +196,7 @@ function getExtractedFiles(infoHash) {
 }
 
 module.exports = {
+  onLoadSetUploader,
   getDownload,
   getDownloads,
   getFiles,
