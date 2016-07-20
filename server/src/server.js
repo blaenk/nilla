@@ -273,17 +273,29 @@ app.get('/api/downloads', JWT, (req, res) => {
 
 app.get('/api/downloads/:infoHash', JWT, (req, res) => {
   downloads.getDownload(req.params.infoHash)
-    .then(downloads => res.json(downloads));
+    .then(downloads => res.json(downloads))
+    .catch(_error => res.status(400).json({
+      success: false,
+      message: 'no such torrent'
+    }));
 });
 
 app.get('/api/downloads/:infoHash/files', JWT, (req, res) => {
   downloads.getFiles(req.params.infoHash)
-    .then(downloads => res.json(downloads));
+    .then(downloads => res.json(downloads))
+    .catch(_error => res.status(400).json({
+      success: false,
+      message: 'no such torrent'
+    }));
 });
 
 app.get('/api/downloads/:infoHash/extracted_files', JWT, (req, res) => {
   downloads.getExtractedFiles(req.params.infoHash)
-    .then(downloads => res.json(downloads));
+    .then(downloads => res.json(downloads))
+    .catch(_error => res.status(400).json({
+      success: false,
+      message: 'no such torrent'
+    }));
 });
 
 app.get('*', JWT, CSRF, (req, res) => {
