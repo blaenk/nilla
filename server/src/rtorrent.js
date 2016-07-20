@@ -41,21 +41,6 @@ function call(method, args, options) {
 }
 
 /**
- * Converts an array of (method, args) pairs into a proper multicall array.
- *
- * @param {Array} calls The array of calls.
- * @returns {Array} The multicall array.
- */
-function createMulticall(calls) {
-  return calls.map(([methodName, params]) => {
-    return {
-      methodName,
-      params: params || []
-    };
-  });
-}
-
-/**
  * Performs multiple calls in one request.
  *
  * @param {Array} calls The calls to perform.
@@ -65,60 +50,42 @@ function multicall(calls) {
   return call('system.multicall', [calls]);
 }
 
-function createMethodObject(methods, index) {
-  if (_.isString(methods[index])) {
-    methods[index] = { method: methods[index] };
-  }
-
-  if (!methods[index].methodName && methods[index].method) {
-    methods[index].methodName = methods[index].method;
-  }
-
-  if (!methods[index].params) {
-    methods[index].params = [];
+function setParamsIfNotPresent(method) {
+  if (!method.params) {
+    method.params = [];
   }
 }
 
-function prependPrefixIfNotPresent(prefix, methods, index) {
-  if (!methods[index].methodName.startsWith(prefix)) {
-    methods[index].methodName = prefix + methods[index].methodName;
+function prependPrefixIfNotPresent(prefix, method) {
+  if (!method.methodName.startsWith(prefix)) {
+    method.methodName = prefix + method.methodName;
   }
 }
 
-function appendEqualsIfNotPresent(methods, index) {
-  if (!methods[index].methodName.includes('=')) {
-    methods[index].methodName += '=';
+function appendEqualsIfNotPresent(method) {
+  if (!method.methodName.includes('=')) {
+    method.methodName += '=';
+  }
+}
+
+function formatParamsForMulticall(method) {
+  if (method.params.length > 0) {
+    method.methodName += method.params.join(',');
   }
 }
 
 function normalizeMethods(prefix, isMulticall, methods) {
-  for (let i = 0; i < methods.length; i++) {
-    createMethodObject(methods, i);
-    prependPrefixIfNotPresent(prefix, methods, i);
+  return _.cloneDeep(methods).map(method => {
+    setParamsIfNotPresent(method);
+    prependPrefixIfNotPresent(prefix, method);
 
     if (isMulticall) {
-      appendEqualsIfNotPresent(methods, i);
+      appendEqualsIfNotPresent(method);
+      formatParamsForMulticall(method);
     }
-  }
-}
 
-function torrentCall(infoHash, methods) {
-  return multicall(methods.map(method => {
-    return {
-      methodName: method,
-      params: [infoHash]
-    };
-  }));
-}
-
-// in:  d.multicall ['main', 'd.get_name=', 'd.get_ratio=']
-// out: [[hash1, ratio1], [hash2, ratio2]]
-function torrentMulticall(view, methods) {
-  return call('d.multicall', [view, ...methods]);
-}
-
-function fileMulticall(infoHash, methods) {
-  return call('f.multicall', [infoHash, 0, ...methods]);
+    return method;
+  });
 }
 
 function transformKey(options) {
@@ -159,86 +126,101 @@ function transformMulticallResult(itemResult, methods) {
   return transformed;
 }
 
+const IS_MULTICALL = true;
+const IS_NOT_MULTICALL = false;
+
+function system(methods) {
+  methods = normalizeMethods('', IS_NOT_MULTICALL, methods);
+
+  let callMethods = methods.map(method => {
+    let pruned = _.pick(method, ['methodName', 'params']);
+    return pruned;
+  });
+
+  return multicall(callMethods)
+    .then(results => {
+      let flattened = results.reduce((acc, cur) => acc.concat(cur));
+
+      let mapped = [flattened].map(itemResult => {
+        return transformMulticallResult(itemResult, methods);
+      });
+
+      return mapped[0];
+    });
+}
+
 // TODO
 // optimize for methods is not array, in which case make a direct call?
 // resource('torrent', [infoHash], 'get_name')
 // invokes: call('d.get_name', infoHash)
-function getResource(target, args, methods) {
-  const RESOURCES = {
-    system: {
-      prefix: '',
-      method: multicall,
-      isMulticall: false
-    },
-    torrent: {
-      prefix: 'd.',
-      method: torrentCall,
-      isMulticall: false
-    },
-    torrents: {
-      prefix: 'd.',
-      method: torrentMulticall,
-      isMulticall: true
-    },
-    files: {
-      prefix: 'f.',
-      method: fileMulticall,
-      isMulticall: true
-    }
-  };
+function torrent(infoHash, methods) {
+  methods = normalizeMethods('d.', IS_NOT_MULTICALL, methods);
 
-  const resource = RESOURCES[target];
-  const { isMulticall } = resource;
+  let callMethods = methods.map(method => {
+    let pruned = _.pick(method, ['methodName', 'params']);
+    pruned.params = [infoHash].concat(pruned.params);
+    return pruned;
+  });
 
-  normalizeMethods(resource.prefix, isMulticall, methods);
-
-  let callMethods;
-
-  if (target == 'system') {
-    callMethods = methods.map(method => _.pick(method, ['methodName', 'params']));
-  } else {
-    callMethods = methods.map(method => method.methodName);
-  }
-
-  return resource.method(...args, callMethods)
+  return multicall(callMethods)
     .then(results => {
-      // If we're performing a system multicall, fake this response as if it
-      // were a regular multicall with a single result, i.e. go from:
-      //
-      // system multicall result: [[name], [size]]
-      // regular multicall result: [[name, size]]
-      if (!isMulticall) {
-        results = [results.reduce((acc, cur) => acc.concat(cur))];
-      }
+      let flattened = results.reduce((acc, cur) => acc.concat(cur));
 
-      const ret = results.map(itemResult => {
+      let mapped = [flattened].map(itemResult => {
         return transformMulticallResult(itemResult, methods);
       });
 
-      // If we're performing a system multicall, the result should be a single
-      // object not an array of a single object.
-      return isMulticall ? ret : ret[0];
+      return mapped[0];
     });
 }
 
-function system(methods) {
-  return getResource('system', [], methods);
-}
-
-function torrent(infoHash, methods) {
-  return getResource('torrent', [infoHash], methods);
-}
-
 function torrents(view, methods) {
-  return getResource('torrents', [view], methods);
+  methods = normalizeMethods('d.', IS_MULTICALL, methods);
+
+  let callMethods = methods.map(method => method.methodName);
+
+  // in:  d.multicall ['main', 'd.get_name=', 'd.get_ratio=']
+  // out: [[hash1, ratio1], [hash2, ratio2]]
+  return call('d.multicall', [view, ...callMethods])
+    .then(results => {
+      return results.map(itemResult => {
+        return transformMulticallResult(itemResult, methods);
+      });
+    });
 }
 
 function file(infoHash, fileID, methods) {
-  return getResource('file', [infoHash, fileID], methods);
+  methods = normalizeMethods('f.', IS_NOT_MULTICALL, methods);
+
+  let callMethods = methods.map(method => {
+    let pruned = _.pick(method, ['methodName', 'params']);
+    pruned.params = [infoHash, fileID].concat(pruned.params);
+    return pruned;
+  });
+
+  return multicall(callMethods)
+    .then(results => {
+      let flattened = results.reduce((acc, cur) => acc.concat(cur));
+
+      let mapped = [flattened].map(itemResult => {
+        return transformMulticallResult(itemResult, methods);
+      });
+
+      return mapped[0];
+    });
 }
 
 function files(infoHash, methods) {
-  return getResource('files', [infoHash], methods);
+  methods = normalizeMethods('f.', IS_MULTICALL, methods);
+
+  let callMethods = methods.map(method => method.methodName);
+
+  return call('f.multicall', [infoHash, 0, ...callMethods])
+    .then(results => {
+      return results.map(itemResult => {
+        return transformMulticallResult(itemResult, methods);
+      });
+    });
 }
 
 function toBoolean(string) {
@@ -313,7 +295,6 @@ function load(file, options) {
 module.exports = {
   call,
   multicall,
-  createMulticall,
 
   system,
 

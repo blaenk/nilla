@@ -271,6 +271,11 @@ app.get('/api/downloads', JWT, (req, res) => {
     .then(downloads => res.json(downloads));
 });
 
+app.get('/api/downloads/:infoHash', JWT, (req, res) => {
+  downloads.getDownload(req.params.infoHash)
+    .then(downloads => res.json(downloads));
+});
+
 app.get('/api/downloads/:infoHash/files', JWT, (req, res) => {
   downloads.getFiles(req.params.infoHash)
     .then(downloads => res.json(downloads));

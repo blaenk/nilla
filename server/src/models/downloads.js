@@ -48,40 +48,51 @@ function getState(torrent) {
 }
 
 const DOWNLOADS_METHODS = [
-  { method: 'get_hash', as: 'infoHash', map: hash => hash.toLowerCase() },
-  { method: 'get_name', as: 'name' },
-  { method: 'get_complete', as: 'isComplete', map: rtorrent.toBoolean },
-  { method: 'get_ratio', as: 'ratio', map: decodeRatio },
-  { method: 'get_message', as: 'message' },
+  { methodName: 'get_hash', as: 'infoHash', map: hash => hash.toLowerCase() },
+  { methodName: 'get_name', as: 'name' },
+  { methodName: 'get_complete', as: 'isComplete', map: rtorrent.toBoolean },
+  { methodName: 'get_ratio', as: 'ratio', map: decodeRatio },
+  { methodName: 'get_message', as: 'message' },
 
-  { method: 'is_multi_file', as: 'isMultiFile', map: rtorrent.toBoolean },
-  { method: 'is_hash_checking', as: 'isHashChecking', map: rtorrent.toBoolean },
-  { method: 'is_active', as: 'isActive', map: rtorrent.toBoolean },
-  { method: 'is_open', as: 'isOpen', map: rtorrent.toBoolean },
+  { methodName: 'is_multi_file', as: 'isMultiFile', map: rtorrent.toBoolean },
+  { methodName: 'is_hash_checking', as: 'isHashChecking', map: rtorrent.toBoolean },
+  { methodName: 'is_active', as: 'isActive', map: rtorrent.toBoolean },
+  { methodName: 'is_open', as: 'isOpen', map: rtorrent.toBoolean },
 
-  { method: 'get_size_bytes', as: 'sizeBytes', map: parseInt },
-  { method: 'get_completed_bytes', as: 'completedBytes', map: parseInt },
+  { methodName: 'get_size_bytes', as: 'sizeBytes', map: parseInt },
+  { methodName: 'get_completed_bytes', as: 'completedBytes', map: parseInt },
 
-  { method: 'get_peers_accounted', as: 'leeches', map: parseInt },
-  { method: 'get_peers_complete', as: 'seeders', map: parseInt },
+  { methodName: 'get_peers_accounted', as: 'leeches', map: parseInt },
+  { methodName: 'get_peers_complete', as: 'seeders', map: parseInt },
 
-  { method: 'get_up_rate', as: 'uploadRate', map: parseInt },
-  { method: 'get_down_rate', as: 'downloadRate', map: parseInt },
+  { methodName: 'get_up_rate', as: 'uploadRate', map: parseInt },
+  { methodName: 'get_down_rate', as: 'downloadRate', map: parseInt },
 
-  { method: 'get_up_total', as: 'totalUploaded', map: parseInt },
+  { methodName: 'get_up_total', as: 'totalUploaded', map: parseInt },
 
-  { method: 'get_custom=levee-uploader', as: 'uploader', map: decodeBase64 },
+  { methodName: 'get_custom', params: ['levee-uploader'], as: 'uploader', map: decodeBase64 },
   {
-    method: 'get_custom=levee-locks',
+    methodName: 'get_custom',
+    params: ['levee-locks'],
     as: 'locks',
     map: data => JSON.parse(decodeBase64(data))
   },
   {
-    method: 'get_custom=levee-date-added',
+    methodName: 'get_custom',
+    params: ['levee-date-added'],
     as: 'dateAdded',
     map: data => new Date(decodeBase64(data))
   }
 ];
+
+function getDownload(infoHash) {
+  return rtorrent.torrent(infoHash, DOWNLOADS_METHODS)
+    .then(torrent => {
+      torrent.state = getState(torrent);
+      torrent.progress = getProgress(torrent.completedBytes, torrent.sizeBytes);
+      return torrent;
+    });
+}
 
 function getDownloads() {
   return rtorrent.torrents('main', DOWNLOADS_METHODS)
@@ -95,10 +106,10 @@ function getDownloads() {
 }
 
 const FILE_METHODS = [
-  { method: 'get_path', as: 'path' },
-  { method: 'get_path_components', as: 'pathComponents' },
+  { methodName: 'get_path', as: 'path' },
+  { methodName: 'get_path_components', as: 'pathComponents' },
   {
-    method: 'get_priority',
+    methodName: 'get_priority',
     as: 'priority',
     map: priority => {
       switch (priority) {
@@ -109,9 +120,9 @@ const FILE_METHODS = [
       }
     }
   },
-  { method: 'get_completed_chunks', as: 'completedChunks' },
-  { method: 'get_size_chunks', as: 'sizeChunks' },
-  { method: 'get_size_bytes', as: 'size' }
+  { methodName: 'get_completed_chunks', as: 'completedChunks' },
+  { methodName: 'get_size_chunks', as: 'sizeChunks' },
+  { methodName: 'get_size_bytes', as: 'size' }
 ];
 
 function getFiles(infoHash) {
@@ -177,6 +188,7 @@ function getExtractedFiles(infoHash) {
 }
 
 module.exports = {
+  getDownload,
   getDownloads,
   getFiles,
   getExtractedFiles,
