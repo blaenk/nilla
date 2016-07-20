@@ -84,8 +84,8 @@ describe('RTorrent', function() {
 
     it('should use a helper to get the name and size simultaneously', function() {
       return rtorrent.torrent(torrents.ubuntu.hash, [
-        { method: 'get_name', as: 'name' },
-        { method: 'get_size_bytes', as: 'sizeBytes' }
+        { methodName: 'get_name', as: 'name' },
+        { methodName: 'get_size_bytes', as: 'sizeBytes' }
       ]).should.become({
         'name': torrents.ubuntu.name,
         'sizeBytes': torrents.ubuntu.size
@@ -96,7 +96,11 @@ describe('RTorrent', function() {
       return rtorrent.system([
         {methodName: 'get_directory', as: 'baseDirectory'},
         {methodName: 'd.get_name', params: [torrents.ubuntu.hash], as: 'name'},
-        {methodName: 'd.get_complete', params: [torrents.ubuntu.hash], as: 'isComplete', map: rtorrent.toBoolean }
+        {
+          methodName: 'd.get_complete',
+          params: [torrents.ubuntu.hash],
+          as: 'isComplete', map: rtorrent.toBoolean
+        }
       ]).should.become({
         baseDirectory: process.env.RTORRENT_DOWNLOADS_DIRECTORY,
         name: torrents.ubuntu.name,
@@ -109,9 +113,9 @@ describe('RTorrent', function() {
     it("should make a torrent multicall", function() {
       return rtorrent.torrents(
         'main', [
-          { method: 'get_name', as: 'name' },
+          { methodName: 'get_name', as: 'name' },
           {
-            method: 'get_completed_bytes',
+            methodName: 'get_completed_bytes',
             map: parseInt,
             as: 'completedBytes'
           }
@@ -133,7 +137,7 @@ describe('RTorrent', function() {
     return Bluebird.map([
       torrents.ubuntu.hash,
       torrents.arch.hash
-    ], hash => rtorrent.torrent(hash, ["erase"]));
+    ], hash => rtorrent.torrent(hash, 'erase'));
   });
 });
 
