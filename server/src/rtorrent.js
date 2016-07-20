@@ -74,13 +74,26 @@ function formatParamsForMulticall(method) {
   }
 }
 
+function createMethodObjectIfString(method) {
+  if (_.isString(method)) {
+    return {methodName: method};
+  } else {
+    return method;
+  }
+}
+
 function normalizeMethods(methods, options) {
   options = Object.assign({
     isMulticall: false,
     prefix: ''
   }, options);
 
+  if (_.isString(methods)) {
+    methods = [methods];
+  }
+
   return _.cloneDeep(methods).map(method => {
+    method = createMethodObjectIfString(method);
     setParamsIfNotPresent(method);
     prependPrefixIfNotPresent(options.prefix, method);
 
