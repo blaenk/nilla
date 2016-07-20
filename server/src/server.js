@@ -95,8 +95,6 @@ function setCSRFTokenCookie(req, res, next) {
   next();
 }
 
-app.use(CSRF, setCSRFTokenCookie);
-
 const { JWT_SECRET } = process.env;
 
 const authenticateJWT = expressJWT({
@@ -171,7 +169,7 @@ function getRedirectPath(req) {
   }
 }
 
-app.get('/login', CSRF, (req, res) => {
+app.get('/login', CSRF, setCSRFTokenCookie, (req, res) => {
   res.render('login', {
     csrfToken: req.csrfToken(),
     redirectTo: getRedirectPath(req)
@@ -278,6 +276,14 @@ app.get('/api/downloads', JWT, (req, res) => {
 app.get('/api/downloads/:infoHash', JWT, (req, res) => {
   downloads.getDownload(req.params.infoHash)
     .then(downloads => res.json(downloads))
+    .catch(_error => res.status(500).json({
+      error: 'no such torrent'
+    }));
+});
+
+app.delete('/api/downloads/:infoHash', JWT, (req, res) => {
+  rtorrent.torrent(req.params.infoHash, 'erase')
+    .then(() => res.json({success: true}))
     .catch(_error => res.status(500).json({
       error: 'no such torrent'
     }));
