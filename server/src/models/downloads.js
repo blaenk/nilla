@@ -195,11 +195,30 @@ function getExtractedFiles(infoHash) {
   });
 }
 
+function getAllFiles(infoHash) {
+  return Bluebird.props({
+    downloaded: getFiles(infoHash),
+    extracted: getExtractedFiles(infoHash)
+  });
+}
+
+function getCompleteDownload(infoHash) {
+  return Bluebird.join(
+    getDownload(infoHash),
+    getAllFiles(infoHash),
+    (download, files) => {
+      download.files = files;
+      return download;
+    });
+}
+
 module.exports = {
   onLoadSetUploader,
   getDownload,
+  getCompleteDownload,
   getDownloads,
   getFiles,
   getExtractedFiles,
+  getAllFiles,
   decodeRatio
 };
