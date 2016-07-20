@@ -175,17 +175,34 @@ function rejectOnMulticallErrors(results, callMethods) {
   return Bluebird.reject(augmentedErrors);
 }
 
-function system(methods) {
-  methods = normalizeMethods(methods);
-
-  let callMethods = methods.map(method => {
-    let pruned = _.pick(method, ['methodName', 'params']);
-    return pruned;
-  });
-
+function multicallAndTransformResults(callMethods, methods) {
   return multicall(callMethods)
     .then(results => rejectOnMulticallErrors(results, callMethods))
     .then(results => transformMulticallResult(_.flatten(results), methods));
+}
+
+function callAndTransformResults(method, args, callMethods, methods) {
+  return call(method, [...args, ...callMethods])
+    .then(results => rejectOnMulticallErrors(results, callMethods))
+    .then(results => results.map(itemResult => transformMulticallResult(itemResult, methods)));
+}
+
+function transformMulticallMethodsWithArgs(methods, args) {
+  args = args || [];
+
+  return methods.map(method => {
+    let pruned = _.pick(method, ['methodName', 'params']);
+    pruned.params = [...args].concat(pruned.params);
+    return pruned;
+  });
+}
+
+function system(methods) {
+  methods = normalizeMethods(methods);
+
+  let callMethods = transformMulticallMethodsWithArgs(methods);
+
+  return multicallAndTransformResults(callMethods, methods);
 }
 
 // TODO
@@ -195,29 +212,17 @@ function system(methods) {
 function torrent(infoHash, methods) {
   methods = normalizeMethods(methods, { prefix: 'd.' });
 
-  let callMethods = methods.map(method => {
-    let pruned = _.pick(method, ['methodName', 'params']);
-    pruned.params = [infoHash].concat(pruned.params);
-    return pruned;
-  });
+  let callMethods = transformMulticallMethodsWithArgs(methods, [infoHash]);
 
-  return multicall(callMethods)
-    .then(results => rejectOnMulticallErrors(results, callMethods))
-    .then(results => transformMulticallResult(_.flatten(results), methods));
+  return multicallAndTransformResults(callMethods, methods);
 }
 
 function file(infoHash, fileID, methods) {
   methods = normalizeMethods(methods, { prefix: 'f.' });
 
-  let callMethods = methods.map(method => {
-    let pruned = _.pick(method, ['methodName', 'params']);
-    pruned.params = [infoHash, fileID].concat(pruned.params);
-    return pruned;
-  });
+  let callMethods = transformMulticallMethodsWithArgs(methods, [infoHash, fileID]);
 
-  return multicall(callMethods)
-    .then(results => rejectOnMulticallErrors(results, callMethods))
-    .then(results => transformMulticallResult(_.flatten(results), methods));
+  return multicallAndTransformResults(callMethods, methods);
 }
 
 function torrents(view, methods) {
@@ -227,9 +232,7 @@ function torrents(view, methods) {
 
   // in:  d.multicall ['main', 'd.get_name=', 'd.get_ratio=']
   // out: [[hash1, ratio1], [hash2, ratio2]]
-  return call('d.multicall', [view, ...callMethods])
-    .then(results => rejectOnMulticallErrors(results, callMethods))
-    .then(results => results.map(itemResult => transformMulticallResult(itemResult, methods)));
+  return callAndTransformResults('d.multicall', [view], callMethods, methods);
 }
 
 function files(infoHash, methods) {
@@ -237,9 +240,7 @@ function files(infoHash, methods) {
 
   let callMethods = methods.map(method => method.methodName);
 
-  return call('f.multicall', [infoHash, 0, ...callMethods])
-    .then(results => rejectOnMulticallErrors(results, callMethods))
-    .then(results => results.map(itemResult => transformMulticallResult(itemResult, methods)));
+  return callAndTransformResults('f.multicall', [infoHash, 0], callMethods, methods);
 }
 
 function toBoolean(string) {
