@@ -62,18 +62,6 @@ function prependPrefixIfNotPresent(prefix, method) {
   }
 }
 
-function appendEqualsIfNotPresent(method) {
-  if (!method.methodName.includes('=')) {
-    method.methodName += '=';
-  }
-}
-
-function formatParamsForMulticall(method) {
-  if (method.params.length > 0) {
-    method.methodName += method.params.join(',');
-  }
-}
-
 function createMethodObjectIfString(method) {
   if (_.isString(method)) {
     return {methodName: method};
@@ -96,11 +84,6 @@ function normalizeMethods(methods, options) {
     method = createMethodObjectIfString(method);
     setParamsIfNotPresent(method);
     prependPrefixIfNotPresent(options.prefix, method);
-
-    if (options.isMulticall) {
-      appendEqualsIfNotPresent(method);
-      formatParamsForMulticall(method);
-    }
 
     return method;
   });
@@ -197,6 +180,10 @@ function transformMulticallMethodsWithArgs(methods, args) {
   });
 }
 
+function transformCallMethods(methods) {
+  return methods.map(method => method.methodName + '=' + method.params.join(','));
+}
+
 function system(methods) {
   methods = normalizeMethods(methods);
 
@@ -228,17 +215,15 @@ function file(infoHash, fileID, methods) {
 function torrents(view, methods) {
   methods = normalizeMethods(methods, { prefix: 'd.', isMulticall: true });
 
-  let callMethods = methods.map(method => method.methodName);
+  let callMethods = transformCallMethods(methods);
 
-  // in:  d.multicall ['main', 'd.get_name=', 'd.get_ratio=']
-  // out: [[hash1, ratio1], [hash2, ratio2]]
   return callAndTransformResults('d.multicall', [view], callMethods, methods);
 }
 
 function files(infoHash, methods) {
   methods = normalizeMethods(methods, { prefix: 'f.', isMulticall: true });
 
-  let callMethods = methods.map(method => method.methodName);
+  let callMethods = transformCallMethods(methods);
 
   return callAndTransformResults('f.multicall', [infoHash, 0], callMethods, methods);
 }
