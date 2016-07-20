@@ -140,12 +140,7 @@ function system(methods) {
   return multicall(callMethods)
     .then(results => {
       let flattened = results.reduce((acc, cur) => acc.concat(cur));
-
-      let mapped = [flattened].map(itemResult => {
-        return transformMulticallResult(itemResult, methods);
-      });
-
-      return mapped[0];
+      return transformMulticallResult(flattened, methods);
     });
 }
 
@@ -165,27 +160,7 @@ function torrent(infoHash, methods) {
   return multicall(callMethods)
     .then(results => {
       let flattened = results.reduce((acc, cur) => acc.concat(cur));
-
-      let mapped = [flattened].map(itemResult => {
-        return transformMulticallResult(itemResult, methods);
-      });
-
-      return mapped[0];
-    });
-}
-
-function torrents(view, methods) {
-  methods = normalizeMethods('d.', IS_MULTICALL, methods);
-
-  let callMethods = methods.map(method => method.methodName);
-
-  // in:  d.multicall ['main', 'd.get_name=', 'd.get_ratio=']
-  // out: [[hash1, ratio1], [hash2, ratio2]]
-  return call('d.multicall', [view, ...callMethods])
-    .then(results => {
-      return results.map(itemResult => {
-        return transformMulticallResult(itemResult, methods);
-      });
+      return transformMulticallResult(flattened, methods);
     });
 }
 
@@ -201,13 +176,19 @@ function file(infoHash, fileID, methods) {
   return multicall(callMethods)
     .then(results => {
       let flattened = results.reduce((acc, cur) => acc.concat(cur));
-
-      let mapped = [flattened].map(itemResult => {
-        return transformMulticallResult(itemResult, methods);
-      });
-
-      return mapped[0];
+      return transformMulticallResult(flattened, methods);
     });
+}
+
+function torrents(view, methods) {
+  methods = normalizeMethods('d.', IS_MULTICALL, methods);
+
+  let callMethods = methods.map(method => method.methodName);
+
+  // in:  d.multicall ['main', 'd.get_name=', 'd.get_ratio=']
+  // out: [[hash1, ratio1], [hash2, ratio2]]
+  return call('d.multicall', [view, ...callMethods])
+    .then(results => results.map(itemResult => transformMulticallResult(itemResult, methods)));
 }
 
 function files(infoHash, methods) {
@@ -216,11 +197,7 @@ function files(infoHash, methods) {
   let callMethods = methods.map(method => method.methodName);
 
   return call('f.multicall', [infoHash, 0, ...callMethods])
-    .then(results => {
-      return results.map(itemResult => {
-        return transformMulticallResult(itemResult, methods);
-      });
-    });
+    .then(results => results.map(itemResult => transformMulticallResult(itemResult, methods)));
 }
 
 function toBoolean(string) {
