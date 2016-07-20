@@ -144,6 +144,37 @@ function transformMulticallResult(itemResult, methods) {
   return transformed;
 }
 
+function resultIsError(result, index) {
+  if (result.faultCode && result.faultString) {
+    result.index = index;
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function rejectOnMulticallErrors(results, callMethods) {
+  const errors = results.filter(resultIsError);
+
+  if (errors.length == 0) {
+    return results;
+  }
+
+  const augmentedErrors = errors.map(error => {
+    const { methodName, params } = callMethods[error.index];
+
+    delete error.index;
+
+    return {
+      methodName,
+      params,
+      error
+    };
+  });
+
+  return Bluebird.reject(augmentedErrors);
+}
+
 function system(methods) {
   methods = normalizeMethods(methods);
 
@@ -153,10 +184,8 @@ function system(methods) {
   });
 
   return multicall(callMethods)
-    .then(results => {
-      let flattened = results.reduce((acc, cur) => acc.concat(cur));
-      return transformMulticallResult(flattened, methods);
-    });
+    .then(results => rejectOnMulticallErrors(results, callMethods))
+    .then(results => transformMulticallResult(_.flatten(results), methods));
 }
 
 // TODO
@@ -173,10 +202,8 @@ function torrent(infoHash, methods) {
   });
 
   return multicall(callMethods)
-    .then(results => {
-      let flattened = results.reduce((acc, cur) => acc.concat(cur));
-      return transformMulticallResult(flattened, methods);
-    });
+    .then(results => rejectOnMulticallErrors(results, callMethods))
+    .then(results => transformMulticallResult(_.flatten(results), methods));
 }
 
 function file(infoHash, fileID, methods) {
@@ -189,10 +216,8 @@ function file(infoHash, fileID, methods) {
   });
 
   return multicall(callMethods)
-    .then(results => {
-      let flattened = results.reduce((acc, cur) => acc.concat(cur));
-      return transformMulticallResult(flattened, methods);
-    });
+    .then(results => rejectOnMulticallErrors(results, callMethods))
+    .then(results => transformMulticallResult(_.flatten(results), methods));
 }
 
 function torrents(view, methods) {
@@ -203,6 +228,7 @@ function torrents(view, methods) {
   // in:  d.multicall ['main', 'd.get_name=', 'd.get_ratio=']
   // out: [[hash1, ratio1], [hash2, ratio2]]
   return call('d.multicall', [view, ...callMethods])
+    .then(results => rejectOnMulticallErrors(results, callMethods))
     .then(results => results.map(itemResult => transformMulticallResult(itemResult, methods)));
 }
 
@@ -212,6 +238,7 @@ function files(infoHash, methods) {
   let callMethods = methods.map(method => method.methodName);
 
   return call('f.multicall', [infoHash, 0, ...callMethods])
+    .then(results => rejectOnMulticallErrors(results, callMethods))
     .then(results => results.map(itemResult => transformMulticallResult(itemResult, methods)));
 }
 
