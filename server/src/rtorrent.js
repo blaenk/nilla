@@ -50,76 +50,76 @@ function multicall(calls) {
   return call('system.multicall', [calls]);
 }
 
-function setParamsIfNotPresent(method) {
-  if (!method.params) {
-    method.params = [];
+function setParamsIfNotPresent(request) {
+  if (!request.params) {
+    request.params = [];
   }
 }
 
-function prependPrefixIfNotPresent(prefix, method) {
-  if (!method.methodName.startsWith(prefix)) {
-    method.methodName = prefix + method.methodName;
+function prependPrefixIfNotPresent(prefix, request) {
+  if (!request.methodName.startsWith(prefix)) {
+    request.methodName = prefix + request.methodName;
   }
 }
 
-function createMethodObjectIfString(method) {
-  if (_.isString(method)) {
-    return {methodName: method};
+function createRequestObjectIfString(request) {
+  if (_.isString(request)) {
+    return {methodName: request};
   } else {
-    return method;
+    return request;
   }
 }
 
-function normalizeMethods(methods, options) {
+function normalizeRequests(requests, options) {
   options = Object.assign({
     isMulticall: false,
     prefix: ''
   }, options);
 
-  if (_.isString(methods)) {
-    methods = [methods];
+  if (_.isString(requests)) {
+    requests = [requests];
   }
 
-  return _.cloneDeep(methods).map(method => {
-    method = createMethodObjectIfString(method);
-    setParamsIfNotPresent(method);
-    prependPrefixIfNotPresent(options.prefix, method);
+  return _.cloneDeep(requests).map(request => {
+    request = createRequestObjectIfString(request);
+    setParamsIfNotPresent(request);
+    prependPrefixIfNotPresent(options.prefix, request);
 
-    return method;
+    return request;
   });
 }
 
-function transformKey(options) {
-  if (_.isString(options.as)) {
-    return options.as;
+function transformKey(request) {
+  if (_.isString(request.as)) {
+    return request.as;
   }  else {
     const nameBody = /^[dfpt]\.(.+)=?$/;
-    let key = nameBody.exec(options.methodName)[1];
+    let key = nameBody.exec(request.methodName)[1];
 
-    if (_.isFunction(options.as)) {
-      return options.as(key);
+    if (_.isFunction(request.as)) {
+      return request.as(key);
     } else {
       return key;
     }
   }
 }
 
-function transformValue(options, result) {
-  if (_.isFunction(options.map)) {
-    return options.map(result);
+function transformValue(request, result) {
+  if (_.isFunction(request.map)) {
+    return request.map(result);
   } else {
     return result;
   }
 }
 
-function transformMulticallResult(itemResult, methods) {
+function transformMulticallResponse(itemResponse, requests) {
   let transformed = {};
 
-  itemResult.map((methodResult, index) => {
-    const options = methods[index];
+  itemResponse.map((response, index) => {
+    const request = requests[index];
 
-    const key = transformKey(options);
-    const value = transformValue(options, methodResult);
+    const key = transformKey(request);
+    const value = transformValue(request, response);
 
     transformed[key] = value;
   });
@@ -127,24 +127,24 @@ function transformMulticallResult(itemResult, methods) {
   return transformed;
 }
 
-function resultIsError(result, index) {
-  if (result.faultCode && result.faultString) {
-    result.index = index;
+function responseIsError(response, index) {
+  if (response.faultCode && response.faultString) {
+    response.index = index;
     return true;
   } else {
     return false;
   }
 }
 
-function rejectOnMulticallErrors(results, callMethods) {
-  const errors = results.filter(resultIsError);
+function rejectOnMulticallErrors(responses, methods) {
+  const errors = responses.filter(responseIsError);
 
   if (errors.length == 0) {
-    return results;
+    return responses;
   }
 
   const augmentedErrors = errors.map(error => {
-    const { methodName, params } = callMethods[error.index];
+    const { methodName, params } = methods[error.index];
 
     delete error.index;
 
@@ -158,74 +158,74 @@ function rejectOnMulticallErrors(results, callMethods) {
   return Bluebird.reject(augmentedErrors);
 }
 
-function multicallAndTransformResults(callMethods, methods) {
-  return multicall(callMethods)
-    .then(results => rejectOnMulticallErrors(results, callMethods))
-    .then(results => transformMulticallResult(_.flatten(results), methods));
+function multicallAndTransformResponses(methods, requests) {
+  return multicall(methods)
+    .then(responses => rejectOnMulticallErrors(responses, methods))
+    .then(responses => transformMulticallResponse(_.flatten(responses), requests));
 }
 
-function callAndTransformResults(method, args, callMethods, methods) {
-  return call(method, [...args, ...callMethods])
-    .then(results => rejectOnMulticallErrors(results, callMethods))
-    .then(results => results.map(itemResult => transformMulticallResult(itemResult, methods)));
+function callAndTransformResponses(multicallMethod, args, methods, requests) {
+  return call(multicallMethod, [...args, ...methods])
+    .then(responses => rejectOnMulticallErrors(responses, methods))
+    .then(responses => responses.map(itemResponse => transformMulticallResponse(itemResponse, requests)));
 }
 
-function transformMulticallMethodsWithArgs(methods, args) {
+function multicallMethodsWithArgs(requests, args) {
   args = args || [];
 
-  return methods.map(method => {
-    let pruned = _.pick(method, ['methodName', 'params']);
+  return requests.map(request => {
+    let pruned = _.pick(request, ['methodName', 'params']);
     pruned.params = [...args].concat(pruned.params);
     return pruned;
   });
 }
 
-function transformCallMethods(methods) {
-  return methods.map(method => method.methodName + '=' + method.params.join(','));
+function transformCallMethods(requests) {
+  return requests.map(request => request.methodName + '=' + request.params.join(','));
 }
 
-function system(methods) {
-  methods = normalizeMethods(methods);
+function system(requests) {
+  requests = normalizeRequests(requests);
 
-  let callMethods = transformMulticallMethodsWithArgs(methods);
+  let methods = multicallMethodsWithArgs(requests);
 
-  return multicallAndTransformResults(callMethods, methods);
+  return multicallAndTransformResponses(methods, requests);
 }
 
 // TODO
 // optimize for methods is not array, in which case make a direct call?
 // resource('torrent', [infoHash], 'get_name')
 // invokes: call('d.get_name', infoHash)
-function torrent(infoHash, methods) {
-  methods = normalizeMethods(methods, { prefix: 'd.' });
+function torrent(infoHash, requests) {
+  requests = normalizeRequests(requests, { prefix: 'd.' });
 
-  let callMethods = transformMulticallMethodsWithArgs(methods, [infoHash]);
+  let methods = multicallMethodsWithArgs(requests, [infoHash]);
 
-  return multicallAndTransformResults(callMethods, methods);
+  return multicallAndTransformResponses(methods, requests);
 }
 
-function file(infoHash, fileID, methods) {
-  methods = normalizeMethods(methods, { prefix: 'f.' });
+function file(infoHash, fileID, requests) {
+  requests = normalizeRequests(requests, { prefix: 'f.' });
 
-  let callMethods = transformMulticallMethodsWithArgs(methods, [infoHash, fileID]);
+  let methods = multicallMethodsWithArgs(requests, [infoHash, fileID]);
 
-  return multicallAndTransformResults(callMethods, methods);
+  return multicallAndTransformResponses(methods, requests);
 }
 
-function torrents(view, methods) {
-  methods = normalizeMethods(methods, { prefix: 'd.', isMulticall: true });
+function torrents(view, requests) {
+  requests = normalizeRequests(requests, { prefix: 'd.', isMulticall: true });
 
-  let callMethods = transformCallMethods(methods);
+  let methods = transformCallMethods(requests);
 
-  return callAndTransformResults('d.multicall', [view], callMethods, methods);
+  return callAndTransformResponses('d.multicall', [view], methods, requests);
 }
 
-function files(infoHash, methods) {
-  methods = normalizeMethods(methods, { prefix: 'f.', isMulticall: true });
+function files(infoHash, requests) {
+  requests = normalizeRequests(requests, { prefix: 'f.', isMulticall: true });
 
-  let callMethods = transformCallMethods(methods);
+  let methods = transformCallMethods(requests);
 
-  return callAndTransformResults('f.multicall', [infoHash, 0], callMethods, methods);
+  return callAndTransformResponses('f.multicall', [infoHash, 0], methods, requests);
 }
 
 function toBoolean(string) {
