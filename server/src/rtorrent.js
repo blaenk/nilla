@@ -72,7 +72,6 @@ function createRequestObjectIfString(request) {
 
 function normalizeRequests(requests, options) {
   options = Object.assign({
-    isMulticall: false,
     prefix: ''
   }, options);
 
@@ -180,7 +179,7 @@ function multicallMethodsWithArgs(requests, args) {
   });
 }
 
-function transformCallMethods(requests) {
+function callMethods(requests) {
   return requests.map(request => request.methodName + '=' + request.params.join(','));
 }
 
@@ -213,17 +212,17 @@ function file(infoHash, fileID, requests) {
 }
 
 function torrents(view, requests) {
-  requests = normalizeRequests(requests, { prefix: 'd.', isMulticall: true });
+  requests = normalizeRequests(requests, { prefix: 'd.' });
 
-  let methods = transformCallMethods(requests);
+  let methods = callMethods(requests);
 
   return callAndTransformResponses('d.multicall', [view], methods, requests);
 }
 
 function files(infoHash, requests) {
-  requests = normalizeRequests(requests, { prefix: 'f.', isMulticall: true });
+  requests = normalizeRequests(requests, { prefix: 'f.' });
 
-  let methods = transformCallMethods(requests);
+  let methods = callMethods(requests);
 
   return callAndTransformResponses('f.multicall', [infoHash, 0], methods, requests);
 }
