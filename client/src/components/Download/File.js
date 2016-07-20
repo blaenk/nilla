@@ -7,7 +7,6 @@ import styles from './filetree.module.less';
 
 const File = React.createClass({
   propTypes: {
-    path: React.PropTypes.string.isRequired,
     pathComponents: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
     size: React.PropTypes.number.isRequired,
     id: React.PropTypes.number.isRequired,
@@ -21,22 +20,21 @@ const File = React.createClass({
   },
 
   render: function() {
-    const path = this.props.pathComponents.join('/');
     const basename = this.props.pathComponents[this.props.pathComponents.length - 1];
     const size = filesize(this.props.size);
 
     const isFinished = this.props.progress == 100;
     const isDisabled = !this.props.enabled;
 
-    const encodedName = encodeURIComponent(this.props.downloadName);
-    const encodedUrl = encodeURIComponent(path);
+    const encodedName = this.props.downloadName;
+    const encodedPath = this.props.pathComponents.map(encodeURIComponent).join('/');
 
     let url;
 
     if (this.props.isMultiFile) {
-      url = `/file/${encodedName}/${encodedUrl}`;
+      url = `/file/${encodedName}/${encodedPath}`;
     } else {
-      url = `/file/${encodedUrl}`;
+      url = `/file/${encodedPath}`;
     }
 
     const disabledOr = style => {

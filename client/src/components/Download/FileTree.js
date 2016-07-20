@@ -143,7 +143,6 @@ const FileTree = CSSModules(React.createClass({
               downloadName={this.props.downloadName}
               progress={file.progress}
               enabled={file.enabled}
-              path={file.path}
               pathComponents={file.pathComponents}
               id={file.id}
               key={file.id} />
