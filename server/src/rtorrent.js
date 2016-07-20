@@ -74,12 +74,17 @@ function formatParamsForMulticall(method) {
   }
 }
 
-function normalizeMethods(prefix, isMulticall, methods) {
+function normalizeMethods(methods, options) {
+  options = Object.assign({
+    isMulticall: false,
+    prefix: ''
+  }, options);
+
   return _.cloneDeep(methods).map(method => {
     setParamsIfNotPresent(method);
-    prependPrefixIfNotPresent(prefix, method);
+    prependPrefixIfNotPresent(options.prefix, method);
 
-    if (isMulticall) {
+    if (options.isMulticall) {
       appendEqualsIfNotPresent(method);
       formatParamsForMulticall(method);
     }
@@ -126,11 +131,8 @@ function transformMulticallResult(itemResult, methods) {
   return transformed;
 }
 
-const IS_MULTICALL = true;
-const IS_NOT_MULTICALL = false;
-
 function system(methods) {
-  methods = normalizeMethods('', IS_NOT_MULTICALL, methods);
+  methods = normalizeMethods(methods);
 
   let callMethods = methods.map(method => {
     let pruned = _.pick(method, ['methodName', 'params']);
@@ -149,7 +151,7 @@ function system(methods) {
 // resource('torrent', [infoHash], 'get_name')
 // invokes: call('d.get_name', infoHash)
 function torrent(infoHash, methods) {
-  methods = normalizeMethods('d.', IS_NOT_MULTICALL, methods);
+  methods = normalizeMethods(methods, { prefix: 'd.' });
 
   let callMethods = methods.map(method => {
     let pruned = _.pick(method, ['methodName', 'params']);
@@ -165,7 +167,7 @@ function torrent(infoHash, methods) {
 }
 
 function file(infoHash, fileID, methods) {
-  methods = normalizeMethods('f.', IS_NOT_MULTICALL, methods);
+  methods = normalizeMethods(methods, { prefix: 'f.' });
 
   let callMethods = methods.map(method => {
     let pruned = _.pick(method, ['methodName', 'params']);
@@ -181,7 +183,7 @@ function file(infoHash, fileID, methods) {
 }
 
 function torrents(view, methods) {
-  methods = normalizeMethods('d.', IS_MULTICALL, methods);
+  methods = normalizeMethods(methods, { prefix: 'd.', isMulticall: true });
 
   let callMethods = methods.map(method => method.methodName);
 
@@ -192,7 +194,7 @@ function torrents(view, methods) {
 }
 
 function files(infoHash, methods) {
-  methods = normalizeMethods('f.', IS_MULTICALL, methods);
+  methods = normalizeMethods(methods, { prefix: 'f.', isMulticall: true });
 
   let callMethods = methods.map(method => method.methodName);
 
