@@ -247,24 +247,32 @@ function setFilePriorities(infoHash, priorities) {
   return rtorrent.multicall(request);
 }
 
-function addLock(infoHash, username) {
+function getLocks(infoHash) {
   return rtorrent.torrent(
     infoHash, {
       methodName: 'get_custom',
       params: ['levee-locks'],
       as: 'locks',
       map: deserializeCustomJSON
-    })
-    .then(({ locks }) => {
+    }).get('locks');
+}
+
+function setLocks(infoHash, locks) {
+  const serialized = serializeCustomJSON(locks);
+
+  return rtorrent.torrent(infoHash, {
+    methodName: 'set_custom',
+    params: ['levee-locks', serialized]
+  });
+}
+
+function addLock(infoHash, username) {
+  return getLocks(infoHash)
+    .then(locks => {
       if (!locks.includes(username)) {
         locks.push(username);
 
-        const serialized = serializeCustomJSON(locks);
-
-        return rtorrent.torrent(infoHash, {
-          methodName: 'set_custom',
-          params: ['levee-locks', serialized]
-        });
+        return setLocks(infoHash, locks);
       }
 
       return Bluebird.resolve();
@@ -272,23 +280,14 @@ function addLock(infoHash, username) {
 }
 
 function removeLock(infoHash, username) {
-  return rtorrent.torrent(
-    infoHash, {
-      methodName: 'get_custom',
-      params: ['levee-locks'],
-      as: 'locks',
-      map: deserializeCustomJSON
-    })
-    .then(({ locks }) => {
-      if (locks.includes(username)) {
-        locks = locks.filter(user => user != username);
+  return getLocks(infoHash)
+    .then(locks => {
+      const index = locks.indexOf(username);
 
-        const serialized = serializeCustomJSON(locks);
+      if (index != -1) {
+        locks.splice(index, 1);
 
-        return rtorrent.torrent(infoHash, {
-          methodName: 'set_custom',
-          params: ['levee-locks', serialized]
-        });
+        return setLocks(infoHash, locks);
       }
 
       return Bluebird.resolve();

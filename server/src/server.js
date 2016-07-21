@@ -284,8 +284,6 @@ app.get('/api/downloads/:infoHash', JWT, (req, res) => {
 app.patch('/api/downloads/:infoHash', JWT, (req, res) => {
   const { infoHash } = req.params;
 
-  console.log('body', req.body);
-
   switch (req.body.action) {
     case 'start': {
       rtorrent.torrent(infoHash, 'start')
