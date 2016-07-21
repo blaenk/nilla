@@ -326,15 +326,6 @@ app.delete('/api/downloads/:infoHash', JWT, (req, res) => {
     }));
 });
 
-app.get('/api/downloads/:infoHash/files', JWT, (req, res) => {
-  downloads.getAllFiles(req.params.infoHash)
-    .then(files => res.json(files))
-    .catch(_error => res.status(500).json({
-      success: false,
-      message: 'no such torrent'
-    }));
-});
-
 app.get('*', JWT, CSRF, (req, res) => {
   res.render('internal', {
     layout: false
