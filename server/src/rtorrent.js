@@ -75,7 +75,7 @@ function normalizeRequests(requests, options) {
     prefix: ''
   }, options);
 
-  if (_.isString(requests)) {
+  if (!_.isArray(requests)) {
     requests = [requests];
   }
 

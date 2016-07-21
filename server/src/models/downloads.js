@@ -26,6 +26,14 @@ function decodeBase64(string) {
   return new Buffer(string, 'base64').toString('ascii');
 }
 
+function serializeCustomJSON(object) {
+  return encodeBase64(JSON.stringify(object));
+}
+
+function deserializeCustomJSON(json) {
+  return JSON.parse(decodeBase64(json));
+}
+
 function getProgress(completed, totalSize) {
   if (totalSize != 0) {
     const fractionComplete = completed / totalSize;
@@ -83,7 +91,7 @@ const DOWNLOADS_METHODS = [
     methodName: 'get_custom',
     params: ['levee-locks'],
     as: 'locks',
-    map: data => JSON.parse(decodeBase64(data))
+    map: deserializeCustomJSON
   },
   {
     methodName: 'get_custom',
@@ -114,31 +122,23 @@ function getDownloads() {
 }
 
 const FILE_METHODS = [
-  { methodName: 'get_path', as: 'path' },
   { methodName: 'get_path_components', as: 'pathComponents' },
   {
     methodName: 'get_priority',
     as: 'priority',
-    map: priority => {
-      switch (priority) {
-        case '0': return 'off';
-        case '1': return 'normal';
-        case '2': return 'high';
-        default: throw new Error('unknown priority');
-      }
-    }
+    map: toHumanPriority
   },
-  { methodName: 'get_completed_chunks', as: 'completedChunks' },
-  { methodName: 'get_size_chunks', as: 'sizeChunks' },
-  { methodName: 'get_size_bytes', as: 'size' }
+  { methodName: 'get_completed_chunks', as: 'completedChunks', map: parseInt },
+  { methodName: 'get_size_chunks', as: 'sizeChunks', map: parseInt },
+  { methodName: 'get_size_bytes', as: 'size', map: parseInt }
 ];
 
 function getFiles(infoHash) {
   return rtorrent.files(infoHash, FILE_METHODS)
     .then(files => {
-      return files.map(file => {
+      return files.map((file, index) => {
+        file.id = index;
         file.progress = getProgress(file.completedChunks, file.sizeChunks);
-        file.name = file.pathComponents[file.pathComponents.length - 1];
         return file;
       });
     });
@@ -183,9 +183,7 @@ function getExtractedFiles(infoHash) {
           const pathComponents = relativePath.split(path.sep);
 
           return {
-            path: relativePath,
             pathComponents: pathComponents,
-            name: pathComponents[pathComponents.length - 1],
             size: stats.size,
             progress: obj.isExtracting ? 0 : 100,
             enabled: true
@@ -212,6 +210,91 @@ function getCompleteDownload(infoHash) {
     });
 }
 
+function toNativePriority(priority) {
+  switch (priority) {
+    case 'off': return 0;
+    case 'normal': return 1;
+    case 'high': return 2;
+    default: throw new Error('unknown priority');
+  }
+}
+
+function toHumanPriority(priority) {
+  switch (priority) {
+    case '0': return 'off';
+    case '1': return 'normal';
+    case '2': return 'high';
+    default: throw new Error('unknown priority');
+  }
+}
+
+function setFilePriorities(infoHash, priorities) {
+  const priorityCalls = priorities.map(object => {
+    const target = `${infoHash}:f${object.id}`;
+    const priority = toNativePriority(object.priority);
+
+    return {
+      methodName: 'f.set_priority',
+      params: [target, priority]
+    };
+  });
+
+  const request = priorityCalls.concat([{
+    methodName: 'd.update_priorities',
+    params: [infoHash]
+  }]);
+
+  return rtorrent.multicall(request);
+}
+
+function addLock(infoHash, username) {
+  return rtorrent.torrent(
+    infoHash, {
+      methodName: 'get_custom',
+      params: ['levee-locks'],
+      as: 'locks',
+      map: deserializeCustomJSON
+    })
+    .then(({ locks }) => {
+      if (!locks.includes(username)) {
+        locks.push(username);
+
+        const serialized = serializeCustomJSON(locks);
+
+        return rtorrent.torrent(infoHash, {
+          methodName: 'set_custom',
+          params: ['levee-locks', serialized]
+        });
+      }
+
+      return Bluebird.resolve();
+    });
+}
+
+function removeLock(infoHash, username) {
+  return rtorrent.torrent(
+    infoHash, {
+      methodName: 'get_custom',
+      params: ['levee-locks'],
+      as: 'locks',
+      map: deserializeCustomJSON
+    })
+    .then(({ locks }) => {
+      if (locks.includes(username)) {
+        locks = locks.filter(user => user != username);
+
+        const serialized = serializeCustomJSON(locks);
+
+        return rtorrent.torrent(infoHash, {
+          methodName: 'set_custom',
+          params: ['levee-locks', serialized]
+        });
+      }
+
+      return Bluebird.resolve();
+    });
+}
+
 module.exports = {
   onLoadSetUploader,
   getDownload,
@@ -220,5 +303,8 @@ module.exports = {
   getFiles,
   getExtractedFiles,
   getAllFiles,
-  decodeRatio
+  decodeRatio,
+  setFilePriorities,
+  addLock,
+  removeLock
 };

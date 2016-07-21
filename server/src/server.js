@@ -281,6 +281,45 @@ app.get('/api/downloads/:infoHash', JWT, (req, res) => {
     }));
 });
 
+app.patch('/api/downloads/:infoHash', JWT, (req, res) => {
+  const { infoHash } = req.params;
+
+  console.log('body', req.body);
+
+  switch (req.body.action) {
+    case 'start': {
+      rtorrent.torrent(infoHash, 'start')
+        .then(() => res.json({success: true}));
+      break;
+    }
+    case 'stop': {
+      rtorrent.torrent(infoHash, 'stop')
+        .then(() => res.json({success: true}));
+      break;
+    }
+    case 'addLock': {
+      const username = req.body.params;
+      downloads.addLock(infoHash, username)
+        .then(() => res.json({success: true}))
+        .catch(error => console.log(error));
+      break;
+    }
+    case 'removeLock': {
+      const username = req.body.params;
+      downloads.removeLock(infoHash, username)
+        .then(() => res.json({success: true}))
+        .catch(error => console.log(error));
+      break;
+    }
+    case 'setFilePriorities': {
+      const priorities = req.body.params;
+      downloads.setFilePriorities(infoHash, priorities)
+        .then(() => res.json({success: true}));
+      break;
+    }
+  }
+});
+
 app.delete('/api/downloads/:infoHash', JWT, (req, res) => {
   rtorrent.torrent(req.params.infoHash, 'erase')
     .then(() => res.json({success: true}))
