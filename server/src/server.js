@@ -213,10 +213,6 @@ function attachAuthentication(app) {
   });
 }
 
-function serveApp(req, res) {
-  res.render('internal', {layout: false});
-}
-
 function attachAPI(app) {
   const api = express.Router();
 
@@ -226,8 +222,8 @@ function attachAPI(app) {
     rtorrent.load(req.file.buffer, {
       start: req.body.start == 'true',
       commands: [downloads.onLoadSetUploader(req.user.username)]
-    }).then(infohash => {
-      res.send({success: true, infohash});
+    }).then(infoHash => {
+      res.send({success: true, infoHash});
     }).catch(error => {
       console.log(error);
 
@@ -331,10 +327,12 @@ function configureHandlebars(app) {
   app.set('view engine', 'handlebars');
 }
 
+function serveApp(req, res) {
+  res.render('internal', {layout: false});
+}
+
 function reactRoutes(app) {
-  app.get('/downloads*', JWT, CSRF, serveApp);
-  app.get('/trackers*', JWT, CSRF, serveApp);
-  app.get('/users*', JWT, CSRF, serveApp);
+  app.use(['/downloads', '/trackers', '/users'], JWT, CSRF, serveApp);
 }
 
 function createServer() {
