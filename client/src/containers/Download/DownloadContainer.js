@@ -10,6 +10,13 @@ const mapStateToProps = (state, _props) => {
   // const infohash = props.params.infohash;
   // const download = state.downloads.find(d => d.infohash == infohash);
 
+  // TODO
+  // audit
+  downloadStub.files.map(f => {
+    f.isHidden = false;
+    return f;
+  });
+
   return downloadStub;
 };
 
