@@ -20,17 +20,18 @@ const config = {};
 
 config.plugins = [];
 
+config.bail = true;
 config.cache = true;
 
 config.resolve = {};
 config.resolve.alias = {
-  'common': path.join(src, 'common'),
-  'reducers': path.join(src, 'reducers'),
-  'selectors': path.join(src, 'selectors'),
-  'actions': path.join(src, 'actions'),
-  'styles': path.join(src, 'styles'),
-  'containers': path.join(src, 'containers'),
-  'components': path.join(src, 'components')
+  common: path.join(src, 'common'),
+  reducers: path.join(src, 'reducers'),
+  selectors: path.join(src, 'selectors'),
+  actions: path.join(src, 'actions'),
+  styles: path.join(src, 'styles'),
+  containers: path.join(src, 'containers'),
+  components: path.join(src, 'components')
 };
 
 config.entry = {
@@ -43,6 +44,12 @@ config.output = {
   filename: '[name].js'
 };
 
+if (NODE_ENV == 'production') {
+  config.devtool = 'cheap-module-source-map';
+} else {
+  config.devtool = 'eval';
+}
+
 config.plugins.push(new webpack.DefinePlugin({
   'process.env': {
     NODE_ENV: JSON.stringify(NODE_ENV)
@@ -50,15 +57,37 @@ config.plugins.push(new webpack.DefinePlugin({
   __NODE_ENV__: JSON.stringify(NODE_ENV)
 }));
 
+config.plugins.push(new webpack.optimize.OccurenceOrderPlugin());
+config.plugins.push(new webpack.optimize.DedupePlugin());
+
 if (NODE_ENV == 'production') {
-  config.devtool = 'cheap-module-source-map';
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    compressor: {
+      screw_ie8: true,
+      warnings: false
+    },
+    mangle: {
+      screw_ie8: true
+    },
+    output: {
+      comments: false,
+      screw_ie8: true
+    }
+  }));
 }
 
-config.plugins.push(new ExtractTextPlugin('app.css', {
-  allChunks: true
-}));
+config.plugins.push(new ExtractTextPlugin('app.css'));
 
 config.module = {};
+
+config.preLoaders = [];
+
+config.preLoaders.push({
+  test: /\.js$/,
+  loader: 'eslint',
+  include: [src, test]
+});
+
 config.module.loaders = [];
 
 config.module.loaders.push({
