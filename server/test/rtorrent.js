@@ -2,63 +2,41 @@
 
 const Bluebird = require('bluebird');
 const semver = require('semver');
-const path = require('path');
 
 const rtorrent = require('../src/rtorrent.js');
 
-const torrents = {
-  arch: {
-    path: 'magnet:?xt=urn:btih:01000e92d5c8cf2473e5978b445de9624c04d11a&dn=archlinux-2016.06.01-dual.iso&tr=udp://tracker.archlinux.org:6969',
-    hash: '01000e92d5c8cf2473e5978b445de9624c04d11a'
-  },
-  ubuntu: {
-    name: 'ubuntu-16.04-desktop-amd64.iso',
-    size: '1485881344',
-    path: './test/fixtures/ubuntu-16.04-desktop-amd64.iso.torrent',
-    hash: '4344503b7e797ebf31582327a5baae35b11bda01'
-  },
-  fedora: {
-    path: './test/fixtures/Fedora-Live-Workstation-x86_64-23.torrent',
-    hash: '796ab93bb81e2dbe072f3c07857675ee5c47b046'
-  }
-};
+const torrents = require('./fixtures/torrents.json');
 
 describe('RTorrent', function() {
-  before("should ensure a connection", function() {
+  before('should ensure a connection', function() {
     // TODO
     // should perform some isolation?
     //
     // * session.path.set to set the session directory?
     // * directory.default.set to set download dir?
 
-    return rtorrent.call("system.client_version")
-        .then(function(version) {
-          if (semver.gt(version, "0.9.0")) {
-            return Bluebird.resolve();
-          } else {
-            return Bluebird.reject(
-              `RTorrent ${version}, but > 0.9.0 required.`
-            );
-          }
-        })
-        .then(() => Bluebird.all([
-          rtorrent.load(torrents.ubuntu.path, {raw: true})
-            .should.eventually.equal(torrents.ubuntu.hash),
+    return rtorrent.call('system.client_version')
+      .then(function(version) {
+        expect(version).to.satisfy(version => semver.gt(version, '0.9.0'));
+      })
+      .then(() => Bluebird.all([
+        expect(rtorrent.load(torrents.ubuntu.path, {raw: true}))
+          .to.eventually.equal(torrents.ubuntu.hash),
 
-          rtorrent.load(torrents.arch.path)
-            .should.eventually.equal(torrents.arch.hash)
-        ]));
+        expect(rtorrent.load(torrents.arch.path))
+          .to.eventually.equal(torrents.arch.hash)
+      ]));
   });
 
   context('manipulate torrents', function() {
     it('read the name', function() {
-      return rtorrent.torrent(torrents.ubuntu.hash, ['get_name']).
-        should.eventually.become({ 'get_name': torrents.ubuntu.name });
+      return expect(rtorrent.torrent(torrents.ubuntu.hash, 'get_name'))
+        .to.eventually.become({ get_name: torrents.ubuntu.name });
     });
 
     it('read the file size', function() {
-      return rtorrent.torrent(torrents.ubuntu.hash, ['get_size_bytes']).
-        should.eventually.become({ 'get_size_bytes': torrents.ubuntu.size });
+      return expect(rtorrent.torrent(torrents.ubuntu.hash, 'get_size_bytes'))
+        .to.eventually.become({ get_size_bytes: torrents.ubuntu.size });
     });
 
     context('manage file properties', function() {
@@ -73,27 +51,27 @@ describe('RTorrent', function() {
 
   context('multicalls', function() {
     it('should get the name and size simultaneously', function() {
-      return rtorrent.multicall([
-        {methodName: "d.get_name", params: [torrents.ubuntu.hash]},
-        {methodName: "d.get_size_bytes", params: [torrents.ubuntu.hash]}
-      ]).should.become([
+      return expect(rtorrent.multicall([
+        {methodName: 'd.get_name', params: [torrents.ubuntu.hash]},
+        {methodName: 'd.get_size_bytes', params: [torrents.ubuntu.hash]}
+      ])).to.become([
         [torrents.ubuntu.name],
         [torrents.ubuntu.size]
       ]);
     });
 
     it('should use a helper to get the name and size simultaneously', function() {
-      return rtorrent.torrent(torrents.ubuntu.hash, [
+      return expect(rtorrent.torrent(torrents.ubuntu.hash, [
         { methodName: 'get_name', as: 'name' },
         { methodName: 'get_size_bytes', as: 'sizeBytes' }
-      ]).should.become({
-        'name': torrents.ubuntu.name,
-        'sizeBytes': torrents.ubuntu.size
+      ])).to.become({
+        name: torrents.ubuntu.name,
+        sizeBytes: torrents.ubuntu.size
       });
     });
 
     it('should support system multicalls', function() {
-      return rtorrent.system([
+      return expect(rtorrent.system([
         {methodName: 'get_directory', as: 'baseDirectory'},
         {methodName: 'd.get_name', params: [torrents.ubuntu.hash], as: 'name'},
         {
@@ -101,7 +79,7 @@ describe('RTorrent', function() {
           params: [torrents.ubuntu.hash],
           as: 'isComplete', map: rtorrent.toBoolean
         }
-      ]).should.become({
+      ])).to.become({
         baseDirectory: process.env.RTORRENT_DOWNLOADS_DIRECTORY,
         name: torrents.ubuntu.name,
         isComplete: false
@@ -110,8 +88,8 @@ describe('RTorrent', function() {
   });
 
   context('helpers', function() {
-    it("should make a torrent multicall", function() {
-      return rtorrent.torrents(
+    it('should make a torrent multicall', function() {
+      return expect(rtorrent.torrents(
         'main', [
           { methodName: 'get_name', as: 'name' },
           {
@@ -120,7 +98,7 @@ describe('RTorrent', function() {
             as: 'completedBytes'
           }
         ]
-      ).should.become([
+      )).to.become([
         {
           name: '01000E92D5C8CF2473E5978B445DE9624C04D11A.meta',
           completedBytes: 0

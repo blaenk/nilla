@@ -1,0 +1,16 @@
+{
+  "arch": {
+    "path": "magnet:?xt=urn:btih:01000e92d5c8cf2473e5978b445de9624c04d11a&dn=archlinux-2016.06.01-dual.iso&tr=udp://tracker.archlinux.org:6969",
+    "hash": "01000e92d5c8cf2473e5978b445de9624c04d11a"
+  },
+  "ubuntu": {
+    "name": "ubuntu-16.04-desktop-amd64.iso",
+    "size": "1485881344",
+    "path": "./test/fixtures/ubuntu-16.04-desktop-amd64.iso.torrent",
+    "hash": "4344503b7e797ebf31582327a5baae35b11bda01"
+  },
+  "fedora": {
+    "path": "./test/fixtures/Fedora-Live-Workstation-x86_64-23.torrent",
+    "hash": "796ab93bb81e2dbe072f3c07857675ee5c47b046"
+  }
+}
