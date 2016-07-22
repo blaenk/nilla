@@ -3,6 +3,9 @@
     "mocha": true
   },
   "globals": {
-    "assert": true
+    "chai": true,
+    "sinon": true,
+    "assert": true,
+    "expect": true
   }
 }

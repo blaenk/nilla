@@ -23,7 +23,7 @@ describe("SCGI", function() {
         "," +
         "What is the answer to life, the Universe and everything?";
 
-      assert.equal(raw, request);
+      expect(raw).to.equal(request);
     });
 
     it('should parse a response', () => {
@@ -35,9 +35,9 @@ describe("SCGI", function() {
 
       const parsed = scgi.parseResponse(response);
 
-      assert.equal('42', parsed.body);
-      assert.equal('200 OK', parsed.headers['Status']);
-      assert.equal('text/plain', parsed.headers['Content-Type']);
+      expect(parsed.body).to.equal('42');
+      expect(parsed.headers['Status']).to.equal('200 OK');
+      expect(parsed.headers['Content-Type']).to.equal('text/plain');
     });
   });
 
