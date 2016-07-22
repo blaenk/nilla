@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "An interface to rtorrent - server",
   "scripts": {
-    "start": "node ./src/server.js",
+    "start": "node ./src/main.js",
     "lint": "eslint --no-inline-config src/ test/",
     "test": "NODE_ENV=test mocha test/",
     "coverage": "istanbul cover --dir ./coverage/server ./node_modules/mocha/bin/_mocha test/ --report lcovonly -- -R spec",

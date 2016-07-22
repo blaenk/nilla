@@ -2,28 +2,34 @@
 
 require('dotenv').config();
 
+const rtorrent = require('./rtorrent');
 const downloads = require('./models/downloads');
 const users = require('./models/users');
 
+const csurf = require('csurf');
 const express = require('express');
 const expressHandlebars = require('express-handlebars');
-const csurf = require('csurf');
 
-const moment = require('moment');
-const path = require('path');
-const url = require('url');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const multer = require('multer');
-const rtorrent = require('./rtorrent');
-const sqlite3 = require('sqlite3');
 const bcrypt = require('bcrypt');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const expressJWT = require('express-jwt');
 const helmet = require('helmet');
+const jwt = require('jsonwebtoken');
+const moment = require('moment');
+const multer = require('multer');
+const path = require('path');
+const sqlite3 = require('sqlite3');
+const url = require('url');
 
 const db = new sqlite3.cached.Database('./db/nilla.db');
 
-const jwt = require('jsonwebtoken');
-const expressJWT = require('express-jwt');
+const {
+  SERVE_STATIC,
+  JWT_SECRET,
+  USE_SENDFILE,
+  RTORRENT_DOWNLOADS_DIRECTORY
+} = process.env;
 
 function JWTErrorHandler(err, req, res, _next) {
   if (err.name == 'UnauthorizedError') {
@@ -31,31 +37,6 @@ function JWTErrorHandler(err, req, res, _next) {
     res.redirect(`/login?redirect=${redirectPath}`);
   }
 }
-
-const app = express();
-
-app.use(helmet());
-
-const VIEWS_PATH = path.join(__dirname, 'views');
-
-app.set('views', VIEWS_PATH);
-
-const handlebars = expressHandlebars.create({
-  defaultLayout: 'main',
-  layoutsDir: path.join(VIEWS_PATH, 'layouts')
-});
-
-app.engine('handlebars', handlebars.engine);
-app.set('view engine', 'handlebars');
-
-const PUBLIC_PATH = path.join(__dirname, '../../client/build');
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser());
-app.use(express.static(PUBLIC_PATH));
-
-const csrfProtection = csurf({cookie: true});
 
 function CSRFValidationError(err, req, res, next) {
   console.log('csrfvalidationError');
@@ -82,8 +63,6 @@ function CSRFValidationError(err, req, res, next) {
   });
 }
 
-const CSRF = [csrfProtection, CSRFValidationError];
-
 function setCSRFTokenCookie(req, res, next) {
   res.cookie('csrf-token', req.csrfToken(), {
     httpOnly: false,
@@ -94,15 +73,6 @@ function setCSRFTokenCookie(req, res, next) {
 
   next();
 }
-
-const { JWT_SECRET } = process.env;
-
-const authenticateJWT = expressJWT({
-  secret: JWT_SECRET,
-  getToken: getJWTFromHeaderOrCookie
-});
-
-const JWT = [authenticateJWT, JWTErrorHandler];
 
 function getJWTFromHeaderOrCookie(req) {
   if (req.headers.authorization) {
@@ -117,34 +87,6 @@ function getJWTFromHeaderOrCookie(req) {
 
   return null;
 }
-
-const TEN_MEGABYTES = 10000000;
-
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: {
-    fileSize: TEN_MEGABYTES
-  }
-});
-
-app.get(/^\/file\/(.+)/, JWT, (req, res) => {
-  const filePath = req.params[0];
-  const name = path.basename(filePath);
-
-  if (!process.env.USE_SENDFILE) {
-    const downloadPath = path.join(process.env.RTORRENT_DOWNLOADS_DIRECTORY, filePath);
-    res.download(downloadPath, name);
-    return;
-  }
-
-  const sendFilePath = path.join('sendfile', filePath);
-
-  // TODO
-  // maybe Content-Type needs to be empty?
-  res.attachment(name);
-  res.header('X-Accel-Redirect', sendFilePath);
-  res.end();
-});
 
 function createJWT(user) {
   return jwt.sign({
@@ -169,57 +111,6 @@ function getRedirectPath(req) {
   }
 }
 
-app.get('/login', CSRF, setCSRFTokenCookie, (req, res) => {
-  res.render('login', {
-    csrfToken: req.csrfToken(),
-    redirectTo: getRedirectPath(req)
-  });
-});
-
-app.post('/login', CSRF, (req, res) => {
-  const { username, password, _redirectTo } = req.body;
-  const failureRedirect = `/login?redirect=${_redirectTo}`;
-
-  if (!username || !password) {
-    res.redirect(failureRedirect);
-    return;
-  }
-
-  users.getUserFromUsername(db, username, (error, user) => {
-    if (error) {
-      throw error;
-    }
-
-    if (!user) {
-      res.redirect(failureRedirect);
-      return;
-    }
-
-    bcrypt.compare(password, user.password, (err, authenticated) => {
-      if (err) {
-        throw err;
-      } else if (!authenticated) {
-        res.redirect(failureRedirect);
-        return;
-      } else {
-        const token = createJWT(user);
-        const expiration = moment().utc().add(1, 'month').toDate();
-
-        // Save the JWT as a cookie as well. It's only ever used to authenticate file
-        // downloads since it's much more convenient that way.
-        res.cookie('token', token, {
-          httpOnly: true,
-          // TODO
-          // secure: true,
-          expires: expiration
-        });
-
-        res.redirect(_redirectTo);
-      }
-    });
-  });
-});
-
 function rejectPlainTextRequest(req, res, next) {
   const contentType = req.headers['Content-Type'];
 
@@ -230,110 +121,248 @@ function rejectPlainTextRequest(req, res, next) {
   }
 }
 
-app.use('/api/', rejectPlainTextRequest);
+const csrfProtection = csurf({cookie: true});
 
-app.post('/api/upload', JWT, upload.single('torrent'), CSRF, (req, res) => {
-  rtorrent.load(req.file.buffer, {
-    start: req.body.start == 'true',
-    commands: [downloads.onLoadSetUploader(req.user.username)]
-  }).then(infohash => {
-      res.send({success: true, infohash});
-    })
-    .catch(error => {
-      console.log(error);
+const CSRF = [csrfProtection, CSRFValidationError];
 
-      res.status(500).send({
-        error: 'An unknown error occurred'
-      });
-    });
+const authenticateJWT = expressJWT({
+  secret: JWT_SECRET,
+  getToken: getJWTFromHeaderOrCookie
 });
 
-app.post('/api/magnet', JWT, (req, res) => {
-  rtorrent.load(req.body.uri, {
-    start: req.body.start,
-    commands: [downloads.onLoadSetUploader(req.user.username)]
-  }).then(infohash => {
-      res.send({success: true, infohash});
-    })
-    .catch(error => {
-      console.log(error);
+const JWT = [authenticateJWT, JWTErrorHandler];
 
-      res.status(500).send({
-        error: 'An unknown error occurred'
-      });
-    });
-});
+const TEN_MEGABYTES = 10000000;
 
-app.get('/api/user', JWT, (req, res) => {
-  res.status(200).json(req.user);
-});
-
-app.get('/api/downloads', JWT, (req, res) => {
-  downloads.getDownloads()
-    .then(downloads => res.json(downloads));
-});
-
-app.get('/api/downloads/:infoHash', JWT, (req, res) => {
-  downloads.getCompleteDownload(req.params.infoHash)
-    .then(downloads => res.json(downloads))
-    .catch(_error => res.status(500).json({
-      error: 'no such torrent'
-    }));
-});
-
-app.patch('/api/downloads/:infoHash', JWT, (req, res) => {
-  const { infoHash } = req.params;
-
-  switch (req.body.action) {
-    case 'start': {
-      rtorrent.torrent(infoHash, 'start')
-        .then(() => res.json({success: true}));
-      break;
-    }
-    case 'stop': {
-      rtorrent.torrent(infoHash, 'stop')
-        .then(() => res.json({success: true}));
-      break;
-    }
-    case 'addLock': {
-      const username = req.body.params;
-      downloads.addLock(infoHash, username)
-        .then(() => res.json({success: true}))
-        .catch(error => console.log(error));
-      break;
-    }
-    case 'removeLock': {
-      const username = req.body.params;
-      downloads.removeLock(infoHash, username)
-        .then(() => res.json({success: true}))
-        .catch(error => console.log(error));
-      break;
-    }
-    case 'setFilePriorities': {
-      const priorities = req.body.params;
-      downloads.setFilePriorities(infoHash, priorities)
-        .then(() => res.json({success: true}));
-      break;
-    }
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: TEN_MEGABYTES
   }
 });
 
-app.delete('/api/downloads/:infoHash', JWT, (req, res) => {
-  rtorrent.torrent(req.params.infoHash, 'erase')
-    .then(() => res.json({success: true}))
-    .catch(_error => res.status(500).json({
-      error: 'no such torrent'
-    }));
-});
-
-app.get('*', JWT, CSRF, (req, res) => {
-  res.render('internal', {
-    layout: false
+function attachAuthentication(app) {
+  app.get('/login', CSRF, setCSRFTokenCookie, (req, res) => {
+    res.render('login', {
+      csrfToken: req.csrfToken(),
+      redirectTo: getRedirectPath(req)
+    });
   });
+
+  app.post('/login', CSRF, (req, res) => {
+    const { username, password, _redirectTo } = req.body;
+    const failureRedirect = `/login?redirect=${_redirectTo}`;
+
+    if (!username || !password) {
+      res.redirect(failureRedirect);
+      return;
+    }
+
+    users.getUserFromUsername(db, username, (error, user) => {
+      if (error) {
+        throw error;
+      }
+
+      if (!user) {
+        res.redirect(failureRedirect);
+        return;
+      }
+
+      bcrypt.compare(password, user.password, (err, authenticated) => {
+        if (err) {
+          throw err;
+        } else if (!authenticated) {
+          res.redirect(failureRedirect);
+          return;
+        } else {
+          const token = createJWT(user);
+          const expiration = moment().utc().add(1, 'month').toDate();
+
+          // Save the JWT as a cookie as well. It's only ever used to authenticate file
+          // downloads since it's much more convenient that way.
+          res.cookie('token', token, {
+            httpOnly: true,
+            // TODO
+            // secure: true,
+            expires: expiration
+          });
+
+          res.redirect(_redirectTo);
+        }
+      });
+    });
+  });
+
+  app.get(/^\/file\/(.+)/, JWT, (req, res) => {
+    const filePath = req.params[0];
+    const name = path.basename(filePath);
+
+    if (!USE_SENDFILE) {
+      const downloadPath = path.join(RTORRENT_DOWNLOADS_DIRECTORY, filePath);
+      res.download(downloadPath, name);
+      return;
+    }
+
+    const sendFilePath = path.join('sendfile', filePath);
+
+    // TODO
+    // maybe Content-Type needs to be empty?
+    res.attachment(name);
+    res.header('X-Accel-Redirect', sendFilePath);
+    res.end();
+  });
+}
+
+function serveApp(req, res) {
+  res.render('internal', {layout: false});
+}
+
+function attachAPI(app) {
+  const api = express.Router();
+
+  api.use(rejectPlainTextRequest);
+
+  api.post('/upload', JWT, upload.single('torrent'), CSRF, (req, res) => {
+    rtorrent.load(req.file.buffer, {
+      start: req.body.start == 'true',
+      commands: [downloads.onLoadSetUploader(req.user.username)]
+    }).then(infohash => {
+      res.send({success: true, infohash});
+    }).catch(error => {
+      console.log(error);
+
+      res.status(500).send({
+        error: 'An unknown error occurred'
+      });
+    });
+  });
+
+  api.post('/magnet', JWT, (req, res) => {
+    rtorrent.load(req.body.uri, {
+      start: req.body.start,
+      commands: [downloads.onLoadSetUploader(req.user.username)]
+    }).then(infohash => {
+      res.send({success: true, infohash});
+    }).catch(error => {
+      console.log(error);
+
+      res.status(500).send({
+        error: 'An unknown error occurred'
+      });
+    });
+  });
+
+  api.get('/user', JWT, (req, res) => {
+    res.status(200).json(req.user);
+  });
+
+  api.get('/downloads', JWT, (req, res) => {
+    downloads.getDownloads()
+      .then(downloads => res.json(downloads));
+  });
+
+  api.get('/downloads/:infoHash', JWT, (req, res) => {
+    downloads.getCompleteDownload(req.params.infoHash)
+      .then(downloads => res.json(downloads))
+      .catch(_error => res.status(500).json({
+        error: 'no such torrent'
+      }));
+  });
+
+  api.patch('/downloads/:infoHash', JWT, (req, res) => {
+    const { infoHash } = req.params;
+
+    switch (req.body.action) {
+      case 'start': {
+        rtorrent.torrent(infoHash, 'start')
+          .then(() => res.json({success: true}));
+        break;
+      }
+      case 'stop': {
+        rtorrent.torrent(infoHash, 'stop')
+          .then(() => res.json({success: true}));
+        break;
+      }
+      case 'addLock': {
+        const username = req.body.params;
+        downloads.addLock(infoHash, username)
+          .then(() => res.json({success: true}))
+          .catch(error => console.log(error));
+        break;
+      }
+      case 'removeLock': {
+        const username = req.body.params;
+        downloads.removeLock(infoHash, username)
+          .then(() => res.json({success: true}))
+          .catch(error => console.log(error));
+        break;
+      }
+      case 'setFilePriorities': {
+        const priorities = req.body.params;
+        downloads.setFilePriorities(infoHash, priorities)
+          .then(() => res.json({success: true}));
+        break;
+      }
+    }
+  });
+
+  api.delete('/downloads/:infoHash', JWT, (req, res) => {
+    rtorrent.torrent(req.params.infoHash, 'erase')
+      .then(() => res.json({success: true}))
+      .catch(_error => res.status(500).json({
+        error: 'no such torrent'
+      }));
+  });
+
+  app.use('/api', api);
+}
+
+const VIEWS_PATH = path.join(__dirname, 'views');
+
+const handlebars = expressHandlebars.create({
+  defaultLayout: 'main',
+  layoutsDir: path.join(VIEWS_PATH, 'layouts')
 });
 
-const { SERVER_HOST, SERVER_PORT } = process.env;
+function configureHandlebars(app) {
+  app.set('views', VIEWS_PATH);
 
-const server = app.listen(SERVER_PORT, SERVER_HOST, () => {
-  console.log('Express server listening on port ' + server.address().port);
-});
+  app.engine('handlebars', handlebars.engine);
+  app.set('view engine', 'handlebars');
+}
+
+function reactRoutes(app) {
+  app.get('/downloads*', JWT, CSRF, serveApp);
+  app.get('/trackers*', JWT, CSRF, serveApp);
+  app.get('/users*', JWT, CSRF, serveApp);
+}
+
+function createServer() {
+  const app = express();
+
+  app.use(helmet());
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(cookieParser());
+
+  if (SERVE_STATIC) {
+    app.use(express.static(path.join(__dirname, '../../client/build')));
+  }
+
+  configureHandlebars(app);
+
+  attachAuthentication(app);
+  attachAPI(app);
+
+  reactRoutes(app);
+
+  return app;
+}
+
+module.exports = {
+  createServer,
+  handlebars,
+  JWT,
+  CSRF,
+  upload
+};
