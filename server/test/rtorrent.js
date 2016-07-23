@@ -20,7 +20,7 @@ describe('RTorrent', function() {
         expect(version).to.satisfy(version => semver.gt(version, '0.9.0'));
       })
       .then(() => Bluebird.all([
-        expect(rtorrent.load(torrents.ubuntu.path, {raw: true}))
+        expect(rtorrent.load(torrents.ubuntu.path, { raw: true }))
           .to.eventually.equal(torrents.ubuntu.hash),
 
         expect(rtorrent.load(torrents.arch.path))
