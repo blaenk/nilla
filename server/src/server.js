@@ -33,7 +33,7 @@ const {
 
 function JWTErrorHandler(err, req, res, _next) {
   if (err.name == 'UnauthorizedError') {
-    const redirectPath = req.path;
+    const redirectPath = req.originalUrl;
     res.redirect(`/login?redirect=${redirectPath}`);
   }
 }
@@ -121,7 +121,7 @@ function rejectPlainTextRequest(req, res, next) {
   }
 }
 
-const csrfProtection = csurf({cookie: true});
+const csrfProtection = csurf({ cookie: true });
 
 const CSRF = [csrfProtection, CSRFValidationError];
 
@@ -141,6 +141,33 @@ const upload = multer({
   }
 });
 
+function authenticate(username, password, callback) {
+  users.getUserFromUsername(db, username, (error, user) => {
+    if (error) {
+      callback(error);
+      return;
+    }
+
+    if (!user) {
+      callback(new Error('User not found.'));
+      return;
+    }
+
+    bcrypt.compare(password, user.password, (error, authenticated) => {
+      if (error) {
+        callback(error);
+        return;
+      } else if (!authenticated) {
+        callback(new Error('Incorrect credentials.'));
+        return;
+      } else {
+        callback(null, user);
+        return;
+      }
+    });
+  });
+}
+
 function attachAuthentication(app) {
   app.get('/login', CSRF, setCSRFTokenCookie, (req, res) => {
     res.render('login', {
@@ -158,38 +185,27 @@ function attachAuthentication(app) {
       return;
     }
 
-    users.getUserFromUsername(db, username, (error, user) => {
+    // TODO
+    // support DI on `authenticate`
+    authenticate(username, password, (error, user) => {
       if (error) {
-        throw error;
-      }
-
-      if (!user) {
         res.redirect(failureRedirect);
         return;
       }
 
-      bcrypt.compare(password, user.password, (err, authenticated) => {
-        if (err) {
-          throw err;
-        } else if (!authenticated) {
-          res.redirect(failureRedirect);
-          return;
-        } else {
-          const token = createJWT(user);
-          const expiration = moment().utc().add(1, 'month').toDate();
+      const token = createJWT(user);
+      const expiration = moment().utc().add(1, 'month').toDate();
 
-          // Save the JWT as a cookie as well. It's only ever used to authenticate file
-          // downloads since it's much more convenient that way.
-          res.cookie('token', token, {
-            httpOnly: true,
-            // TODO
-            // secure: true,
-            expires: expiration
-          });
-
-          res.redirect(_redirectTo);
-        }
+      // Save the JWT as a cookie as well. It's only ever used to authenticate file
+      // downloads since it's much more convenient that way.
+      res.cookie('token', token, {
+        httpOnly: true,
+        // TODO
+        // secure: true,
+        expires: expiration
       });
+
+      res.redirect(_redirectTo);
     });
   });
 
@@ -328,7 +344,7 @@ function configureHandlebars(app) {
 }
 
 function serveApp(req, res) {
-  res.render('internal', {layout: false});
+  res.render('internal', { layout: false });
 }
 
 function reactRoutes(app) {
@@ -340,7 +356,7 @@ function createServer() {
 
   app.use(helmet());
   app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cookieParser());
 
   if (SERVE_STATIC) {
