@@ -98,19 +98,6 @@ function createJWT(user) {
   });
 }
 
-function getRedirectPath(req) {
-  const query = req.query.redirect;
-  const header = req.header('Referer');
-
-  if (query) {
-    return query;
-  } else if (header) {
-    return url.parse(header).path;
-  } else {
-    return '/';
-  }
-}
-
 function rejectPlainTextRequest(req, res, next) {
   const contentType = req.headers['Content-Type'];
 
@@ -168,17 +155,22 @@ function authenticate(username, password, callback) {
   });
 }
 
-function attachAuthentication(app) {
+function attachAuthentication(app, options) {
   app.get('/login', CSRF, setCSRFTokenCookie, (req, res) => {
     res.render('login', {
       csrfToken: req.csrfToken(),
-      redirectTo: getRedirectPath(req)
+      redirectTo: req.query.redirect || ''
     });
   });
 
   app.post('/login', CSRF, (req, res) => {
-    const { username, password, _redirectTo } = req.body;
-    const failureRedirect = `/login?redirect=${_redirectTo}`;
+    const { username, password, _redirectTo = '' } = req.body;
+
+    let failureRedirect = '/login';
+
+    if (_redirectTo != '') {
+      failureRedirect += `?redirect=${_redirectTo}`;
+    }
 
     if (!username || !password) {
       res.redirect(failureRedirect);
@@ -187,7 +179,7 @@ function attachAuthentication(app) {
 
     // TODO
     // support DI on `authenticate`
-    authenticate(username, password, (error, user) => {
+    options.authenticator(username, password, (error, user) => {
       if (error) {
         res.redirect(failureRedirect);
         return;
@@ -205,7 +197,7 @@ function attachAuthentication(app) {
         expires: expiration
       });
 
-      res.redirect(_redirectTo);
+      res.redirect(_redirectTo || '/');
     });
   });
 
@@ -348,10 +340,14 @@ function serveApp(req, res) {
 }
 
 function reactRoutes(app) {
-  app.use(['/downloads', '/trackers', '/users'], JWT, CSRF, serveApp);
+  app.use(['/', '/downloads', '/trackers', '/users'], JWT, CSRF, serveApp);
 }
 
-function createServer() {
+function createServer(options) {
+  options = Object.assign({
+    authenticator: authenticate
+  }, options);
+
   const app = express();
 
   app.use(helmet());
@@ -365,7 +361,7 @@ function createServer() {
 
   configureHandlebars(app);
 
-  attachAuthentication(app);
+  attachAuthentication(app, options);
   attachAPI(app);
 
   reactRoutes(app);
