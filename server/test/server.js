@@ -166,13 +166,13 @@ describe('Server', function() {
 
   // TODO
   // don't actually submit a torrent
-  it.skip('POST /downloads', function() {
+  it('POST /downloads', function() {
     const cookie = agent.jar.getCookie('csrf-token', CookieJar.CookieAccessInfo());
     const csrfToken = cookie.value;
 
     return Bluebird.resolve(
       agent
-        .post('/api/upload')
+        .post('/api/downloads')
         .accept('json')
         .set('X-CSRF-TOKEN', csrfToken)
         .attach('torrent', torrents.fedora.path)
@@ -182,5 +182,13 @@ describe('Server', function() {
           expect(res.body.infoHash).to.equal(torrents.fedora.hash);
         })
     ).finally(() => rtorrent.torrent(torrents.fedora.hash, 'erase'));
+  });
+
+  context('PATCH /downloads', function() {
+    it('should start a download');
+    it('should stop a download');
+    it('should add a lock');
+    it('should remove a lock');
+    it('should set file priorities');
   });
 });

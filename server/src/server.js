@@ -226,27 +226,30 @@ function attachAPI(app) {
 
   api.use(rejectPlainTextRequest);
 
-  api.post('/upload', JWT, upload.single('torrent'), CSRF, (req, res) => {
-    rtorrent.load(req.file.buffer, {
-      start: req.body.start == 'true',
-      commands: [downloads.onLoadSetUploader(req.user.username)]
-    }).then(infoHash => {
-      res.send({success: true, infoHash});
-    }).catch(error => {
-      console.log(error);
+  api.post('/downloads', JWT, upload.single('torrent'), CSRF, (req, res) => {
+    let torrent, start;
 
+    if (req.is('multipart/form-data')) {
+      torrent = req.file.buffer;
+      start = req.body.start == 'true';
+    } else if (req.is('json')) {
+      torrent = req.body.uri;
+      start = req.body.start;
+    } else {
       res.status(500).send({
         error: 'An unknown error occurred'
       });
-    });
-  });
 
-  api.post('/magnet', JWT, (req, res) => {
-    rtorrent.load(req.body.uri, {
-      start: req.body.start,
-      commands: [downloads.onLoadSetUploader(req.user.username)]
-    }).then(infohash => {
-      res.send({success: true, infohash});
+      return;
+    }
+
+    const commands = [downloads.onLoadSetUploader(req.user.username)];
+
+    rtorrent.load(torrent, {
+      start,
+      commands
+    }).then(infoHash => {
+      res.send({ success: true, infoHash });
     }).catch(error => {
       console.log(error);
 

@@ -21,6 +21,8 @@ import request from 'superagent';
 
 import ErrorAlert from './ErrorAlert';
 
+import Cookies from 'js-cookie';
+
 import { removeFile, submitFile, submitAllFiles, setFileStart } from 'actions';
 
 const RejectedFilesErrorAlert = React.createClass({
@@ -159,8 +161,9 @@ const UploadAllButton = connect(
 
 let MagnetURI = React.createClass({
   onSubmitMagnet: function() {
-    request.post('/api/magnet')
+    request.post('/api/downloads')
       .type('json')
+      .set('X-CSRF-TOKEN', Cookies.get('csrf-token'))
       .send({
         uri: this.uriInput.value,
         start: this.startCheckbox.checked

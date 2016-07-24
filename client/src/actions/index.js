@@ -124,7 +124,7 @@ export function submitFile(file) {
       return Promise.reject(new Error(`file not found: ${file}`));
     }
 
-    return request.post('/api/upload')
+    return request.post('/api/downloads')
       .accept('json')
       .set('X-CSRF-TOKEN', Cookies.get('csrf-token'))
       .attach('torrent', fileObject.backingFile)
