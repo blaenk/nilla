@@ -166,7 +166,7 @@ describe('Server', function() {
 
   // TODO
   // don't actually submit a torrent
-  it('POST /downloads', function() {
+  it.skip('POST /downloads', function() {
     const cookie = agent.jar.getCookie('csrf-token', CookieJar.CookieAccessInfo());
     const csrfToken = cookie.value;
 
@@ -184,11 +184,13 @@ describe('Server', function() {
     ).finally(() => rtorrent.torrent(torrents.fedora.hash, 'erase'));
   });
 
-  context('PATCH /downloads', function() {
+  context('PATCH /downloads/:infoHash', function() {
     it('should start a download');
     it('should stop a download');
     it('should add a lock');
     it('should remove a lock');
     it('should set file priorities');
   });
+
+  it('DELETE /downloads/:infoHash');
 });

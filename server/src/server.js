@@ -20,7 +20,6 @@ const moment = require('moment');
 const multer = require('multer');
 const path = require('path');
 const sqlite3 = require('sqlite3');
-const url = require('url');
 
 const db = new sqlite3.cached.Database('./db/nilla.db');
 
@@ -282,32 +281,32 @@ function attachAPI(app) {
     switch (req.body.action) {
       case 'start': {
         rtorrent.torrent(infoHash, 'start')
-          .then(() => res.json({success: true}));
+          .then(() => res.json({ success: true }));
         break;
       }
       case 'stop': {
         rtorrent.torrent(infoHash, 'stop')
-          .then(() => res.json({success: true}));
+          .then(() => res.json({ success: true }));
         break;
       }
       case 'addLock': {
         const username = req.body.params;
         downloads.addLock(infoHash, username)
-          .then(() => res.json({success: true}))
+          .then(() => res.json({ success: true }))
           .catch(error => console.log(error));
         break;
       }
       case 'removeLock': {
         const username = req.body.params;
         downloads.removeLock(infoHash, username)
-          .then(() => res.json({success: true}))
+          .then(() => res.json({ success: true }))
           .catch(error => console.log(error));
         break;
       }
       case 'setFilePriorities': {
         const priorities = req.body.params;
         downloads.setFilePriorities(infoHash, priorities)
-          .then(() => res.json({success: true}));
+          .then(() => res.json({ success: true }));
         break;
       }
     }
@@ -315,7 +314,7 @@ function attachAPI(app) {
 
   api.delete('/downloads/:infoHash', JWT, (req, res) => {
     rtorrent.torrent(req.params.infoHash, 'erase')
-      .then(() => res.json({success: true}))
+      .then(() => res.json({ success: true }))
       .catch(_error => res.status(500).json({
         error: 'no such torrent'
       }));

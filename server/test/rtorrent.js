@@ -52,8 +52,8 @@ describe('RTorrent', function() {
   context('multicalls', function() {
     it('should get the name and size simultaneously', function() {
       return expect(rtorrent.multicall([
-        {methodName: 'd.get_name', params: [torrents.ubuntu.hash]},
-        {methodName: 'd.get_size_bytes', params: [torrents.ubuntu.hash]}
+        { methodName: 'd.get_name', params: [torrents.ubuntu.hash] },
+        { methodName: 'd.get_size_bytes', params: [torrents.ubuntu.hash] }
       ])).to.become([
         [torrents.ubuntu.name],
         [torrents.ubuntu.size]
@@ -72,8 +72,8 @@ describe('RTorrent', function() {
 
     it('should support system multicalls', function() {
       return expect(rtorrent.system([
-        {methodName: 'get_directory', as: 'baseDirectory'},
-        {methodName: 'd.get_name', params: [torrents.ubuntu.hash], as: 'name'},
+        { methodName: 'get_directory', as: 'baseDirectory' },
+        { methodName: 'd.get_name', params: [torrents.ubuntu.hash], as: 'name' },
         {
           methodName: 'd.get_complete',
           params: [torrents.ubuntu.hash],

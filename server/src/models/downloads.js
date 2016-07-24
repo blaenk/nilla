@@ -60,7 +60,7 @@ function getState(torrent) {
 }
 
 function onLoadSetUploader(uploader) {
-  return "d.custom.set=levee-uploader," + encodeBase64(uploader);
+  return 'd.custom.set=levee-uploader,' + encodeBase64(uploader);
 }
 
 const DOWNLOADS_METHODS = [
@@ -139,6 +139,7 @@ function getFiles(infoHash) {
       return files.map((file, index) => {
         file.id = index;
         file.progress = getProgress(file.completedChunks, file.sizeChunks);
+        file.isEnabled = file.priority != 'off';
         return file;
       });
     });
@@ -150,8 +151,8 @@ function fileExists(path) {
 
 function getExtractedFiles(infoHash) {
   return rtorrent.system([
-    {methodName: 'get_directory', params: [], as: 'basePath'},
-    {methodName: 'd.get_name', params: [infoHash], as: 'name'},
+    { methodName: 'get_directory', params: [], as: 'basePath' },
+    { methodName: 'd.get_name', params: [infoHash], as: 'name' },
     {
       methodName: 'd.is_multi_file',
       params: [infoHash],
@@ -186,7 +187,7 @@ function getExtractedFiles(infoHash) {
             pathComponents: pathComponents,
             size: stats.size,
             progress: obj.isExtracting ? 0 : 100,
-            enabled: true
+            isEnabled: true
           };
         });
       });
@@ -200,12 +201,19 @@ function getAllFiles(infoHash) {
   });
 }
 
+function getTrackers(infoHash) {
+  return rtorrent.trackers(infoHash, { methodName: 'get_url', as: 'url' })
+    .map(({ url }) => url);
+}
+
 function getCompleteDownload(infoHash) {
   return Bluebird.join(
     getDownload(infoHash),
     getAllFiles(infoHash),
-    (download, files) => {
+    getTrackers(infoHash),
+    (download, files, trackers) => {
       download.files = files;
+      download.trackers = trackers;
       return download;
     });
 }

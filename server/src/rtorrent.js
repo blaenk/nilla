@@ -64,7 +64,7 @@ function prependPrefixIfNotPresent(prefix, request) {
 
 function createRequestObjectIfString(request) {
   if (_.isString(request)) {
-    return {methodName: request};
+    return { methodName: request };
   } else {
     return request;
   }
@@ -91,9 +91,15 @@ function normalizeRequests(requests, options) {
 function transformKey(request) {
   if (_.isString(request.as)) {
     return request.as;
-  }  else {
+  } else {
     const nameBody = /^[dfpt]\.(.+)=?$/;
-    let key = nameBody.exec(request.methodName)[1];
+    let matches = nameBody.exec(request.methodName);
+
+    let key = request.methodName;
+
+    if (matches.length > 1) {
+      key = matches[1];
+    }
 
     if (_.isFunction(request.as)) {
       return request.as(key);
@@ -183,12 +189,16 @@ function callMethods(requests) {
   return requests.map(request => request.methodName + '=' + request.params.join(','));
 }
 
-function system(requests) {
-  requests = normalizeRequests(requests);
+function getSingle(options, args, requests) {
+  requests = normalizeRequests(requests, options);
 
-  let methods = multicallMethodsWithArgs(requests);
+  let methods = multicallMethodsWithArgs(requests, args);
 
   return multicallAndTransformResponses(methods, requests);
+}
+
+function system(requests) {
+  return getSingle({}, [], requests);
 }
 
 // TODO
@@ -196,35 +206,45 @@ function system(requests) {
 // resource('torrent', [infoHash], 'get_name')
 // invokes: call('d.get_name', infoHash)
 function torrent(infoHash, requests) {
-  requests = normalizeRequests(requests, { prefix: 'd.' });
-
-  let methods = multicallMethodsWithArgs(requests, [infoHash]);
-
-  return multicallAndTransformResponses(methods, requests);
+  return getSingle({ prefix: 'd.' }, [infoHash], requests);
 }
 
 function file(infoHash, fileID, requests) {
-  requests = normalizeRequests(requests, { prefix: 'f.' });
+  return getSingle({ prefix: 'f.' }, [infoHash, fileID], requests);
+}
 
-  let methods = multicallMethodsWithArgs(requests, [infoHash, fileID]);
+function tracker(infoHash, fileID, requests) {
+  return getSingle({ prefix: 't.' }, [infoHash, fileID], requests);
+}
 
-  return multicallAndTransformResponses(methods, requests);
+function peer(infoHash, fileID, requests) {
+  return getSingle({ prefix: 'p.' }, [infoHash, fileID], requests);
+}
+
+function getAll(call, args, requests) {
+  const prefix = call.slice(0, 2);
+
+  requests = normalizeRequests(requests, { prefix });
+
+  let methods = callMethods(requests);
+
+  return callAndTransformResponses(call, args, methods, requests);
 }
 
 function torrents(view, requests) {
-  requests = normalizeRequests(requests, { prefix: 'd.' });
-
-  let methods = callMethods(requests);
-
-  return callAndTransformResponses('d.multicall', [view], methods, requests);
+  return getAll('d.multicall', [view], requests);
 }
 
 function files(infoHash, requests) {
-  requests = normalizeRequests(requests, { prefix: 'f.' });
+  return getAll('f.multicall', [infoHash, 0], requests);
+}
 
-  let methods = callMethods(requests);
+function trackers(infoHash, requests) {
+  return getAll('t.multicall', [infoHash, 0], requests);
+}
 
-  return callAndTransformResponses('f.multicall', [infoHash, 0], methods, requests);
+function peers(infoHash, requests) {
+  return getAll('p.multicall', [infoHash, 0], requests);
 }
 
 function toBoolean(string) {
@@ -251,12 +271,12 @@ function load(file, options) {
 
   if (!options.start) {
     options.commands = [
-      "f.multicall=,,f.set_priority=0",
-      "d.update_priorities="
+      'f.multicall=,,f.set_priority=0',
+      'd.update_priorities='
     ].concat(options.commands);
   }
 
-  if (!isBuffer && file.startsWith("magnet:")) {
+  if (!isBuffer && file.startsWith('magnet:')) {
     const { infoHash } = parseTorrent(file);
 
     let method = 'load';
@@ -307,6 +327,12 @@ module.exports = {
 
   file,
   files,
+
+  tracker,
+  trackers,
+
+  peer,
+  peers,
 
   load,
 
