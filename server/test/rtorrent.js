@@ -60,16 +60,6 @@ describe('RTorrent', function() {
       ]);
     });
 
-    it('should use a helper to get the name and size simultaneously', function() {
-      return expect(rtorrent.torrent(torrents.ubuntu.hash, [
-        { methodName: 'get_name', as: 'name' },
-        { methodName: 'get_size_bytes', as: 'sizeBytes' }
-      ])).to.become({
-        name: torrents.ubuntu.name,
-        sizeBytes: torrents.ubuntu.size
-      });
-    });
-
     it('should support system multicalls', function() {
       return expect(rtorrent.system([
         { methodName: 'get_directory', as: 'baseDirectory' },
@@ -109,6 +99,17 @@ describe('RTorrent', function() {
         }
       ]);
     });
+
+    it('should get the name and size simultaneously', function() {
+      return expect(rtorrent.torrent(torrents.ubuntu.hash, [
+        { methodName: 'get_name', as: 'name' },
+        { methodName: 'get_size_bytes', as: 'sizeBytes' }
+      ])).to.become({
+        name: torrents.ubuntu.name,
+        sizeBytes: torrents.ubuntu.size
+      });
+    });
+
   });
 
   after('remove torrents', function() {
