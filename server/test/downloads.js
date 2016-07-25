@@ -1,14 +1,10 @@
 'use strict';
 
-const Bluebird = require('bluebird');
-
 const torrents = require('./fixtures/torrents.json');
 
 const rtorrent = require('../src/rtorrent');
 
 const downloads = require('../src/models/downloads');
-
-require('sinon-as-promised')(Bluebird);
 
 describe('Downloads Model', function() {
   context('decode ratio', function() {

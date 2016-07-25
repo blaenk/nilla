@@ -1,5 +1,7 @@
 'use strict';
 
+global.Bluebird = require('bluebird');
+
 // If this is a Travis build don't attempt to load a .env file. Instead the
 // environment variables will be passed via the .travis.yml file.
 require('dotenv').config({
@@ -17,3 +19,5 @@ global.expect = global.chai.expect;
 
 global.AssertionError = global.chai.AssertionError;
 global.Assertion = global.chai.Assertion;
+
+require('sinon-as-promised')(global.Bluebird);
