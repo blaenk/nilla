@@ -8,12 +8,18 @@ import DownloadList from 'components/Downloads/DownloadList';
 
 import styles from './styles.module.less';
 
-const Downloads = React.createClass({
-  propTypes: {
-    downloads: React.PropTypes.arrayOf(React.PropTypes.shape(Download.propTypes))
-  },
+import { getDownloads } from 'actions';
 
-  render: function() {
+class Downloads extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    this.props.dispatch(getDownloads());
+  }
+
+  render() {
     let visibleCount = this.props.downloads.reduce((acc, next) => {
       return acc + (next.isHidden ? 0 : 1);
     }, 0);
@@ -41,6 +47,10 @@ const Downloads = React.createClass({
       </div>
     );
   }
-});
+}
+
+Downloads.propTypes = {
+  downloads: React.PropTypes.arrayOf(React.PropTypes.shape(Download.propTypes))
+};
 
 export default CSSModules(Downloads, styles);

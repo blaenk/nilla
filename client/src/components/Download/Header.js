@@ -6,7 +6,7 @@ import styles from './header.module.less';
 
 const Header = React.createClass({
   propTypes: {
-    infohash: React.PropTypes.string.isRequired,
+    infoHash: React.PropTypes.string.isRequired,
     dateAdded: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     state: React.PropTypes.string.isRequired,

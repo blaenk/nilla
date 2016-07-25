@@ -17,7 +17,7 @@ delete filesProps['downloadName'];
 
 const Download = React.createClass({
   propTypes: {
-    infohash: React.PropTypes.string.isRequired,
+    infoHash: React.PropTypes.string.isRequired,
     dateAdded: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     state: React.PropTypes.string.isRequired,
@@ -60,7 +60,7 @@ const Download = React.createClass({
       <div>
         <Row>
           <Col lg={12}>
-            <Header infohash={this.props.infohash}
+            <Header infoHash={this.props.infoHash}
                     dateAdded={this.props.dateAdded}
                     name={this.props.name}
                     state={this.props.state}

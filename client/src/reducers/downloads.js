@@ -1,5 +1,3 @@
-import downloadsStub from '../../../.data/downloads.json';
-
 /**
  * Downloads reducer.
  * @param {Object} state The current downloads state.
@@ -8,9 +6,10 @@ import downloadsStub from '../../../.data/downloads.json';
  */
 export default function downloads(state, action) {
   switch (action.type) {
-    case 'SET_DOWNLOADS':
-      return action.downloads;
+    case 'RECEIVE_DOWNLOADS':
+      // return Object.assign({}, state, action.downloads);
+      return action.downloads.slice();
     default:
-      return downloadsStub;
+      return [];
   }
 }

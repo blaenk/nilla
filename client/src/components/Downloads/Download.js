@@ -7,7 +7,7 @@ import styles from './styles.module.less';
 
 let Download = React.createClass({
   propTypes: {
-    infohash: React.PropTypes.string.isRequired,
+    infoHash: React.PropTypes.string.isRequired,
     state: React.PropTypes.oneOf([
       'seeding',
       'closed',
@@ -15,7 +15,7 @@ let Download = React.createClass({
       'hashing',
       'stopped'
     ]).isRequired,
-    progress: React.PropTypes.number.isRequired,
+    progress: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     locks: React.PropTypes.array.isRequired,
     isHidden: React.PropTypes.bool.isRequired
@@ -52,7 +52,7 @@ let Download = React.createClass({
             </div>
           </div>
         </OverlayTrigger>
-        <Link to={`/downloads/${this.props.infohash}/${this.props.name}`} styleName='name'>
+        <Link to={`/downloads/${this.props.infoHash}/${this.props.name}`} styleName='name'>
           {this.props.name}
         </Link>
         {lockStatus()}

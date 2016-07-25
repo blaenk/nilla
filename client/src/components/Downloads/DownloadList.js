@@ -10,9 +10,9 @@ const DownloadList = (props) => {
   let downloads = props.downloads.map(download => {
     // return React.createElement(Download, Object.assign({}, download));
     return (
-      <Download key={download.infohash}
+      <Download key={download.infoHash}
                 isHidden={download.isHidden}
-                infohash={download.infohash}
+                infoHash={download.infoHash}
                 state={download.state}
                 progress={download.progress}
                 name={download.name}

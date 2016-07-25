@@ -10,16 +10,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onChangeScope: (scope) => dispatch(setScope(scope)),
-    onChangeFilter: (filter) => dispatch(setFilter(filter))
-  };
-};
-
 const FilteredDownloads = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(Downloads);
 
 export default FilteredDownloads;
