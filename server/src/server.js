@@ -31,7 +31,7 @@ const {
 } = process.env;
 
 function JWTErrorHandler(err, req, res, _next) {
-  if (err.name == 'UnauthorizedError') {
+  if (err.name === 'UnauthorizedError') {
     const redirectPath = req.originalUrl;
     res.redirect(`/login?redirect=${redirectPath}`);
   }
@@ -40,7 +40,7 @@ function JWTErrorHandler(err, req, res, _next) {
 function CSRFValidationError(err, req, res, next) {
   console.log('csrfvalidationError');
 
-  if (err.code != 'EBADCSRFTOKEN') {
+  if (err.code !== 'EBADCSRFTOKEN') {
     next(err);
     return;
   }
@@ -77,7 +77,7 @@ function getJWTFromHeaderOrCookie(req) {
   if (req.headers.authorization) {
     let [scheme, token] = req.headers.authorization.split(' ');
 
-    if (scheme == 'Bearer') {
+    if (scheme === 'Bearer') {
       return token;
     }
   } else if (req.cookies.token) {
@@ -100,7 +100,7 @@ function createJWT(user) {
 function rejectPlainTextRequest(req, res, next) {
   const contentType = req.headers['Content-Type'];
 
-  if (contentType == 'text/plain') {
+  if (contentType === 'text/plain') {
     res.sendStatus(400);
   } else {
     next();
@@ -146,10 +146,9 @@ function authenticate(username, password, callback) {
       } else if (!authenticated) {
         callback(new Error('Incorrect credentials.'));
         return;
-      } else {
-        callback(null, user);
-        return;
       }
+
+      callback(null, user);
     });
   });
 }
@@ -167,7 +166,7 @@ function attachAuthentication(app, options) {
 
     let failureRedirect = '/login';
 
-    if (_redirectTo != '') {
+    if (_redirectTo !== '') {
       failureRedirect += `?redirect=${_redirectTo}`;
     }
 
@@ -230,7 +229,7 @@ function attachAPI(app) {
 
     if (req.is('multipart/form-data')) {
       torrent = req.file.buffer;
-      start = req.body.start == 'true';
+      start = req.body.start === 'true';
     } else if (req.is('json')) {
       torrent = req.body.uri;
       start = req.body.start;
