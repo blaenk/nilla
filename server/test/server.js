@@ -24,12 +24,14 @@ function parseLoginForm(html) {
   return { csrf, redirectTo };
 }
 
-const passAuthentication = sinon.stub();
-passAuthentication.yields(null, {
+const USER = {
   id: 1,
   username: 'test',
   permissions: 'admin'
-});
+};
+
+const passAuthentication = sinon.stub();
+passAuthentication.yields(null, USER);
 
 describe('Server', function() {
   it('should remain on /login on login failure', function(done) {
@@ -107,6 +109,22 @@ describe('Server', function() {
             done();
           });
       });
+  });
+
+  it('GET /user', function(done) {
+    agent
+      .get('/api/user')
+      .accept('json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(({ body: user }) => {
+        expect(user).to.contain.keys('exp', 'iat');
+
+        expect(user.id).to.equal(USER.id);
+        expect(user.username).to.equal(USER.username);
+        expect(user.permissions).to.deep.equal(USER.permissions.split(','));
+      })
+      .end(done);
   });
 
   context('GET /downloads', function() {
