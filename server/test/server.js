@@ -52,7 +52,7 @@ describe('Server', function() {
           .expect(302)
           .end((err, res) => {
             expect(res.redirect).to.be.true;
-            expect(res.headers['location']).to.equal('/login');
+            expect(res.headers.location).to.equal('/login');
             done();
           });
       });
@@ -79,7 +79,7 @@ describe('Server', function() {
           .expect(302)
           .end((err, res) => {
             expect(res.redirect).to.be.true;
-            expect(res.headers['location']).to.equal('/downloads');
+            expect(res.headers.location).to.equal('/downloads');
             done();
           });
       });
@@ -103,7 +103,7 @@ describe('Server', function() {
           .expect(302)
           .end((err, res) => {
             expect(res.redirect).to.be.true;
-            expect(res.headers['location']).to.equal('/');
+            expect(res.headers.location).to.equal('/');
             done();
           });
       });
