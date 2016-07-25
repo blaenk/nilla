@@ -15,7 +15,9 @@ const fs = Bluebird.promisifyAll(require('fs'));
  * @returns {String} The floating-point ratio.
  */
 function decodeRatio(ratio) {
-  return (ratio / 1000).toFixed(2);
+  const fraction = ratio / 1000;
+
+  return fraction.toFixed(2);
 }
 
 function encodeBase64(string) {
@@ -35,14 +37,14 @@ function deserializeCustomJSON(json) {
 }
 
 function getProgress(completed, totalSize) {
-  if (totalSize != 0) {
+  if (totalSize !== 0) {
     const fractionComplete = completed / totalSize;
     const percentageComplete = fractionComplete * 100;
 
     return percentageComplete.toFixed(2);
-  } else {
-    return '0.00';
   }
+
+  return '0.00';
 }
 
 function getState(torrent) {
@@ -54,9 +56,9 @@ function getState(torrent) {
     return 'stopped';
   } else if (!torrent.isComplete) {
     return 'downloading';
-  } else {
-    return 'seeding';
   }
+
+  return 'seeding';
 }
 
 function onLoadSetUploader(uploader) {
@@ -139,7 +141,7 @@ function getFiles(infoHash) {
       return files.map((file, index) => {
         file.id = index;
         file.progress = getProgress(file.completedChunks, file.sizeChunks);
-        file.isEnabled = file.priority != 'off';
+        file.isEnabled = file.priority !== 'off';
         return file;
       });
     });
@@ -292,7 +294,7 @@ function removeLock(infoHash, username) {
     .then(locks => {
       const index = locks.indexOf(username);
 
-      if (index != -1) {
+      if (index !== -1) {
         locks.splice(index, 1);
 
         return setLocks(infoHash, locks);
