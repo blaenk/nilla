@@ -13,6 +13,8 @@ const parseTorrent = require('parse-torrent');
 
 const _ = require('lodash');
 
+const rtorrent = exports = module.exports = {};
+
 /**
  * Perform an XML-RPC request.
  *
@@ -21,7 +23,7 @@ const _ = require('lodash');
  * @param {Object} [options] Optional connection options.
  * @returns {Promise} The response.
  */
-function call(method, args, options) {
+rtorrent.call = function call(method, args, options) {
   args = args || [];
 
   options = Object.assign({
@@ -35,10 +37,10 @@ function call(method, args, options) {
   // If a socket path was specified, infer SCGI transport.
   if (options.path) {
     return client.methodCallWithTransportAsync(scgi.Transport, method, args);
-  } else {
-    return client.methodCallAsync(method, args);
   }
-}
+
+  return client.methodCallAsync(method, args);
+};
 
 /**
  * Performs multiple calls in one request.
@@ -46,31 +48,31 @@ function call(method, args, options) {
  * @param {Array} calls The calls to perform.
  * @returns {Promise} The response.
  */
-function multicall(calls) {
-  return call('system.multicall', [calls]);
-}
+rtorrent.multicall = function multicall(calls) {
+  return this.call('system.multicall', [calls]);
+};
 
-function setParamsIfNotPresent(request) {
+rtorrent._setParamsIfNotPresent = function _setParamsIfNotPresent(request) {
   if (!request.params) {
     request.params = [];
   }
-}
+};
 
-function prependPrefixIfNotPresent(prefix, request) {
+rtorrent._prependPrefixIfNotPresent = function _prependPrefixIfNotPresent(prefix, request) {
   if (!request.methodName.startsWith(prefix)) {
     request.methodName = prefix + request.methodName;
   }
-}
+};
 
-function createRequestObjectIfString(request) {
+rtorrent._createRequestObjectIfString = function _createRequestObjectIfString(request) {
   if (_.isString(request)) {
     return { methodName: request };
-  } else {
-    return request;
   }
-}
 
-function normalizeRequests(requests, options) {
+  return request;
+};
+
+rtorrent._normalizeRequests = function _normalizeRequests(requests, options) {
   options = Object.assign({
     prefix: ''
   }, options);
@@ -80,71 +82,71 @@ function normalizeRequests(requests, options) {
   }
 
   return _.cloneDeep(requests).map(request => {
-    request = createRequestObjectIfString(request);
-    setParamsIfNotPresent(request);
-    prependPrefixIfNotPresent(options.prefix, request);
+    request = this._createRequestObjectIfString(request);
+    this._setParamsIfNotPresent(request);
+    this._prependPrefixIfNotPresent(options.prefix, request);
 
     return request;
   });
-}
+};
 
-function transformKey(request) {
+rtorrent._transformKey = function _transformKey(request) {
   if (_.isString(request.as)) {
     return request.as;
-  } else {
-    const nameBody = /^[dfpt]\.(.+)=?$/;
-    let matches = nameBody.exec(request.methodName);
-
-    let key = request.methodName;
-
-    if (matches.length > 1) {
-      key = matches[1];
-    }
-
-    if (_.isFunction(request.as)) {
-      return request.as(key);
-    } else {
-      return key;
-    }
   }
-}
 
-function transformValue(request, result) {
+  const nameBody = /^[dfpt]\.(.+)=?$/;
+  let matches = nameBody.exec(request.methodName);
+
+  let key = request.methodName;
+
+  if (matches.length > 1) {
+    key = matches[1];
+  }
+
+  if (_.isFunction(request.as)) {
+    return request.as(key);
+  }
+
+  return key;
+};
+
+rtorrent._transformValue = function _transformValue(request, result) {
   if (_.isFunction(request.map)) {
     return request.map(result);
-  } else {
-    return result;
   }
-}
 
-function transformMulticallResponse(itemResponse, requests) {
+  return result;
+};
+
+rtorrent._transformMulticallResponse = function _transformMulticallResponse(itemResponse, requests) {
   let transformed = {};
 
   itemResponse.map((response, index) => {
     const request = requests[index];
 
-    const key = transformKey(request);
-    const value = transformValue(request, response);
+    const key = this._transformKey(request);
+    const value = this._transformValue(request, response);
 
     transformed[key] = value;
   });
 
   return transformed;
-}
+};
 
-function responseIsError(response, index) {
+rtorrent._responseIsError = function _responseIsError(response, index) {
   if (response.faultCode && response.faultString) {
     response.index = index;
     return true;
-  } else {
-    return false;
   }
-}
 
-function rejectOnMulticallErrors(responses, methods) {
-  const errors = responses.filter(responseIsError);
+  return false;
+};
 
-  if (errors.length == 0) {
+rtorrent._rejectOnMulticallErrors = function _rejectOnMulticallErrors(responses, methods) {
+  const errors = responses.filter(this._responseIsError);
+
+  if (errors.length === 0) {
     return responses;
   }
 
@@ -161,21 +163,21 @@ function rejectOnMulticallErrors(responses, methods) {
   });
 
   return Bluebird.reject(augmentedErrors);
-}
+};
 
-function multicallAndTransformResponses(methods, requests) {
-  return multicall(methods)
-    .then(responses => rejectOnMulticallErrors(responses, methods))
-    .then(responses => transformMulticallResponse(_.flatten(responses), requests));
-}
+rtorrent._multicallAndTransformResponses = function _multicallAndTransformResponses(methods, requests) {
+  return this.multicall(methods)
+    .then(responses => this._rejectOnMulticallErrors(responses, methods))
+    .then(responses => this._transformMulticallResponse(_.flatten(responses), requests));
+};
 
-function callAndTransformResponses(multicallMethod, args, methods, requests) {
-  return call(multicallMethod, [...args, ...methods])
-    .then(responses => rejectOnMulticallErrors(responses, methods))
-    .then(responses => responses.map(itemResponse => transformMulticallResponse(itemResponse, requests)));
-}
+rtorrent._callAndTransformResponses = function _callAndTransformResponses(multicallMethod, args, methods, requests) {
+  return this.call(multicallMethod, [...args, ...methods])
+    .then(responses => this._rejectOnMulticallErrors(responses, methods))
+    .then(responses => responses.map(itemResponse => this._transformMulticallResponse(itemResponse, requests)));
+};
 
-function multicallMethodsWithArgs(requests, args) {
+rtorrent._multicallMethodsWithArgs = function _multicallMethodsWithArgs(requests, args) {
   args = args || [];
 
   return requests.map(request => {
@@ -183,73 +185,73 @@ function multicallMethodsWithArgs(requests, args) {
     pruned.params = [...args].concat(pruned.params);
     return pruned;
   });
-}
+};
 
-function callMethods(requests) {
+rtorrent._callMethods = function _callMethods(requests) {
   return requests.map(request => request.methodName + '=' + request.params.join(','));
-}
+};
 
-function getSingle(options, args, requests) {
-  requests = normalizeRequests(requests, options);
+rtorrent._getSingle = function _getSingle(options, args, requests) {
+  requests = this._normalizeRequests(requests, options);
 
-  let methods = multicallMethodsWithArgs(requests, args);
+  let methods = this._multicallMethodsWithArgs(requests, args);
 
-  return multicallAndTransformResponses(methods, requests);
-}
+  return this._multicallAndTransformResponses(methods, requests);
+};
 
-function system(requests) {
-  return getSingle({}, [], requests);
-}
+rtorrent.system = function system(requests) {
+  return this._getSingle({}, [], requests);
+};
 
 // TODO
 // optimize for methods is not array, in which case make a direct call?
 // resource('torrent', [infoHash], 'get_name')
 // invokes: call('d.get_name', infoHash)
-function torrent(infoHash, requests) {
-  return getSingle({ prefix: 'd.' }, [infoHash], requests);
-}
+rtorrent.torrent = function torrent(infoHash, requests) {
+  return this._getSingle({ prefix: 'd.' }, [infoHash], requests);
+};
 
-function file(infoHash, fileID, requests) {
-  return getSingle({ prefix: 'f.' }, [infoHash, fileID], requests);
-}
+rtorrent.file = function file(infoHash, fileID, requests) {
+  return this._getSingle({ prefix: 'f.' }, [infoHash, fileID], requests);
+};
 
-function tracker(infoHash, fileID, requests) {
-  return getSingle({ prefix: 't.' }, [infoHash, fileID], requests);
-}
+rtorrent.tracker = function tracker(infoHash, fileID, requests) {
+  return this._getSingle({ prefix: 't.' }, [infoHash, fileID], requests);
+};
 
-function peer(infoHash, fileID, requests) {
-  return getSingle({ prefix: 'p.' }, [infoHash, fileID], requests);
-}
+rtorrent.peer = function peer(infoHash, fileID, requests) {
+  return this._getSingle({ prefix: 'p.' }, [infoHash, fileID], requests);
+};
 
-function getAll(call, args, requests) {
+rtorrent._getAll = function _getAll(call, args, requests) {
   const prefix = call.slice(0, 2);
 
-  requests = normalizeRequests(requests, { prefix });
+  requests = this._normalizeRequests(requests, { prefix });
 
-  let methods = callMethods(requests);
+  let methods = this._callMethods(requests);
 
-  return callAndTransformResponses(call, args, methods, requests);
-}
+  return this._callAndTransformResponses(call, args, methods, requests);
+};
 
-function torrents(view, requests) {
-  return getAll('d.multicall', [view], requests);
-}
+rtorrent.torrents = function torrents(view, requests) {
+  return this._getAll('d.multicall', [view], requests);
+};
 
-function files(infoHash, requests) {
-  return getAll('f.multicall', [infoHash, 0], requests);
-}
+rtorrent.files = function files(infoHash, requests) {
+  return this._getAll('f.multicall', [infoHash, 0], requests);
+};
 
-function trackers(infoHash, requests) {
-  return getAll('t.multicall', [infoHash, 0], requests);
-}
+rtorrent.trackers = function trackers(infoHash, requests) {
+  return this._getAll('t.multicall', [infoHash, 0], requests);
+};
 
-function peers(infoHash, requests) {
-  return getAll('p.multicall', [infoHash, 0], requests);
-}
+rtorrent.peers = function peers(infoHash, requests) {
+  return this._getAll('p.multicall', [infoHash, 0], requests);
+};
 
-function toBoolean(string) {
-  return string == '1';
-}
+rtorrent.toBoolean = function toBoolean(string) {
+  return string === '1';
+};
 
 /**
  * Load a torrent into rtorrent.
@@ -259,7 +261,7 @@ function toBoolean(string) {
  * to run on-load, and connection options.
  * @returns {Promise} The response.
  */
-function load(file, options) {
+rtorrent.load = function(file, options) {
   const isBuffer = Buffer.isBuffer(file);
 
   options = Object.assign({
@@ -287,54 +289,30 @@ function load(file, options) {
       method +=  '_start';
     }
 
-    return call(method, args, options.connection)
+    return this.call(method, args, options.connection)
       .then(() => Bluebird.resolve(infoHash));
-  } else {
-    let method = 'load';
-
-    if (options.raw) {
-      method += '_raw';
-    }
-
-    if (options.start) {
-      method +=  '_start';
-    }
-
-    const buffer = isBuffer ? Bluebird.resolve(file) : fs.readFileAsync(file);
-
-    return buffer
-      .then(buffer => {
-        const { infoHash } = parseTorrent(buffer);
-
-        const args = [
-          options.raw ? buffer : path.resolve(file)
-        ].concat(options.commands);
-
-        return call(method, args, options.connection)
-          .then(() => Bluebird.resolve(infoHash));
-      });
   }
-}
+  let method = 'load';
 
-module.exports = {
-  call,
-  multicall,
+  if (options.raw) {
+    method += '_raw';
+  }
 
-  system,
+  if (options.start) {
+    method +=  '_start';
+  }
 
-  torrent,
-  torrents,
+  const buffer = isBuffer ? Bluebird.resolve(file) : fs.readFileAsync(file);
 
-  file,
-  files,
+  return buffer
+    .then(buffer => {
+      const { infoHash } = parseTorrent(buffer);
 
-  tracker,
-  trackers,
+      const args = [
+        options.raw ? buffer : path.resolve(file)
+      ].concat(options.commands);
 
-  peer,
-  peers,
-
-  load,
-
-  toBoolean
+      return this.call(method, args, options.connection)
+        .then(() => Bluebird.resolve(infoHash));
+    });
 };
