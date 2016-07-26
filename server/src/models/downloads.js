@@ -41,10 +41,10 @@ function getProgress(completed, totalSize) {
     const fractionComplete = completed / totalSize;
     const percentageComplete = fractionComplete * 100;
 
-    return percentageComplete.toFixed(2);
+    return Math.trunc(percentageComplete);
   }
 
-  return '0.00';
+  return 0;
 }
 
 function getState(torrent) {
@@ -180,12 +180,13 @@ function getExtractedFiles(infoHash) {
     }
 
     return recursiveReaddirAsync(obj.extractDirectory)
-      .map(file => {
+      .map((file, index) => {
         return fs.statAsync(file).then(stats => {
-          const relativePath = path.relative(obj.extractDirectory, file);
+          const relativePath = path.relative(obj.directory, file);
           const pathComponents = relativePath.split(path.sep);
 
           return {
+            id: index,
             pathComponents: pathComponents,
             size: stats.size,
             progress: obj.isExtracting ? 0 : 100,

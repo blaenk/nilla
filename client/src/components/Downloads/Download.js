@@ -15,7 +15,7 @@ let Download = React.createClass({
       'hashing',
       'stopped'
     ]).isRequired,
-    progress: React.PropTypes.string.isRequired,
+    progress: React.PropTypes.number.isRequired,
     name: React.PropTypes.string.isRequired,
     locks: React.PropTypes.array.isRequired,
     isHidden: React.PropTypes.bool.isRequired
