@@ -6,6 +6,7 @@ import styles from './search.module.less';
 
 const SearchFilter = React.createClass({
   propTypes: {
+    filter: React.PropTypes.string.isRequired,
     onChangeFilter: React.PropTypes.func.isRequired
   },
 
@@ -19,6 +20,7 @@ const SearchFilter = React.createClass({
                    placeholder='Search'
                    autoFocus={true}
                    onChange={this.onChangeFilter}
+                   value={this.props.filter}
                    styleName='search-filter' />
     );
   }
