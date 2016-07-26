@@ -52,6 +52,7 @@ const FileTree = CSSModules(React.createClass({
     name: React.PropTypes.string,
     files: React.PropTypes.arrayOf(React.PropTypes.shape(File.propTypes)),
     depth: React.PropTypes.number,
+    isRoot: React.PropTypes.bool,
     isEnabled: React.PropTypes.bool,
 
     initialCollapse: React.PropTypes.bool,
@@ -62,7 +63,8 @@ const FileTree = CSSModules(React.createClass({
 
   getDefaultProps: function() {
     return {
-      depth: 0
+      depth: 0,
+      isRoot: false
     };
   },
 
@@ -73,18 +75,18 @@ const FileTree = CSSModules(React.createClass({
   },
 
   componentWillReceiveProps: function(nextProps) {
-    if (this.props.initialCollapse != nextProps.initialCollapse) {
-      this.setState({isCollapsed: nextProps.initialCollapse});
+    if (this.props.initialCollapse !== nextProps.initialCollapse) {
+      this.setState({ isCollapsed: nextProps.initialCollapse });
     }
   },
 
   shouldComponentUpdate: function(nextProps, nextState) {
-    return this.props.files != nextProps.files ||
-      this.state.isCollapsed != nextState.isCollapsed;
+    return this.props.files !== nextProps.files ||
+      this.state.isCollapsed !== nextState.isCollapsed;
   },
 
   collapse: function(_event) {
-    this.setState({isCollapsed: !this.state.isCollapsed});
+    this.setState({ isCollapsed: !this.state.isCollapsed });
   },
 
   render: function() {
@@ -92,15 +94,15 @@ const FileTree = CSSModules(React.createClass({
       return acc + (file.isHidden ? 0 : 1);
     }, 0);
 
-    const maybeHide = (visibleCount > 0) ? {} : {display: 'none'};
+    const maybeHide = (visibleCount > 0) ? {} : { display: 'none' };
 
     let tab;
 
-    if (this.props.depth != 0) {
+    if (!this.props.isRoot) {
       tab = (
         <div styleName='folder-tab' onClick={this.collapse}>
           <Glyphicon styleName='collapse-mark'
-                     glyph={this.state.isCollapsed ? "chevron-down" : "chevron-up"} />
+                     glyph={this.state.isCollapsed ? 'chevron-down' : 'chevron-up'} />
           <div styleName='folder-name'>
             {this.props.name}
           </div>
@@ -112,16 +114,15 @@ const FileTree = CSSModules(React.createClass({
       );
     }
 
-    if (this.props.depth != 0 && this.state.isCollapsed) {
+    if (!this.props.isRoot && this.state.isCollapsed) {
       return (
-        <div styleName={this.props.depth == 0 ? 'root-file-tree' : 'file-tree'}
-             style={maybeHide}>
+        <div styleName='file-tree' style={maybeHide}>
           {tab}
         </div>
       );
     }
 
-    let {folders, files} = partitionFiles(this.props.files, this.props.depth);
+    let { folders, files } = partitionFiles(this.props.files, this.props.depth);
 
     folders = folders.map(folder => {
       return (
@@ -142,7 +143,7 @@ const FileTree = CSSModules(React.createClass({
               isHidden={file.isHidden}
               downloadName={this.props.downloadName}
               progress={file.progress}
-              enabled={file.enabled}
+              isEnabled={file.isEnabled}
               pathComponents={file.pathComponents}
               id={file.id}
               key={file.id} />
@@ -150,7 +151,7 @@ const FileTree = CSSModules(React.createClass({
     });
 
     return (
-      <div styleName={this.props.depth == 0 ? 'root-file-tree' : 'file-tree'}
+      <div styleName={this.props.isRoot ? 'root-file-tree' : 'file-tree'}
            style={maybeHide}>
         {tab}
 
