@@ -11,9 +11,12 @@ import styles from './download.module.less';
 
 import { fuzzyPattern } from 'common';
 
+import { getDownload } from 'actions';
+
 const filesProps = File.propTypes;
-delete filesProps['isMultiFile'];
-delete filesProps['downloadName'];
+
+delete filesProps.isMultiFile;
+delete filesProps.downloadName;
 
 const Download = React.createClass({
   propTypes: {
@@ -24,7 +27,10 @@ const Download = React.createClass({
     progress: React.PropTypes.number.isRequired,
     isMultiFile: React.PropTypes.bool.isRequired,
     uploader: React.PropTypes.string.isRequired,
-    files: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
+    files: React.PropTypes.shape({
+      downloaded: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
+      extracted: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps))
+    }),
     locks: React.PropTypes.array.isRequired
   },
 
@@ -35,26 +41,94 @@ const Download = React.createClass({
     };
   },
 
+  componentDidMount: function() {
+    const { dispatch } = this.props;
+
+    dispatch(getDownload(this.props.params.infoHash));
+  },
+
   onGlobalCollapse: function(_event) {
-    this.setState({globalCollapse: !this.state.globalCollapse});
+    this.setState({ globalCollapse: !this.state.globalCollapse });
   },
 
   onChangeFilter: function(event) {
-    this.setState({filter: event.target.value});
+    this.setState({ filter: event.target.value });
   },
 
   render: function() {
+    if (!('files' in this.props)) {
+      return null;
+    }
+
     const filterRE = fuzzyPattern(this.state.filter);
 
-    let visibleCount = 0;
+    // TODO
+    // DRY this all up.
 
-    const files = this.props.files.map(file => {
-      file.isHidden = !filterRE.test(file.path);
+    let extractedVisibleCount = 0;
 
-      visibleCount += file.isHidden ? 0 : 1;
+    let extractedFilesSection = null;
+
+    if (this.props.files.extracted.length > 0) {
+      const extractedFiles = this.props.files.extracted.map(file => {
+        file.isHidden = !file.pathComponents.some(c => filterRE.test(c));
+
+        extractedVisibleCount += file.isHidden ? 0 : 1;
+
+        return file;
+      });
+
+      let sectionLabel = null;
+
+      if (extractedVisibleCount > 0) {
+        sectionLabel = (
+          <p styleName='section-label'>EXTRACTED ({extractedVisibleCount})</p>
+        );
+      }
+
+      extractedFilesSection = (
+        <div styleName='files'>
+          {sectionLabel}
+          <FileTree isMultiFile={this.props.isMultiFile}
+                    depth={1}
+                    isRoot={true}
+                    initialCollapse={this.state.globalCollapse}
+                    downloadName={this.props.name}
+                    files={extractedFiles} />
+        </div>
+      );
+    }
+
+    let downloadedVisibleCount = 0;
+
+    const downloadedFiles = this.props.files.downloaded.map(file => {
+      file.isHidden = !file.pathComponents.some(c => filterRE.test(c));
+
+      downloadedVisibleCount += file.isHidden ? 0 : 1;
 
       return file;
     });
+
+    let downloadedSectionLabel = null;
+
+    if (extractedFilesSection && downloadedVisibleCount > 0) {
+      downloadedSectionLabel = (
+        <p styleName='section-label'>DOWNLOADED ({downloadedVisibleCount})</p>
+      );
+    }
+
+    const downloadedFilesSection = (
+      <div styleName='files'>
+        {downloadedSectionLabel}
+        <FileTree isMultiFile={this.props.isMultiFile}
+                  initialCollapse={this.state.globalCollapse}
+                  downloadName={this.props.name}
+                  isRoot={true}
+                  files={downloadedFiles} />
+      </div>
+    );
+
+    const totalVisibleCount = extractedVisibleCount + downloadedVisibleCount;
 
     return (
       <div>
@@ -72,7 +146,7 @@ const Download = React.createClass({
 
         <Row>
           <Col lg={12}>
-            <Search count={visibleCount}
+            <Search count={totalVisibleCount}
                     onChangeFilter={this.onChangeFilter}
                     onCollapse={this.onGlobalCollapse} />
           </Col>
@@ -80,12 +154,8 @@ const Download = React.createClass({
 
         <Row>
           <Col lg={12}>
-            <div styleName='files'>
-              <FileTree isMultiFile={this.props.isMultiFile}
-                        initialCollapse={this.state.globalCollapse}
-                        downloadName={this.props.name}
-                        files={files} />
-            </div>
+            {extractedFilesSection}
+            {downloadedFilesSection}
           </Col>
         </Row>
       </div>

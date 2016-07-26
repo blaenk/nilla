@@ -10,6 +10,10 @@ export default function downloads(state, action) {
       // TODO
       // merge it with existing state/downloads
       return Object.assign({}, action.downloads);
+    case 'RECEIVE_DOWNLOAD':
+      return Object.assign({}, state, {
+        [action.download.infoHash]: action.download
+      });
     default:
       return state || {};
   }

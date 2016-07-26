@@ -130,6 +130,14 @@ export function receiveDownloads(downloads) {
   };
 }
 
+export function receiveDownload(download) {
+  return {
+    type: 'RECEIVE_DOWNLOAD',
+    download,
+    receivedAt: Date.now()
+  };
+}
+
 function normalizeDownloads(downloads) {
   const normalized = {};
 
@@ -153,6 +161,13 @@ export function getDownloads() {
   };
 }
 
+export function getDownload(infoHash) {
+  return dispatch => {
+    // dispatch(requestDownloads());
+
+    return request.get(`/api/downloads/${infoHash}`)
+      .accept('json')
+      .then(res => dispatch(receiveDownload(res.body)));
   };
 }
 
