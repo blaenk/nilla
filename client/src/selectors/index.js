@@ -1,14 +1,20 @@
 import { createSelector } from 'reselect';
 import { fuzzyPattern } from 'common';
 import moment from 'moment';
+import _ from 'lodash';
 
 const getDownloads = (state) => state.downloads;
 const getFilter = (state) => state.search.filter;
 const getScope = (state) => state.search.scope;
 const getOrder = (state) => state.search.order;
 
+export const getDownloadsValues = createSelector(
+  [getDownloads],
+  (downloads) => _.values(downloads)
+);
+
 export const getScopedDownloads = createSelector(
-  [getDownloads, getScope],
+  [getDownloadsValues, getScope],
   (downloads, scope) => {
     switch (scope) {
       case 'mine':
@@ -16,19 +22,19 @@ export const getScopedDownloads = createSelector(
           // TODO
           // get username from auth
           return Object.assign({}, download, {
-            isHidden: download.uploader != 'blaenk'
+            isHidden: download.uploader !== 'blaenk'
           });
         });
       case 'system':
         return downloads.map(download => {
           return Object.assign({}, download, {
-            isHidden: download.uploader != 'system'
+            isHidden: download.uploader !== 'system'
           });
         });
       case 'locked':
         return downloads.map(download => {
           return Object.assign({}, download, {
-            isHidden: download.locks.length == 0
+            isHidden: download.locks.length === 0
           });
         });
       case 'expiring':
@@ -77,9 +83,9 @@ export const getOrderedDownloads = createSelector(
             return -1;
           } else if (right > left) {
             return 1;
-          } else {
-            return 0;
           }
+
+          return 0;
         });
 
         return sortedByDate;

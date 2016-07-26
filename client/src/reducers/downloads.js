@@ -7,8 +7,9 @@
 export default function downloads(state, action) {
   switch (action.type) {
     case 'RECEIVE_DOWNLOADS':
-      // return Object.assign({}, state, action.downloads);
-      return action.downloads.slice();
+      // TODO
+      // merge it with existing state/downloads
+      return Object.assign({}, action.downloads);
     default:
       return state || {};
   }

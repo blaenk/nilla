@@ -130,13 +130,29 @@ export function receiveDownloads(downloads) {
   };
 }
 
+function normalizeDownloads(downloads) {
+  const normalized = {};
+
+  for (const download of downloads) {
+    normalized[download.infoHash] = download;
+  }
+
+  return normalized;
+}
+
 export function getDownloads() {
   return dispatch => {
     // dispatch(requestDownloads());
 
     return request.get('/api/downloads')
       .accept('json')
-      .then(res => dispatch(receiveDownloads(res.body)));
+      .then(res => {
+        const normalized = normalizeDownloads(res.body);
+        dispatch(receiveDownloads(normalized));
+      });
+  };
+}
+
   };
 }
 
