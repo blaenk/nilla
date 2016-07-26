@@ -24,10 +24,10 @@ const sqlite3 = require('sqlite3');
 const db = new sqlite3.cached.Database('./db/nilla.db');
 
 const {
-  SERVE_STATIC,
   JWT_SECRET,
-  USE_SENDFILE,
-  RTORRENT_DOWNLOADS_DIRECTORY
+  RTORRENT_DOWNLOADS_DIRECTORY,
+  SERVE_ASSETS,
+  SERVE_DOWNLOADS
 } = process.env;
 
 function JWTErrorHandler(err, req, res, _next) {
@@ -203,7 +203,7 @@ function attachAuthentication(app, options) {
     const filePath = req.params[0];
     const name = path.basename(filePath);
 
-    if (!USE_SENDFILE) {
+    if (SERVE_DOWNLOADS) {
       const downloadPath = path.join(RTORRENT_DOWNLOADS_DIRECTORY, filePath);
       res.download(downloadPath, name);
       return;
@@ -356,7 +356,7 @@ function createServer(options) {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cookieParser());
 
-  if (SERVE_STATIC) {
+  if (SERVE_ASSETS) {
     app.use(express.static(path.join(__dirname, '../../client/build')));
   }
 
