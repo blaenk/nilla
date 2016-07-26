@@ -19,7 +19,7 @@ export default function search(state, action) {
         filter: action.filter
       });
     default:
-      return {
+      return state || {
         scope: 'all',
         order: 'recent',
         filter: ''

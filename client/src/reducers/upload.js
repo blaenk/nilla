@@ -70,7 +70,7 @@ export default function upload(state, action) {
     case 'UPLOAD_FILE_SUCCESS':
     case 'UPLOAD_FILE_FAILURE':
     default:
-      return {
+      return state || {
         files: [],
         rejectedFiles: [],
         isDragging: false,

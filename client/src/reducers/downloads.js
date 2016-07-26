@@ -10,6 +10,6 @@ export default function downloads(state, action) {
       // return Object.assign({}, state, action.downloads);
       return action.downloads.slice();
     default:
-      return [];
+      return state || {};
   }
 }
