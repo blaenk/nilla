@@ -11,7 +11,7 @@ const File = React.createClass({
     size: React.PropTypes.number.isRequired,
     id: React.PropTypes.number.isRequired,
     progress: React.PropTypes.number.isRequired,
-    enabled: React.PropTypes.bool.isRequired,
+    isEnabled: React.PropTypes.bool.isRequired,
     isHidden: React.PropTypes.bool.isRequired,
 
     // download-props
@@ -23,8 +23,8 @@ const File = React.createClass({
     const basename = this.props.pathComponents[this.props.pathComponents.length - 1];
     const size = filesize(this.props.size);
 
-    const isFinished = this.props.progress == 100;
-    const isDisabled = !this.props.enabled;
+    const isFinished = this.props.progress === 100;
+    const isDisabled = !this.props.isEnabled;
 
     const encodedName = this.props.downloadName;
     const encodedPath = this.props.pathComponents.map(encodeURIComponent).join('/');
@@ -51,7 +51,7 @@ const File = React.createClass({
       badge = <Badge styleName={disabledOr('file-progress')}>{this.props.progress}</Badge>;
     }
 
-    let maybeHide = this.props.isHidden ? {display: 'none'} : {};
+    let maybeHide = this.props.isHidden ? { display: 'none' } : {};
 
     return (
       <li styleName='file' style={maybeHide}>
