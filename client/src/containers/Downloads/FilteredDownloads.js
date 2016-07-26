@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { getFilteredDownloads } from 'selectors';
-import { setScope, setFilter } from 'actions';
 
 import Downloads from 'components/Downloads/Downloads';
 
