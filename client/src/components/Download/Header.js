@@ -52,8 +52,8 @@ const Header = React.createClass({
 
           <div styleName='progress'>
             <div styleName={`progress-${this.props.state}`}
-                 style={{width: "75%"}}
-                 aria-valuenow="75">
+                 style={{ width: `${this.props.progress}%` }}
+                 aria-valuenow={this.props.progress}>
             </div>
           </div>
 
