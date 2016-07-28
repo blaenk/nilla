@@ -224,7 +224,8 @@ rtorrent.peer = function peer(infoHash, fileID, requests) {
 };
 
 rtorrent._getAll = function _getAll(call, args, requests) {
-  const prefix = call.slice(0, 2);
+  const PREFIX_LENGTH = 2;
+  const prefix = call.slice(0, PREFIX_LENGTH);
 
   requests = this._normalizeRequests(requests, { prefix });
 

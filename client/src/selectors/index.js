@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
-import { fuzzyPattern } from 'common';
+import { fuzzyPattern, EXPIRATION_DURATION } from 'common';
+
 import moment from 'moment';
 import _ from 'lodash';
 
@@ -44,7 +45,7 @@ export const getScopedDownloads = createSelector(
           // don't hard-code expiration time
           // perhaps store some TTL in metadata?
           const expiresAt =
-                moment(download['date-added']).add(2, 'weeks').subtract(1, 'day');
+                moment(download['date-added']).add(EXPIRATION_DURATION).subtract(1, 'day');
 
           return Object.assign({}, download, {
             isHidden: moment().isBefore(expiresAt)

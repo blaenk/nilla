@@ -15,9 +15,11 @@ const fs = Bluebird.promisifyAll(require('fs'));
  * @returns {String} The floating-point ratio.
  */
 function decodeRatio(ratio) {
-  const fraction = ratio / 1000;
+  const FULL_RATIO = 1000;
+  const fraction = ratio / FULL_RATIO;
 
-  return fraction.toFixed(2);
+  const TWO_DECIMAL_PLACES = 2;
+  return fraction.toFixed(TWO_DECIMAL_PLACES);
 }
 
 function encodeBase64(string) {
@@ -36,10 +38,12 @@ function deserializeCustomJSON(json) {
   return JSON.parse(decodeBase64(json));
 }
 
+const PROGRESS_COMPLETE = 100;
+
 function getProgress(completed, totalSize) {
   if (totalSize !== 0) {
     const fractionComplete = completed / totalSize;
-    const percentageComplete = fractionComplete * 100;
+    const percentageComplete = fractionComplete * PROGRESS_COMPLETE;
 
     return Math.trunc(percentageComplete);
   }
@@ -189,7 +193,7 @@ function getExtractedFiles(infoHash) {
             id: index,
             pathComponents: pathComponents,
             size: stats.size,
-            progress: obj.isExtracting ? 0 : 100,
+            progress: obj.isExtracting ? 0 : PROGRESS_COMPLETE,
             isEnabled: true
           };
         });
@@ -223,9 +227,9 @@ function getCompleteDownload(infoHash) {
 
 function toNativePriority(priority) {
   switch (priority) {
-    case 'off': return 0;
-    case 'normal': return 1;
-    case 'high': return 2;
+    case 'off': return '0';
+    case 'normal': return '1';
+    case 'high': return '2';
     default: throw new Error('unknown priority');
   }
 }

@@ -39,7 +39,8 @@ function buildRequest(headers, body) {
  * @returns {Object} The parsed response with keys for the headers and body.
  */
 function parseResponse(response) {
-  let [rawHeaders, body] = response.split('\r\n\r\n', 2);
+  const MAX_TWO_SPLITS = 2;
+  let [rawHeaders, body] = response.split('\r\n\r\n', MAX_TWO_SPLITS);
 
   // create headers map
   let headers = _.fromPairs(rawHeaders.split('\r\n').map(h => h.split(': ')));

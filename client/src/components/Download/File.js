@@ -23,7 +23,9 @@ const File = React.createClass({
     const basename = this.props.pathComponents[this.props.pathComponents.length - 1];
     const size = filesize(this.props.size);
 
-    const isFinished = this.props.progress === 100;
+    const PROGRESS_COMPLETE = 100;
+
+    const isFinished = this.props.progress === PROGRESS_COMPLETE;
     const isDisabled = !this.props.isEnabled;
 
     const encodedName = this.props.downloadName;

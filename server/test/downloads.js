@@ -9,10 +9,14 @@ const downloads = require('../src/models/downloads');
 describe('Downloads Model', function() {
   context('decode ratio', function() {
     it('returns actual ratio from integer value', function() {
+      /* eslint-disable no-magic-numbers */
+
       expect(downloads.decodeRatio(1000)).to.equal('1.00');
       expect(downloads.decodeRatio(750)).to.equal('0.75');
       expect(downloads.decodeRatio(100)).to.equal('0.10');
       expect(downloads.decodeRatio(0)).to.equal('0.00');
+
+      /* eslint-enable no-magic-numbers */
     });
   });
 

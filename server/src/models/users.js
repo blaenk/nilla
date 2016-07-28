@@ -8,7 +8,9 @@ function getUserFromUsername(db, username, callback) {
 }
 
 function createRefreshToken(callback) {
-  crypto.randomBytes(64, (err, buffer) => {
+  const BYTE_COUNT = 64;
+
+  crypto.randomBytes(BYTE_COUNT, (err, buffer) => {
     if (err) {
       callback(err);
     } else {

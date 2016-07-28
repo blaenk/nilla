@@ -4,6 +4,7 @@ const Bluebird = require('bluebird');
 const request = require('supertest');
 const cheerio = require('cheerio');
 const CookieJar = require('cookiejar');
+const HttpStatus = require('http-status-codes');
 
 const server = require('../src/server');
 
@@ -43,7 +44,7 @@ describe('Server', function() {
     }));
 
     fail.get('/login')
-      .expect(200)
+      .expect(HttpStatus.OK)
       .end((err, res) => {
         const { csrf } = parseLoginForm(res.text);
 
@@ -51,7 +52,7 @@ describe('Server', function() {
           .send('username=baduser')
           .send('password=badpass')
           .send(`_csrf=${csrf}`)
-          .expect(302)
+          .expect(HttpStatus.MOVED_TEMPORARILY)
           .end((err, res) => {
             expect(res.redirect).to.be.true;
             expect(res.headers.location).to.equal('/login');
@@ -69,7 +70,7 @@ describe('Server', function() {
 
     redirect.get('/downloads')
       .redirects(FOLLOW_ONE_REDIRECT)
-      .expect(200)
+      .expect(HttpStatus.OK)
       .end((err, res) => {
         const { csrf, redirectTo } = parseLoginForm(res.text);
 
@@ -78,7 +79,7 @@ describe('Server', function() {
           .send('password=pass')
           .send(`_csrf=${csrf}`)
           .send(`_redirectTo=${redirectTo}`)
-          .expect(302)
+          .expect(HttpStatus.MOVED_TEMPORARILY)
           .end((err, res) => {
             expect(res.redirect).to.be.true;
             expect(res.headers.location).to.equal('/downloads');
@@ -94,7 +95,7 @@ describe('Server', function() {
     }));
 
     agent.get('/login')
-      .expect(200)
+      .expect(HttpStatus.OK)
       .end((err, res) => {
         const { csrf } = parseLoginForm(res.text);
 
@@ -102,7 +103,7 @@ describe('Server', function() {
           .send('username=user')
           .send('password=pass')
           .send(`_csrf=${csrf}`)
-          .expect(302)
+          .expect(HttpStatus.MOVED_TEMPORARILY)
           .end((err, res) => {
             expect(res.redirect).to.be.true;
             expect(res.headers.location).to.equal('/');
@@ -115,7 +116,7 @@ describe('Server', function() {
     agent
       .get('/api/user')
       .accept('json')
-      .expect(200)
+      .expect(HttpStatus.OK)
       .expect('Content-Type', /json/)
       .expect(({ body: user }) => {
         expect(user).to.contain.keys('exp', 'iat');
@@ -132,7 +133,7 @@ describe('Server', function() {
       agent
         .get('/api/downloads')
         .accept('json')
-        .expect(200)
+        .expect(HttpStatus.OK)
         .expect('Content-Type', /json/)
         .expect(res => {
           expect(res.body).to.deep.equal([]);
@@ -149,7 +150,7 @@ describe('Server', function() {
           return agent
             .get('/api/downloads/' + torrents.fedora.hash)
             .accept('json')
-            .expect(200)
+            .expect(HttpStatus.OK)
             .expect('Content-Type', /json/)
             .expect(res => {
               expect(res.body).to.have.keys(

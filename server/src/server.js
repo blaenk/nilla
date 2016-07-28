@@ -10,6 +10,7 @@ const csurf = require('csurf');
 const express = require('express');
 const expressHandlebars = require('express-handlebars');
 
+const HttpStatus = require('http-status-codes');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -54,7 +55,7 @@ function CSRFValidationError(err, req, res, next) {
       res.redirect(failureRedirect);
     },
     json: () => {
-      res.status(400).json({
+      res.status(HttpStatus.BAD_REQUEST).json({
         success: false,
         message: 'invalid CSRF token'
       });
@@ -101,7 +102,7 @@ function rejectPlainTextRequest(req, res, next) {
   const contentType = req.headers['Content-Type'];
 
   if (contentType === 'text/plain') {
-    res.sendStatus(400);
+    res.sendStatus(HttpStatus.BAD_REQUEST);
   } else {
     next();
   }
@@ -234,7 +235,7 @@ function attachAPI(app) {
       torrent = req.body.uri;
       start = req.body.start;
     } else {
-      res.status(500).send({
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
         error: 'An unknown error occurred'
       });
 
@@ -251,14 +252,14 @@ function attachAPI(app) {
     }).catch(error => {
       console.log(error);
 
-      res.status(500).send({
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
         error: 'An unknown error occurred'
       });
     });
   });
 
   api.get('/user', JWT, (req, res) => {
-    res.status(200).json(req.user);
+    res.status(HttpStatus.OK).json(req.user);
   });
 
   api.get('/downloads', JWT, (req, res) => {
@@ -269,7 +270,7 @@ function attachAPI(app) {
   api.get('/downloads/:infoHash', JWT, (req, res) => {
     downloads.getCompleteDownload(req.params.infoHash)
       .then(downloads => res.json(downloads))
-      .catch(_error => res.status(500).json({
+      .catch(_error => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         error: 'no such torrent'
       }));
   });
@@ -314,7 +315,7 @@ function attachAPI(app) {
   api.delete('/downloads/:infoHash', JWT, (req, res) => {
     rtorrent.torrent(req.params.infoHash, 'erase')
       .then(() => res.json({ success: true }))
-      .catch(_error => res.status(500).json({
+      .catch(_error => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         error: 'no such torrent'
       }));
   });

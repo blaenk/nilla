@@ -4,6 +4,8 @@ import moment from 'moment';
 
 import styles from './header.module.less';
 
+import { EXPIRATION_DURATION } from 'common';
+
 const Header = React.createClass({
   propTypes: {
     infoHash: React.PropTypes.string.isRequired,
@@ -21,7 +23,7 @@ const Header = React.createClass({
     const dateAddedLongFormat = dateAdded.clone()
                                    .format('dddd, MMMM Do YYYY [at] h:mm:ss A');
 
-    const expiresDate = dateAdded.clone().add(2, 'weeks');
+    const expiresDate = dateAdded.clone().add(EXPIRATION_DURATION);
     const expiresShortFormat = expiresDate.clone().fromNow();
     const expiresLongFormat = expiresDate.clone()
                                    .format('dddd, MMMM Do YYYY [at] h:mm:ss A');
