@@ -62,7 +62,7 @@ describe('Downloads Model', function() {
       locks: [],
       dateAdded: new Date('2016-07-24T23:54:07.000Z'),
       state: 'closed',
-      progress: '0.00'
+      progress: 0
     };
 
     rtorrent.call = sinon.stub(rtorrent, 'call').resolves(input);
