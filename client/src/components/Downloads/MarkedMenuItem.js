@@ -7,7 +7,7 @@ import styles from './search.module.less';
 const MarkedMenuItem = (props) => {
   return (
     <MenuItem eventKey={props.eventKey}
-              className={props.eventKey == props.selected ? 'dropdown-menu-selected' : ''}
+              className={props.eventKey === props.selected ? 'dropdown-menu-selected' : ''}
               onSelect={props.onSelect}>
       {props.children}
     </MenuItem>

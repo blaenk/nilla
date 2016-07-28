@@ -17,14 +17,14 @@ const Header = React.createClass({
 
   render: function() {
     const dateAdded = new moment(this.props.dateAdded).utc().local();
-    const dateAddedShortFormat = dateAdded.clone().format("l");
+    const dateAddedShortFormat = dateAdded.clone().format('l');
     const dateAddedLongFormat = dateAdded.clone()
-                                   .format("dddd, MMMM Do YYYY [at] h:mm:ss A");
+                                   .format('dddd, MMMM Do YYYY [at] h:mm:ss A');
 
-    const expiresDate = dateAdded.clone().add(2, "weeks");
+    const expiresDate = dateAdded.clone().add(2, 'weeks');
     const expiresShortFormat = expiresDate.clone().fromNow();
     const expiresLongFormat = expiresDate.clone()
-                                   .format("dddd, MMMM Do YYYY [at] h:mm:ss A");
+                                   .format('dddd, MMMM Do YYYY [at] h:mm:ss A');
 
     let expiresOrLocks;
 

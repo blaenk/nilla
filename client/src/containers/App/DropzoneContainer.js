@@ -29,7 +29,7 @@ const DropzoneContainer = connect(
   null,
   mapDispatchToProps,
   null,
-  {withRef: true}
+  { withRef: true }
 )(Dropzone);
 
 export default DropzoneContainer;

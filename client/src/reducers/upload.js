@@ -13,7 +13,7 @@ export default function upload(state, action) {
     }
     case 'REMOVE_FILE': {
       return Object.assign({}, state, {
-        files: state.files.filter(f => f != action.file)
+        files: state.files.filter(f => f !== action.file)
       });
     }
     case 'REJECT_FILE': {
@@ -38,13 +38,13 @@ export default function upload(state, action) {
     }
     case 'SET_FILE_START': {
       const files = state.files.map(f => {
-        if (f == action.file) {
+        if (f === action.file) {
           return Object.assign({}, f, {
             start: action.start
           });
-        } else {
-          return f;
         }
+
+        return f;
       });
 
       return Object.assign({}, state, {
@@ -53,13 +53,13 @@ export default function upload(state, action) {
     }
     case 'SET_FILE_PROGRESS': {
       const files = state.files.map(f => {
-        if (f == action.file) {
+        if (f === action.file) {
           return Object.assign({}, f, {
             progress: action.progress
           });
-        } else {
-          return f;
         }
+
+        return f;
       });
 
       return Object.assign({}, state, {

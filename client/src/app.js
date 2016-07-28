@@ -16,7 +16,7 @@ let store = createStore(
   )
 );
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener('DOMContentLoaded', function() {
   const mountNode = document.querySelector('#root');
   ReactDOM.render(
     <AppContainer history={browserHistory} store={store} />,

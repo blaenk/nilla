@@ -20,6 +20,8 @@ delete filesProps.downloadName;
 
 const Download = React.createClass({
   propTypes: {
+    dispatch: React.PropTypes.func.isRequired,
+    params: React.PropTypes.object.isRequired,
     infoHash: React.PropTypes.string.isRequired,
     dateAdded: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,

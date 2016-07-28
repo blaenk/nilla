@@ -38,7 +38,7 @@ const OrderDropDown = React.createClass({
             <Glyphicon glyph='sort' />
           </Dropdown.Toggle>
 
-          <Dropdown.Menu style={{left: 'auto', right: 0}}>
+          <Dropdown.Menu style={{ left: 'auto', right: 0 }}>
             <MenuItem header>Sort By</MenuItem>
             {['name', 'recent'].map(item)}
           </Dropdown.Menu>

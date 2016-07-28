@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import CSSModules from 'react-css-modules';
-import {OverlayTrigger, Tooltip} from 'react-bootstrap';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import styles from './styles.module.less';
 
@@ -23,31 +23,33 @@ let Download = React.createClass({
 
   render: function() {
     const lockedTooltip = (
-      <Tooltip id="tooltip_locked">locked</Tooltip>
+      <Tooltip id='tooltip_locked'>locked</Tooltip>
     );
 
     const progressTooltip = (
-      <Tooltip id="tooltip_state">{this.props.state}</Tooltip>
+      <Tooltip id='tooltip_state'>{this.props.state}</Tooltip>
     );
 
     const lockStatus = () => {
       if (this.props.locks.length) {
         return (
-          <OverlayTrigger placement="left" overlay={lockedTooltip}>
-            <div styleName="lock-status" />
+          <OverlayTrigger placement='left' overlay={lockedTooltip}>
+            <div styleName='lock-status' />
           </OverlayTrigger>
         );
-      } else { return null; }
+      }
+
+      return null;
     };
 
-    let maybeHide = this.props.isHidden ? {display: 'none'} : {};
+    let maybeHide = this.props.isHidden ? { display: 'none' } : {};
 
     return (
-      <li styleName="download" style={maybeHide}>
-        <OverlayTrigger placement="right" overlay={progressTooltip}>
+      <li styleName='download' style={maybeHide}>
+        <OverlayTrigger placement='right' overlay={progressTooltip}>
           <div styleName='progress'>
             <div styleName={`progress-${this.props.state}`}
-                 style={{height: this.props.progress + "%"}}
+                 style={{ height: this.props.progress + '%' }}
                  aria-valuenow={this.props.progress}>
             </div>
           </div>
