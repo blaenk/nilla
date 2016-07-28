@@ -39,12 +39,12 @@ function buildRequest(headers, body) {
  * @returns {Object} The parsed response with keys for the headers and body.
  */
 function parseResponse(response) {
-  let [rawHeaders, body] = response.split("\r\n\r\n", 2);
+  let [rawHeaders, body] = response.split('\r\n\r\n', 2);
 
   // create headers map
-  let headers = _.fromPairs(rawHeaders.split("\r\n").map(h => h.split(": ")));
+  let headers = _.fromPairs(rawHeaders.split('\r\n').map(h => h.split(': ')));
 
-  return {headers, body};
+  return { headers, body };
 }
 
 /**
@@ -58,7 +58,7 @@ function parseResponse(response) {
 function request(options, body) {
   return new Bluebird((resolve, reject) => {
     const connection = net.connect(options);
-    let response = "";
+    let response = '';
 
     connection.on('data', (data) => {
       response += data;

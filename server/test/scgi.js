@@ -36,7 +36,7 @@ describe('SCGI', function() {
       const parsed = scgi.parseResponse(response);
 
       expect(parsed.body).to.equal('42');
-      expect(parsed.headers['Status']).to.equal('200 OK');
+      expect(parsed.headers.Status).to.equal('200 OK');
       expect(parsed.headers['Content-Type']).to.equal('text/plain');
     });
   });
