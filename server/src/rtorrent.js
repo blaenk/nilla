@@ -287,7 +287,7 @@ rtorrent.load = function(file, options) {
     const args = [file].concat(options.commands);
 
     if (options.start) {
-      method +=  '_start';
+      method += '_start';
     }
 
     return this.call(method, args, options.connection)
@@ -300,7 +300,7 @@ rtorrent.load = function(file, options) {
   }
 
   if (options.start) {
-    method +=  '_start';
+    method += '_start';
   }
 
   const buffer = isBuffer ? Bluebird.resolve(file) : fs.readFileAsync(file);
