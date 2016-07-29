@@ -127,6 +127,24 @@ function getDownloads() {
     });
 }
 
+function toNativePriority(priority) {
+  switch (priority) {
+    case 'off': return '0';
+    case 'normal': return '1';
+    case 'high': return '2';
+    default: throw new Error('unknown priority');
+  }
+}
+
+function toHumanPriority(priority) {
+  switch (priority) {
+    case '0': return 'off';
+    case '1': return 'normal';
+    case '2': return 'high';
+    default: throw new Error('unknown priority');
+  }
+}
+
 const FILE_METHODS = [
   { methodName: 'get_path_components', as: 'pathComponents' },
   {
@@ -223,24 +241,6 @@ function getCompleteDownload(infoHash) {
       download.trackers = trackers;
       return download;
     });
-}
-
-function toNativePriority(priority) {
-  switch (priority) {
-    case 'off': return '0';
-    case 'normal': return '1';
-    case 'high': return '2';
-    default: throw new Error('unknown priority');
-  }
-}
-
-function toHumanPriority(priority) {
-  switch (priority) {
-    case '0': return 'off';
-    case '1': return 'normal';
-    case '2': return 'high';
-    default: throw new Error('unknown priority');
-  }
 }
 
 function setFilePriorities(infoHash, priorities) {

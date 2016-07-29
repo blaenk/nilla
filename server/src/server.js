@@ -103,9 +103,10 @@ function rejectPlainTextRequest(req, res, next) {
 
   if (contentType === 'text/plain') {
     res.sendStatus(HttpStatus.BAD_REQUEST);
-  } else {
-    next();
+    return;
   }
+
+  next();
 }
 
 const csrfProtection = csurf({ cookie: true });

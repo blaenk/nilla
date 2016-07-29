@@ -108,14 +108,6 @@ export function setFileProgress(file, progress) {
   };
 }
 
-export function submitAllFiles() {
-  return (dispatch, getState) => {
-    for (const file of getState().upload.files) {
-      dispatch(submitFile(file));
-    }
-  };
-}
-
 export function requestDownloads() {
   return {
     type: 'REQUEST_DOWNLOADS'
@@ -199,5 +191,13 @@ export function submitFile(file) {
 
         fileObject = getState().upload.files.find(f => f.backingFile === fileObject.backingFile);
       });
+  };
+}
+
+export function submitAllFiles() {
+  return (dispatch, getState) => {
+    for (const file of getState().upload.files) {
+      dispatch(submitFile(file));
+    }
   };
 }

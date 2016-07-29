@@ -49,6 +49,7 @@
     "no-void": ["error"],
     "no-unused-vars": ["error", {"argsIgnorePattern": "^_"}],
     "no-var": ["error"],
+    "no-with": ["error"],
     "object-curly-spacing": ["error", "always"],
     "quote-props": ["error", "as-needed"],
     "quotes": ["error", "single", {"avoidEscape": true}],
@@ -57,6 +58,15 @@
     "space-in-parens": ["error", "never"],
     "space-infix-ops": ["error"],
     "strict": ["error", "global"],
+    "wrap-iife": ["error"],
+    "yoda": ["error"],
+    "no-catch-shadow": ["error"],
+    "no-shadow-restricted-names": ["error"],
+    "no-undef-init": ["error"],
+    "no-undefined": ["error"],
+    "no-use-before-define": ["error"],
+    "global-require": ["error"],
+    "callback-return": ["error"],
     "valid-jsdoc": ["error"]
   }
 }

@@ -13,9 +13,10 @@ function createRefreshToken(callback) {
   crypto.randomBytes(BYTE_COUNT, (err, buffer) => {
     if (err) {
       callback(err);
-    } else {
-      callback(null, crypto.createHash('sha1').update(buffer).digest('hex'));
+      return;
     }
+
+    callback(null, crypto.createHash('sha1').update(buffer).digest('hex'));
   });
 }
 
