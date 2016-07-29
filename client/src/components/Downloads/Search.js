@@ -3,7 +3,7 @@ import CSSModules from 'react-css-modules';
 import {
   Row,
   Col,
-  InputGroup
+  InputGroup,
 } from 'react-bootstrap';
 
 import styles from './search.module.less';
@@ -16,7 +16,7 @@ import DownloadCount from 'components/Downloads/DownloadCount';
 
 const Search = React.createClass({
   propTypes: {
-    count: React.PropTypes.number.isRequired
+    count: React.PropTypes.number.isRequired,
   },
 
   render: function() {
@@ -32,7 +32,7 @@ const Search = React.createClass({
         </Col>
       </Row>
     );
-  }
+  },
 });
 
 export default CSSModules(Search, styles);

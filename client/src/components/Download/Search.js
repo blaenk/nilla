@@ -5,7 +5,7 @@ import {
   Button,
   FormControl,
   Glyphicon,
-  InputGroup
+  InputGroup,
 } from 'react-bootstrap';
 
 import styles from './search.module.less';
@@ -16,12 +16,12 @@ const Search = React.createClass({
     initialCollapse: React.PropTypes.bool,
 
     onCollapse: React.PropTypes.func.isRequired,
-    onChangeFilter: React.PropTypes.func.isRequired
+    onChangeFilter: React.PropTypes.func.isRequired,
   },
 
   getInitialState: function() {
     return {
-      isCollapsed: true
+      isCollapsed: true,
     };
   },
 
@@ -51,7 +51,7 @@ const Search = React.createClass({
         </InputGroup.Addon>
       </InputGroup>
     );
-  }
+  },
 });
 
 export default CSSModules(Search, styles);

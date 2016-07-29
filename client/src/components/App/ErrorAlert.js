@@ -8,7 +8,7 @@ const ErrorAlert = React.createClass({
   propTypes: {
     title: React.PropTypes.string.isRequired,
     onDismiss: React.PropTypes.func.isRequired,
-    children: React.PropTypes.node.isRequired
+    children: React.PropTypes.node.isRequired,
   },
 
   render: function() {
@@ -33,7 +33,7 @@ const ErrorAlert = React.createClass({
         </Col>
       </Row>
     );
-  }
+  },
 });
 
 export default CSSModules(ErrorAlert, styles);

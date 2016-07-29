@@ -21,7 +21,7 @@ const mapDispatchToProps = (dispatch) => {
     },
     onDragLeave: function(_event) {
       dispatch(setDragging(false));
-    }
+    },
   };
 };
 

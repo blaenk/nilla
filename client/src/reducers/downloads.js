@@ -12,7 +12,7 @@ export default function downloads(state, action) {
       return Object.assign({}, action.downloads);
     case 'RECEIVE_DOWNLOAD':
       return Object.assign({}, state, {
-        [action.download.infoHash]: action.download
+        [action.download.infoHash]: action.download,
       });
     default:
       return state || {};

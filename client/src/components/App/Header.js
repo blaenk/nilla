@@ -40,7 +40,7 @@ const Header = function(props) {
 
 Header.propTypes = {
   isDragging: React.PropTypes.bool.isRequired,
-  onUpload: React.PropTypes.func.isRequired
+  onUpload: React.PropTypes.func.isRequired,
 };
 
 export default CSSModules(Header, styles);

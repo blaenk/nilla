@@ -5,7 +5,7 @@ import ScopeDropDown from 'components/Downloads/ScopeDropDown';
 
 const mapStateToProps = (state) => {
   return {
-    scope: state.search.scope
+    scope: state.search.scope,
   };
 };
 
@@ -13,7 +13,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onChangeScope: (scope) => {
       dispatch(setScope(scope));
-    }
+    },
   };
 };
 

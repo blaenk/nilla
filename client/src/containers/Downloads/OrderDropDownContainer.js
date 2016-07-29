@@ -5,7 +5,7 @@ import OrderDropDown from 'components/Downloads/OrderDropDown';
 
 const mapStateToProps = (state) => {
   return {
-    order: state.search.order
+    order: state.search.order,
   };
 };
 
@@ -13,7 +13,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onChangeOrder: (order) => {
       dispatch(setOrder(order));
-    }
+    },
   };
 };
 

@@ -13,12 +13,12 @@ let Download = React.createClass({
       'closed',
       'downloading',
       'hashing',
-      'stopped'
+      'stopped',
     ]).isRequired,
     progress: React.PropTypes.number.isRequired,
     name: React.PropTypes.string.isRequired,
     locks: React.PropTypes.array.isRequired,
-    isHidden: React.PropTypes.bool.isRequired
+    isHidden: React.PropTypes.bool.isRequired,
   },
 
   render: function() {
@@ -60,7 +60,7 @@ let Download = React.createClass({
         {lockStatus()}
       </li>
     );
-  }
+  },
 });
 
 export default CSSModules(Download, styles);

@@ -11,7 +11,7 @@ import styles from 'styles/app.module.less';
 
 const App = React.createClass({
   propTypes: {
-    children: React.PropTypes.node.isRequired
+    children: React.PropTypes.node.isRequired,
   },
 
   render: function() {
@@ -35,7 +35,7 @@ const App = React.createClass({
         </Grid>
       </DropzoneContainer>
     );
-  }
+  },
 });
 
 module.exports = CSSModules(App, styles);

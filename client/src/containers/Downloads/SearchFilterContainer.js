@@ -5,7 +5,7 @@ import { setFilter } from 'actions';
 
 const mapStateToProps = (state) => {
   return {
-    filter: state.search.filter
+    filter: state.search.filter,
   };
 };
 
@@ -13,7 +13,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onChangeFilter: (filter) => {
       dispatch(setFilter(filter));
-    }
+    },
   };
 };
 

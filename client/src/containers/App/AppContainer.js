@@ -16,7 +16,7 @@ import styles from 'styles/app.module.less';
 const AppContainer = React.createClass({
   propTypes: {
     history: PropTypes.object.isRequired,
-    store: PropTypes.object.isRequired
+    store: PropTypes.object.isRequired,
   },
 
   render: function() {
@@ -32,7 +32,7 @@ const AppContainer = React.createClass({
         </Router>
       </Provider>
     );
-  }
+  },
 });
 
 export default CSSModules(AppContainer, styles);

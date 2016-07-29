@@ -9,7 +9,7 @@ import MarkedMenuItem from './MarkedMenuItem';
 const ScopeDropDown = React.createClass({
   propTypes: {
     scope: React.PropTypes.string.isRequired,
-    onChangeScope: React.PropTypes.func.isRequired
+    onChangeScope: React.PropTypes.func.isRequired,
   },
 
   onChangeScope: function(eventKey, _event) {
@@ -34,11 +34,11 @@ const ScopeDropDown = React.createClass({
         </DropdownButton>
       </InputGroup.Button>
     );
-  }
+  },
 });
 
 ScopeDropDown.propTypes = {
-  onChangeScope: React.PropTypes.func.isRequired
+  onChangeScope: React.PropTypes.func.isRequired,
 };
 
 export default CSSModules(ScopeDropDown, styles);

@@ -7,7 +7,7 @@ import styles from './search.module.less';
 const SearchFilter = React.createClass({
   propTypes: {
     filter: React.PropTypes.string.isRequired,
-    onChangeFilter: React.PropTypes.func.isRequired
+    onChangeFilter: React.PropTypes.func.isRequired,
   },
 
   onChangeFilter: function(event) {
@@ -23,7 +23,7 @@ const SearchFilter = React.createClass({
                    value={this.props.filter}
                    styleName='search-filter' />
     );
-  }
+  },
 });
 
 export default CSSModules(SearchFilter, styles);

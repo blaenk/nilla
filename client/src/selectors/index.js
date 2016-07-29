@@ -23,19 +23,19 @@ export const getScopedDownloads = createSelector(
           // TODO
           // get username from auth
           return Object.assign({}, download, {
-            isHidden: download.uploader !== 'blaenk'
+            isHidden: download.uploader !== 'blaenk',
           });
         });
       case 'system':
         return downloads.map(download => {
           return Object.assign({}, download, {
-            isHidden: download.uploader !== 'system'
+            isHidden: download.uploader !== 'system',
           });
         });
       case 'locked':
         return downloads.map(download => {
           return Object.assign({}, download, {
-            isHidden: download.locks.length === 0
+            isHidden: download.locks.length === 0,
           });
         });
       case 'expiring':
@@ -48,7 +48,7 @@ export const getScopedDownloads = createSelector(
                 moment(download['date-added']).add(EXPIRATION_DURATION).subtract(1, 'day');
 
           return Object.assign({}, download, {
-            isHidden: moment().isBefore(expiresAt)
+            isHidden: moment().isBefore(expiresAt),
           });
         });
       case 'all':
@@ -102,7 +102,7 @@ export const getFilteredDownloads = createSelector(
 
     return downloads.map(download => {
       return Object.assign({}, download, {
-        isHidden: download.isHidden || !filterRE.test(download.name)
+        isHidden: download.isHidden || !filterRE.test(download.name),
       });
     });
   }

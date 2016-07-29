@@ -14,7 +14,7 @@ const Header = React.createClass({
     state: React.PropTypes.string.isRequired,
     progress: React.PropTypes.number.isRequired,
     uploader: React.PropTypes.string.isRequired,
-    locks: React.PropTypes.array.isRequired
+    locks: React.PropTypes.array.isRequired,
   },
 
   render: function() {
@@ -73,7 +73,7 @@ const Header = React.createClass({
         </div>
       </div>
     );
-  }
+  },
 });
 
 export default CSSModules(Header, styles);

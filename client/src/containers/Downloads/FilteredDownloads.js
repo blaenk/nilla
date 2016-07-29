@@ -5,7 +5,7 @@ import Downloads from 'components/Downloads/Downloads';
 
 const mapStateToProps = (state) => {
   return {
-    downloads: getFilteredDownloads(state)
+    downloads: getFilteredDownloads(state),
   };
 };
 

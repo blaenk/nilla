@@ -31,15 +31,15 @@ const Download = React.createClass({
     uploader: React.PropTypes.string.isRequired,
     files: React.PropTypes.shape({
       downloaded: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
-      extracted: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps))
+      extracted: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
     }),
-    locks: React.PropTypes.array.isRequired
+    locks: React.PropTypes.array.isRequired,
   },
 
   getInitialState: function() {
     return {
       filter: '',
-      globalCollapse: true
+      globalCollapse: true,
     };
   },
 
@@ -162,7 +162,7 @@ const Download = React.createClass({
         </Row>
       </div>
     );
-  }
+  },
 });
 
 export default CSSModules(Download, styles);

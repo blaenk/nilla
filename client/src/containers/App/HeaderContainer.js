@@ -7,7 +7,7 @@ import Header from 'components/App/Header';
 const mapStateToProps = (state) => {
   return {
     isDragging: state.upload.isDragging,
-    isUploading: state.upload.isUploading
+    isUploading: state.upload.isUploading,
   };
 };
 
@@ -17,7 +17,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   return Object.assign({}, ownProps, stateProps, dispatchProps, {
     onUpload: function() {
       dispatch(setUploading(!stateProps.isUploading));
-    }
+    },
   });
 };
 

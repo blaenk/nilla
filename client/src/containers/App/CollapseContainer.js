@@ -4,7 +4,7 @@ import { Collapse } from 'react-bootstrap';
 
 const mapStateToProps = (state) => {
   return {
-    in: state.upload.isUploading
+    in: state.upload.isUploading,
   };
 };
 

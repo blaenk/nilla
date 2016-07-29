@@ -10,7 +10,7 @@ import Cookies from 'js-cookie';
 export function setScope(scope) {
   return {
     type: 'SET_SCOPE',
-    scope
+    scope,
   };
 }
 
@@ -22,7 +22,7 @@ export function setScope(scope) {
 export function setOrder(order) {
   return {
     type: 'SET_ORDER',
-    order
+    order,
   };
 }
 
@@ -34,7 +34,7 @@ export function setOrder(order) {
 export function setFilter(filter) {
   return {
     type: 'SET_FILTER',
-    filter
+    filter,
   };
 }
 
@@ -45,50 +45,50 @@ export function addFiles(files) {
       return {
         start: true,
         backingFile: f,
-        progress: 0
+        progress: 0,
       };
-    })
+    }),
   };
 }
 
 export function removeFile(file) {
   return {
     type: 'REMOVE_FILE',
-    file
+    file,
   };
 }
 
 export function rejectFiles(files) {
   return {
     type: 'REJECT_FILE',
-    files
+    files,
   };
 }
 
 export function clearRejectedFiles() {
   return {
-    type: 'CLEAR_REJECTED_FILES'
+    type: 'CLEAR_REJECTED_FILES',
   };
 }
 
 export function setDragging(isDragging) {
   return {
     type: 'SET_DRAGGING',
-    isDragging
+    isDragging,
   };
 }
 
 export function setUploading(isUploading) {
   return {
     type: 'SET_UPLOADING',
-    isUploading
+    isUploading,
   };
 }
 
 export function uploadFile(file) {
   return {
     type: 'UPLOAD_FILE',
-    file
+    file,
   };
 }
 
@@ -96,7 +96,7 @@ export function setFileStart(file, start) {
   return {
     type: 'SET_FILE_START',
     file,
-    start
+    start,
   };
 }
 
@@ -104,13 +104,13 @@ export function setFileProgress(file, progress) {
   return {
     type: 'SET_FILE_PROGRESS',
     file,
-    progress
+    progress,
   };
 }
 
 export function requestDownloads() {
   return {
-    type: 'REQUEST_DOWNLOADS'
+    type: 'REQUEST_DOWNLOADS',
   };
 }
 
@@ -118,7 +118,7 @@ export function receiveDownloads(downloads) {
   return {
     type: 'RECEIVE_DOWNLOADS',
     downloads,
-    receivedAt: Date.now()
+    receivedAt: Date.now(),
   };
 }
 
@@ -126,7 +126,7 @@ export function receiveDownload(download) {
   return {
     type: 'RECEIVE_DOWNLOAD',
     download,
-    receivedAt: Date.now()
+    receivedAt: Date.now(),
   };
 }
 

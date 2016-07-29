@@ -51,7 +51,7 @@ class Downloads extends React.Component {
 
 Downloads.propTypes = {
   dispatch: React.PropTypes.func.isRequired,
-  downloads: React.PropTypes.arrayOf(React.PropTypes.shape(Download.propTypes))
+  downloads: React.PropTypes.arrayOf(React.PropTypes.shape(Download.propTypes)),
 };
 
 export default CSSModules(Downloads, styles);

@@ -18,7 +18,7 @@ MarkedMenuItem.propTypes = {
   eventKey: React.PropTypes.string.isRequired,
   children: React.PropTypes.node.isRequired,
   onSelect: React.PropTypes.func.isRequired,
-  selected: React.PropTypes.string.isRequired
+  selected: React.PropTypes.string.isRequired,
 };
 
 export default CSSModules(MarkedMenuItem, styles);

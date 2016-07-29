@@ -16,7 +16,7 @@ const File = React.createClass({
 
     // download-props
     downloadName: React.PropTypes.string.isRequired,
-    isMultiFile: React.PropTypes.bool.isRequired
+    isMultiFile: React.PropTypes.bool.isRequired,
   },
 
   render: function() {
@@ -61,7 +61,7 @@ const File = React.createClass({
         {badge}
       </li>
     );
-  }
+  },
 });
 
 export default CSSModules(File, styles);

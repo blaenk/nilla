@@ -32,7 +32,7 @@ const DownloadList = (props) => {
 };
 
 DownloadList.propTypes = {
-  downloads: React.PropTypes.arrayOf(React.PropTypes.shape(Download.propTypes))
+  downloads: React.PropTypes.arrayOf(React.PropTypes.shape(Download.propTypes)),
 };
 
 export default CSSModules(DownloadList, styles);

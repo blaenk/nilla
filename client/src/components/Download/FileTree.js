@@ -36,13 +36,13 @@ function partitionFiles(entries, depth) {
   _.forOwn(tree, (value, key) => {
     folders.push({
       name: key,
-      files: value
+      files: value,
     });
   });
 
   return {
     folders,
-    files
+    files,
   };
 }
 
@@ -58,19 +58,19 @@ const FileTree = CSSModules(React.createClass({
     initialCollapse: React.PropTypes.bool,
 
     downloadName: React.PropTypes.string.isRequired,
-    isMultiFile: React.PropTypes.bool.isRequired
+    isMultiFile: React.PropTypes.bool.isRequired,
   },
 
   getDefaultProps: function() {
     return {
       depth: 0,
-      isRoot: false
+      isRoot: false,
     };
   },
 
   getInitialState: function() {
     return {
-      isCollapsed: this.props.initialCollapse
+      isCollapsed: this.props.initialCollapse,
     };
   },
 
@@ -161,7 +161,7 @@ const FileTree = CSSModules(React.createClass({
         </ul>
       </div>
     );
-  }
+  },
 }), styles);
 
 export default FileTree;

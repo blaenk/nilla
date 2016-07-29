@@ -11,7 +11,7 @@ import {
   Label,
   ProgressBar,
   Row,
-  Table
+  Table,
 } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 import filesize from 'filesize';
@@ -28,7 +28,7 @@ import { removeFile, submitFile, submitAllFiles, setFileStart } from 'actions';
 const RejectedFilesErrorAlert = React.createClass({
   propTypes: {
     rejectedFiles: React.PropTypes.array,
-    onDismiss: React.PropTypes.func.isRequired
+    onDismiss: React.PropTypes.func.isRequired,
   },
 
   render: function() {
@@ -70,7 +70,7 @@ const RejectedFilesErrorAlert = React.createClass({
     }
 
     return null;
-  }
+  },
 });
 
 const StartCheckbox = connect(
@@ -79,7 +79,7 @@ const StartCheckbox = connect(
     return {
       onChange: function(event) {
         dispatch(setFileStart(ownProps.file, event.target.checked));
-      }
+      },
     };
   }
 )(Checkbox);
@@ -88,7 +88,7 @@ let FileUpload = React.createClass({
   propTypes: {
     file: React.PropTypes.object.isRequired,
     onRemove: React.PropTypes.func.isRequired,
-    onSubmit: React.PropTypes.func.isRequired
+    onSubmit: React.PropTypes.func.isRequired,
   },
 
   render: function() {
@@ -129,7 +129,7 @@ let FileUpload = React.createClass({
         {right}
       </li>
     );
-  }
+  },
 });
 
 FileUpload = CSSModules(FileUpload, styles);
@@ -143,7 +143,7 @@ FileUpload = connect(
       },
       onRemove: function() {
         dispatch(removeFile(ownProps.file));
-      }
+      },
     };
   }
 )(FileUpload);
@@ -154,7 +154,7 @@ const UploadAllButton = connect(
     return {
       onClick: function() {
         dispatch(submitAllFiles());
-      }
+      },
     };
   }
 )(Button);
@@ -166,7 +166,7 @@ let MagnetURI = React.createClass({
       .set('X-CSRF-TOKEN', Cookies.get('csrf-token'))
       .send({
         uri: this.uriInput.value,
-        start: this.startCheckbox.checked
+        start: this.startCheckbox.checked,
       })
       .then(_json => {
         this.uriInput.value = '';
@@ -202,7 +202,7 @@ let MagnetURI = React.createClass({
         </InputGroup.Button>
       </InputGroup>
     );
-  }
+  },
 });
 
 MagnetURI = CSSModules(MagnetURI, styles);
@@ -212,7 +212,7 @@ const Upload = React.createClass({
     files: React.PropTypes.array,
     rejectedFiles: React.PropTypes.array,
     onClickFiles: React.PropTypes.func.isRequired,
-    onDismissRejectionAlert: React.PropTypes.func.isRequired
+    onDismissRejectionAlert: React.PropTypes.func.isRequired,
   },
 
   render: function() {
@@ -257,7 +257,7 @@ const Upload = React.createClass({
         </Row>
       </div>
     );
-  }
+  },
 });
 
 export default CSSModules(Upload, styles);

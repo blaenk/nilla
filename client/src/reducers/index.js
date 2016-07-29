@@ -7,5 +7,5 @@ import search from './search';
 export default combineReducers({
   upload,
   downloads,
-  search
+  search,
 });

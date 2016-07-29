@@ -3,7 +3,7 @@ import {
   Dropdown,
   Glyphicon,
   InputGroup,
-  MenuItem
+  MenuItem,
 } from 'react-bootstrap';
 
 import CSSModules from 'react-css-modules';
@@ -14,7 +14,7 @@ import MarkedMenuItem from './MarkedMenuItem';
 const OrderDropDown = React.createClass({
   propTypes: {
     order: React.PropTypes.string.isRequired,
-    onChangeOrder: React.PropTypes.func.isRequired
+    onChangeOrder: React.PropTypes.func.isRequired,
   },
 
   onChangeOrder: function(eventKey, _event) {
@@ -45,11 +45,11 @@ const OrderDropDown = React.createClass({
         </Dropdown>
       </InputGroup.Button>
     );
-  }
+  },
 });
 
 OrderDropDown.propTypes = {
-  onChangeOrder: React.PropTypes.func.isRequired
+  onChangeOrder: React.PropTypes.func.isRequired,
 };
 
 export default CSSModules(OrderDropDown, styles);

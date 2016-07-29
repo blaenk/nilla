@@ -7,7 +7,7 @@ import Upload from 'components/App/Upload';
 const mapStateToProps = (state) => {
   return {
     files: state.upload.files,
-    rejectedFiles: state.upload.rejectedFiles
+    rejectedFiles: state.upload.rejectedFiles,
   };
 };
 
@@ -15,7 +15,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onDismissRejectionAlert: function() {
       dispatch(clearRejectedFiles());
-    }
+    },
   };
 };
 
