@@ -12,6 +12,9 @@
   "rules": {
     "array-bracket-spacing": ["error", "never"],
     "comma-spacing": ["error", {"before": false, "after": true}],
+    "comma-style": ["error", "last"],
+    "computed-property-spacing": ["error"],
+    "consistent-this": ["error", "that"],
     "curly": ["error"],
     "dot-location": ["error", "property"],
     "dot-notation": ["error"],
@@ -67,6 +70,15 @@
     "no-use-before-define": ["error"],
     "global-require": ["error"],
     "callback-return": ["error"],
-    "valid-jsdoc": ["error"]
+    "handle-callback-err": ["error"],
+    "no-mixed-requires": ["error"],
+    "no-new-require": ["error"],
+    "no-path-concate": ["error"],
+    "block-spacing": ["error"],
+    "brace-style": ["error", "1tbs"],
+    "camelcase": ["error"],
+    "no-sync": ["error"],
+    "valid-jsdoc": ["error"],
+    "comma-dangle": ["error", "always-multiline"]
   }
 }
