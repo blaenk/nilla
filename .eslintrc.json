@@ -79,6 +79,7 @@
     "camelcase": ["error"],
     "no-sync": ["error"],
     "valid-jsdoc": ["error"],
+    "eol-last": ["error"],
     "comma-dangle": ["error", "always-multiline"]
   }
 }
