@@ -97,14 +97,14 @@ const DOWNLOADS_METHODS = [
     methodName: 'get_custom',
     params: ['levee-locks'],
     as: 'locks',
-    map: deserializeCustomJSON
+    map: deserializeCustomJSON,
   },
   {
     methodName: 'get_custom',
     params: ['levee-date-added'],
     as: 'dateAdded',
-    map: data => new Date(decodeBase64(data))
-  }
+    map: data => new Date(decodeBase64(data)),
+  },
 ];
 
 function getDownload(infoHash) {
@@ -150,11 +150,11 @@ const FILE_METHODS = [
   {
     methodName: 'get_priority',
     as: 'priority',
-    map: toHumanPriority
+    map: toHumanPriority,
   },
   { methodName: 'get_completed_chunks', as: 'completedChunks', map: parseInt },
   { methodName: 'get_size_chunks', as: 'sizeChunks', map: parseInt },
-  { methodName: 'get_size_bytes', as: 'size', map: parseInt }
+  { methodName: 'get_size_bytes', as: 'size', map: parseInt },
 ];
 
 function getFiles(infoHash) {
@@ -181,8 +181,8 @@ function getExtractedFiles(infoHash) {
       methodName: 'd.is_multi_file',
       params: [infoHash],
       as: 'isMultiFile',
-      map: rtorrent.toBoolean
-    }
+      map: rtorrent.toBoolean,
+    },
   ]).then(result => {
     const { basePath, name, isMultiFile } = result;
 
@@ -194,7 +194,7 @@ function getExtractedFiles(infoHash) {
       extractDirectory,
       isMultiFile,
       extractDirectoryExists: fileExists(extractDirectory),
-      isExtracting: fileExists(path.join(directory, '.extracting'))
+      isExtracting: fileExists(path.join(directory, '.extracting')),
     });
   }).then(obj => {
     if (!(obj.extractDirectoryExists && obj.isMultiFile)) {
@@ -212,7 +212,7 @@ function getExtractedFiles(infoHash) {
             pathComponents: pathComponents,
             size: stats.size,
             progress: obj.isExtracting ? 0 : PROGRESS_COMPLETE,
-            isEnabled: true
+            isEnabled: true,
           };
         });
       });
@@ -222,7 +222,7 @@ function getExtractedFiles(infoHash) {
 function getAllFiles(infoHash) {
   return Bluebird.props({
     downloaded: getFiles(infoHash),
-    extracted: getExtractedFiles(infoHash)
+    extracted: getExtractedFiles(infoHash),
   });
 }
 
@@ -250,13 +250,13 @@ function setFilePriorities(infoHash, priorities) {
 
     return {
       methodName: 'f.set_priority',
-      params: [target, priority]
+      params: [target, priority],
     };
   });
 
   const request = priorityCalls.concat([{
     methodName: 'd.update_priorities',
-    params: [infoHash]
+    params: [infoHash],
   }]);
 
   return rtorrent.multicall(request);
@@ -268,7 +268,7 @@ function getLocks(infoHash) {
       methodName: 'get_custom',
       params: ['levee-locks'],
       as: 'locks',
-      map: deserializeCustomJSON
+      map: deserializeCustomJSON,
     }).get('locks');
 }
 
@@ -277,7 +277,7 @@ function setLocks(infoHash, locks) {
 
   return rtorrent.torrent(infoHash, {
     methodName: 'set_custom',
-    params: ['levee-locks', serialized]
+    params: ['levee-locks', serialized],
   });
 }
 
@@ -320,5 +320,5 @@ module.exports = {
   decodeRatio,
   setFilePriorities,
   addLock,
-  removeLock
+  removeLock,
 };

@@ -28,7 +28,7 @@ const {
   JWT_SECRET,
   RTORRENT_DOWNLOADS_DIRECTORY,
   SERVE_ASSETS,
-  SERVE_DOWNLOADS
+  SERVE_DOWNLOADS,
 } = process.env;
 
 function JWTErrorHandler(err, req, res, _next) {
@@ -57,9 +57,9 @@ function CSRFValidationError(err, req, res, next) {
     json: () => {
       res.status(HttpStatus.BAD_REQUEST).json({
         success: false,
-        message: 'invalid CSRF token'
+        message: 'invalid CSRF token',
       });
-    }
+    },
   });
 }
 
@@ -68,7 +68,7 @@ function setCSRFTokenCookie(req, res, next) {
     httpOnly: false,
     // TODO
     // secure: true,
-    expires: 0
+    expires: 0,
   });
 
   next();
@@ -92,9 +92,9 @@ function createJWT(user) {
   return jwt.sign({
     id: user.id,
     username: user.username,
-    permissions: user.permissions.split(',')
+    permissions: user.permissions.split(','),
   }, JWT_SECRET, {
-    expiresIn: '14 days'
+    expiresIn: '14 days',
   });
 }
 
@@ -115,7 +115,7 @@ const CSRF = [csrfProtection, CSRFValidationError];
 
 const authenticateJWT = expressJWT({
   secret: JWT_SECRET,
-  getToken: getJWTFromHeaderOrCookie
+  getToken: getJWTFromHeaderOrCookie,
 });
 
 const JWT = [authenticateJWT, JWTErrorHandler];
@@ -125,8 +125,8 @@ const TEN_MEGABYTES = 10000000;
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: TEN_MEGABYTES
-  }
+    fileSize: TEN_MEGABYTES,
+  },
 });
 
 function authenticate(username, password, callback) {
@@ -159,7 +159,7 @@ function attachAuthentication(app, options) {
   app.get('/login', CSRF, setCSRFTokenCookie, (req, res) => {
     res.render('login', {
       csrfToken: req.csrfToken(),
-      redirectTo: req.query.redirect || ''
+      redirectTo: req.query.redirect || '',
     });
   });
 
@@ -194,7 +194,7 @@ function attachAuthentication(app, options) {
         httpOnly: true,
         // TODO
         // secure: true,
-        expires: expiration
+        expires: expiration,
       });
 
       res.redirect(_redirectTo || '/');
@@ -237,7 +237,7 @@ function attachAPI(app) {
       start = req.body.start;
     } else {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
-        error: 'An unknown error occurred'
+        error: 'An unknown error occurred',
       });
 
       return;
@@ -247,14 +247,14 @@ function attachAPI(app) {
 
     rtorrent.load(torrent, {
       start,
-      commands
+      commands,
     }).then(infoHash => {
       res.send({ success: true, infoHash });
     }).catch(error => {
       console.log(error);
 
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
-        error: 'An unknown error occurred'
+        error: 'An unknown error occurred',
       });
     });
   });
@@ -272,7 +272,7 @@ function attachAPI(app) {
     downloads.getCompleteDownload(req.params.infoHash)
       .then(downloads => res.json(downloads))
       .catch(_error => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        error: 'no such torrent'
+        error: 'no such torrent',
       }));
   });
 
@@ -317,7 +317,7 @@ function attachAPI(app) {
     rtorrent.torrent(req.params.infoHash, 'erase')
       .then(() => res.json({ success: true }))
       .catch(_error => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        error: 'no such torrent'
+        error: 'no such torrent',
       }));
   });
 
@@ -328,7 +328,7 @@ const VIEWS_PATH = path.join(__dirname, 'views');
 
 const handlebars = expressHandlebars.create({
   defaultLayout: 'main',
-  layoutsDir: path.join(VIEWS_PATH, 'layouts')
+  layoutsDir: path.join(VIEWS_PATH, 'layouts'),
 });
 
 function configureHandlebars(app) {
@@ -348,7 +348,7 @@ function reactRoutes(app) {
 
 function createServer(options) {
   options = Object.assign({
-    authenticator: authenticate
+    authenticator: authenticate,
   }, options);
 
   const app = express();
@@ -377,5 +377,5 @@ module.exports = {
   handlebars,
   JWT,
   CSRF,
-  upload
+  upload,
 };

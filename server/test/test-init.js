@@ -5,7 +5,7 @@ global.Bluebird = require('bluebird');
 // If this is a Travis build don't attempt to load a .env file. Instead the
 // environment variables will be passed via the .travis.yml file.
 require('dotenv').config({
-  silent: Boolean(process.env.TRAVIS)
+  silent: Boolean(process.env.TRAVIS),
 });
 
 global.chai = require('chai');

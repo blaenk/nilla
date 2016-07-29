@@ -24,7 +24,7 @@ describe('RTorrent', function() {
           .to.eventually.equal(torrents.ubuntu.hash),
 
         expect(rtorrent.load(torrents.arch.path))
-          .to.eventually.equal(torrents.arch.hash)
+          .to.eventually.equal(torrents.arch.hash),
       ]));
   });
 
@@ -53,10 +53,10 @@ describe('RTorrent', function() {
     it('should get the name and size simultaneously', function() {
       return expect(rtorrent.multicall([
         { methodName: 'd.get_name', params: [torrents.ubuntu.hash] },
-        { methodName: 'd.get_size_bytes', params: [torrents.ubuntu.hash] }
+        { methodName: 'd.get_size_bytes', params: [torrents.ubuntu.hash] },
       ])).to.become([
         [torrents.ubuntu.name],
-        [torrents.ubuntu.size]
+        [torrents.ubuntu.size],
       ]);
     });
 
@@ -67,12 +67,12 @@ describe('RTorrent', function() {
         {
           methodName: 'd.get_complete',
           params: [torrents.ubuntu.hash],
-          as: 'isComplete', map: rtorrent.toBoolean
-        }
+          as: 'isComplete', map: rtorrent.toBoolean,
+        },
       ])).to.become({
         baseDirectory: process.env.RTORRENT_DOWNLOADS_DIRECTORY,
         name: torrents.ubuntu.name,
-        isComplete: false
+        isComplete: false,
       });
     });
   });
@@ -85,28 +85,28 @@ describe('RTorrent', function() {
           {
             methodName: 'get_completed_bytes',
             map: parseInt,
-            as: 'completedBytes'
-          }
+            as: 'completedBytes',
+          },
         ]
       )).to.become([
         {
           name: '01000E92D5C8CF2473E5978B445DE9624C04D11A.meta',
-          completedBytes: 0
+          completedBytes: 0,
         },
         {
           name: 'ubuntu-16.04-desktop-amd64.iso',
-          completedBytes: 0
-        }
+          completedBytes: 0,
+        },
       ]);
     });
 
     it('should get the name and size simultaneously', function() {
       return expect(rtorrent.torrent(torrents.ubuntu.hash, [
         { methodName: 'get_name', as: 'name' },
-        { methodName: 'get_size_bytes', as: 'sizeBytes' }
+        { methodName: 'get_size_bytes', as: 'sizeBytes' },
       ])).to.become({
         name: torrents.ubuntu.name,
-        sizeBytes: torrents.ubuntu.size
+        sizeBytes: torrents.ubuntu.size,
       });
     });
 
@@ -115,7 +115,7 @@ describe('RTorrent', function() {
   after('remove torrents', function() {
     return Bluebird.map([
       torrents.ubuntu.hash,
-      torrents.arch.hash
+      torrents.arch.hash,
     ], hash => rtorrent.torrent(hash, 'erase'));
   });
 });

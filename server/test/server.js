@@ -28,7 +28,7 @@ function parseLoginForm(html) {
 const USER = {
   id: 1,
   username: 'test',
-  permissions: 'admin'
+  permissions: 'admin',
 };
 
 const passAuthentication = sinon.stub();
@@ -40,7 +40,7 @@ describe('Server', function() {
     failAuthentication.yields(new Error('failed auth'));
 
     const fail = request.agent(server.createServer({
-      authenticator: failAuthentication
+      authenticator: failAuthentication,
     }));
 
     fail.get('/login')
@@ -71,7 +71,7 @@ describe('Server', function() {
 
   it('should redirect to the original path after login', function(done) {
     const redirect = request.agent(server.createServer({
-      authenticator: passAuthentication
+      authenticator: passAuthentication,
     }));
 
     const FOLLOW_ONE_REDIRECT = 1;
@@ -107,7 +107,7 @@ describe('Server', function() {
   let agent;
   it('should login', function(done) {
     agent = request.agent(server.createServer({
-      authenticator: passAuthentication
+      authenticator: passAuthentication,
     }));
 
     agent.get('/login')

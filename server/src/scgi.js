@@ -18,7 +18,7 @@ const _ = require('lodash');
 function buildRequest(headers, body) {
   const scgiHeaders = {
     CONTENT_LENGTH: body.length,
-    SCGI: 1
+    SCGI: 1,
   };
 
   // NOTE
@@ -136,5 +136,5 @@ module.exports = {
   buildRequest,
   parseResponse,
   request,
-  Transport
+  Transport,
 };

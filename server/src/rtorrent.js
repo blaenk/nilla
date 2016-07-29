@@ -29,7 +29,7 @@ rtorrent.call = function call(method, args, options) {
   options = Object.assign({
     path: process.env.RTORRENT_SOCKET,
     host: process.env.RTORRENT_HOST,
-    port: process.env.RTORRENT_PORT
+    port: process.env.RTORRENT_PORT,
   }, options);
 
   const client = Bluebird.promisifyAll(xmlrpc.createClient(options));
@@ -74,7 +74,7 @@ rtorrent._createRequestObjectIfString = function _createRequestObjectIfString(re
 
 rtorrent._normalizeRequests = function _normalizeRequests(requests, options) {
   options = Object.assign({
-    prefix: ''
+    prefix: '',
   }, options);
 
   if (!_.isArray(requests)) {
@@ -158,7 +158,7 @@ rtorrent._rejectOnMulticallErrors = function _rejectOnMulticallErrors(responses,
     return {
       methodName,
       params,
-      error
+      error,
     };
   });
 
@@ -269,13 +269,13 @@ rtorrent.load = function(file, options) {
     start: false,
     raw: isBuffer,
     commands: [],
-    connection: {}
+    connection: {},
   }, options);
 
   if (!options.start) {
     options.commands = [
       'f.multicall=,,f.set_priority=0',
-      'd.update_priorities='
+      'd.update_priorities=',
     ].concat(options.commands);
   }
 
@@ -310,7 +310,7 @@ rtorrent.load = function(file, options) {
       const { infoHash } = parseTorrent(buffer);
 
       const args = [
-        options.raw ? buffer : path.resolve(file)
+        options.raw ? buffer : path.resolve(file),
       ].concat(options.commands);
 
       return this.call(method, args, options.connection)

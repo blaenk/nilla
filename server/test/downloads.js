@@ -42,7 +42,7 @@ describe('Downloads Model', function() {
       ['0'],
       ['c3lzdGVt'],
       ['W10='],
-      ['MjAxNi0wNy0yNFQyMzo1NDowN1o=']
+      ['MjAxNi0wNy0yNFQyMzo1NDowN1o='],
     ];
 
     const output = {
@@ -66,7 +66,7 @@ describe('Downloads Model', function() {
       locks: [],
       dateAdded: new Date('2016-07-24T23:54:07.000Z'),
       state: 'closed',
-      progress: 0
+      progress: 0,
     };
 
     rtorrent.call = sinon.stub(rtorrent, 'call').resolves(input);

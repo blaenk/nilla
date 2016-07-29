@@ -6,7 +6,7 @@ const app = server.createServer();
 
 const {
   SERVER_HOST,
-  SERVER_PORT
+  SERVER_PORT,
 } = process.env;
 
 const instance = app.listen(SERVER_PORT, SERVER_HOST, () => {

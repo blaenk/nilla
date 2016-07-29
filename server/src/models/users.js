@@ -22,5 +22,5 @@ function createRefreshToken(callback) {
 
 module.exports = {
   getUserFromUsername,
-  createRefreshToken
+  createRefreshToken,
 };

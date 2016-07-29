@@ -11,7 +11,7 @@ describe('SCGI', function() {
     it('should build a request', () => {
       const request = scgi.buildRequest({
         REQUEST_METHOD: 'POST',
-        REQUEST_URI: '/deepthought'
+        REQUEST_URI: '/deepthought',
       }, 'What is the answer to life, the Universe and everything?');
 
       const NULL = '\x00';
