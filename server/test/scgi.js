@@ -14,12 +14,14 @@ describe('SCGI', function() {
         REQUEST_URI: '/deepthought'
       }, 'What is the answer to life, the Universe and everything?');
 
+      const NULL = '\x00';
+
       const raw =
         '70:' +
-        'CONTENT_LENGTH' + '\x00' + '56' + '\x00' +
-        'SCGI' + '\x00' +  '1' + '\x00' +
-        'REQUEST_METHOD' + '\x00' +  'POST' + '\x00' +
-        'REQUEST_URI' + '\x00' +  '/deepthought' + '\x00' +
+        'CONTENT_LENGTH' + NULL + '56' + NULL +
+        'SCGI' + NULL + '1' + NULL +
+        'REQUEST_METHOD' + NULL + 'POST' + NULL +
+        'REQUEST_URI' + NULL + '/deepthought' + NULL +
         ',' +
         'What is the answer to life, the Universe and everything?';
 
