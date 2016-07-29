@@ -76,7 +76,7 @@
     "no-path-concat": ["error"],
     "block-spacing": ["error"],
     "brace-style": ["error", "1tbs", {"allowSingleLine": true}],
-    "camelcase": ["error"],
+    "camelcase": ["error", {"properties": "never"}],
     "no-sync": ["error"],
     "valid-jsdoc": ["error"],
     "eol-last": ["error"],
