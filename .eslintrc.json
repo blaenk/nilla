@@ -75,7 +75,7 @@
     "no-new-require": ["error"],
     "no-path-concate": ["error"],
     "block-spacing": ["error"],
-    "brace-style": ["error", "1tbs"],
+    "brace-style": ["error", "1tbs", {"allowSingleLine": true}],
     "camelcase": ["error"],
     "no-sync": ["error"],
     "valid-jsdoc": ["error"],
