@@ -46,6 +46,10 @@ describe('Server', function() {
     fail.get('/login')
       .expect(HttpStatus.OK)
       .end((err, res) => {
+        if (err) {
+          throw err;
+        }
+
         const { csrf } = parseLoginForm(res.text);
 
         fail.post('/login')
@@ -54,6 +58,10 @@ describe('Server', function() {
           .send(`_csrf=${csrf}`)
           .expect(HttpStatus.MOVED_TEMPORARILY)
           .end((err, res) => {
+            if (err) {
+              throw err;
+            }
+
             expect(res.redirect).to.be.true();
             expect(res.headers.location).to.equal('/login');
             done();
@@ -72,6 +80,10 @@ describe('Server', function() {
       .redirects(FOLLOW_ONE_REDIRECT)
       .expect(HttpStatus.OK)
       .end((err, res) => {
+        if (err) {
+          throw err;
+        }
+
         const { csrf, redirectTo } = parseLoginForm(res.text);
 
         redirect.post('/login')
@@ -81,6 +93,10 @@ describe('Server', function() {
           .send(`_redirectTo=${redirectTo}`)
           .expect(HttpStatus.MOVED_TEMPORARILY)
           .end((err, res) => {
+            if (err) {
+              throw err;
+            }
+
             expect(res.redirect).to.be.true();
             expect(res.headers.location).to.equal('/downloads');
             done();
@@ -97,6 +113,10 @@ describe('Server', function() {
     agent.get('/login')
       .expect(HttpStatus.OK)
       .end((err, res) => {
+        if (err) {
+          throw err;
+        }
+
         const { csrf } = parseLoginForm(res.text);
 
         agent.post('/login')
@@ -105,6 +125,10 @@ describe('Server', function() {
           .send(`_csrf=${csrf}`)
           .expect(HttpStatus.MOVED_TEMPORARILY)
           .end((err, res) => {
+            if (err) {
+              throw err;
+            }
+
             expect(res.redirect).to.be.true();
             expect(res.headers.location).to.equal('/');
             done();
