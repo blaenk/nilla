@@ -73,7 +73,7 @@ describe('Downloads Model', function() {
 
     return downloads.getDownload(torrents.fedora.hash, rtorrent)
       .then(download => {
-        expect(rtorrent.call.calledOnce).to.be.true;
+        expect(rtorrent.call.calledOnce).to.be.true();
         expect(download).to.deep.equal(output);
       })
       .finally(() => rtorrent.call.restore());

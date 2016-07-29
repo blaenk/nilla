@@ -54,7 +54,7 @@ describe('Server', function() {
           .send(`_csrf=${csrf}`)
           .expect(HttpStatus.MOVED_TEMPORARILY)
           .end((err, res) => {
-            expect(res.redirect).to.be.true;
+            expect(res.redirect).to.be.true();
             expect(res.headers.location).to.equal('/login');
             done();
           });
@@ -81,7 +81,7 @@ describe('Server', function() {
           .send(`_redirectTo=${redirectTo}`)
           .expect(HttpStatus.MOVED_TEMPORARILY)
           .end((err, res) => {
-            expect(res.redirect).to.be.true;
+            expect(res.redirect).to.be.true();
             expect(res.headers.location).to.equal('/downloads');
             done();
           });
@@ -105,7 +105,7 @@ describe('Server', function() {
           .send(`_csrf=${csrf}`)
           .expect(HttpStatus.MOVED_TEMPORARILY)
           .end((err, res) => {
-            expect(res.redirect).to.be.true;
+            expect(res.redirect).to.be.true();
             expect(res.headers.location).to.equal('/');
             done();
           });
