@@ -44,12 +44,13 @@ const Header = React.createClass({
       );
     }
 
+    const wrappedName = this.props.name.replace(/\./g, '&#8203');
+
     return (
       <div>
         <div styleName='header'>
-          {/* Insert &#8203; before dots so long names wrap */}
           <h4 styleName='name'>
-            {this.props.name}
+            {wrappedName}
           </h4>
 
           <div styleName='progress'>

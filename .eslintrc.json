@@ -93,6 +93,10 @@
     "new-parens": ["error"],
     "newline-after-var": ["error"],
     "newline-before-return": ["error"],
+    "no-array-constructor": ["error"],
+    "no-bitwise": ["error"],
+    "no-continue": ["error"],
+    "no-inline-comments": ["error"],
     "max-statements-per-line": ["error", {"max": 1}],
     "comma-dangle": ["error", "always-multiline"]
   }

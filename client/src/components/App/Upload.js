@@ -240,7 +240,6 @@ const Upload = React.createClass({
             </Button>
           </Col>
 
-          {/* TODO move this to bottom of download rows? */}
           <Col xs={6}>
             <UploadAllButton bsStyle='success' styleName='button'>
               upload all
