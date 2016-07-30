@@ -92,6 +92,7 @@
     "new-cap": ["error", {"capIsNew": false, "properties": false}],
     "new-parens": ["error"],
     "newline-after-var": ["error"],
+    "newline-before-return": ["error"],
     "max-statements-per-line": ["error", {"max": 1}],
     "comma-dangle": ["error", "always-multiline"]
   }

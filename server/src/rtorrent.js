@@ -138,6 +138,7 @@ rtorrent._transformMulticallResponse =
 rtorrent._responseIsError = function _responseIsError(response, index) {
   if (response.faultCode && response.faultString) {
     response.index = index;
+
     return true;
   }
 

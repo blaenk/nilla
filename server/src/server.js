@@ -44,6 +44,7 @@ function CSRFValidationError(err, req, res, next) {
 
   if (err.code !== 'EBADCSRFTOKEN') {
     next(err);
+
     return;
   }
 
@@ -105,6 +106,7 @@ function rejectPlainTextRequest(req, res, next) {
 
   if (contentType === 'text/plain') {
     res.sendStatus(HttpStatus.BAD_REQUEST);
+
     return;
   }
 
@@ -135,20 +137,24 @@ function authenticate(username, password, callback) {
   users.getUserFromUsername(db, username, (error, user) => {
     if (error) {
       callback(error);
+
       return;
     }
 
     if (!user) {
       callback(new Error('User not found.'));
+
       return;
     }
 
     bcrypt.compare(password, user.password, (error, authenticated) => {
       if (error) {
         callback(error);
+
         return;
       } else if (!authenticated) {
         callback(new Error('Incorrect credentials.'));
+
         return;
       }
 
@@ -176,6 +182,7 @@ function attachAuthentication(app, options) {
 
     if (!username || !password) {
       res.redirect(failureRedirect);
+
       return;
     }
 
@@ -184,6 +191,7 @@ function attachAuthentication(app, options) {
     options.authenticator(username, password, (error, user) => {
       if (error) {
         res.redirect(failureRedirect);
+
         return;
       }
 
@@ -211,6 +219,7 @@ function attachAuthentication(app, options) {
       const downloadPath = path.join(RTORRENT_DOWNLOADS_DIRECTORY, filePath);
 
       res.download(downloadPath, name);
+
       return;
     }
 

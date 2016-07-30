@@ -13,6 +13,7 @@ function createRefreshToken(callback) {
   crypto.randomBytes(BYTE_COUNT, (err, buffer) => {
     if (err) {
       callback(err);
+
       return;
     }
 
