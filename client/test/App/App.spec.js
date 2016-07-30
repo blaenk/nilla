@@ -11,7 +11,7 @@ import { shallow } from 'enzyme';
 
 import AppContainer from 'containers/App/AppContainer';
 
-describe('<AppContainer />', function () {
+describe('<AppContainer />', function() {
   it('should pass', function() {
     assert.equal(true, true);
   });

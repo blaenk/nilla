@@ -57,7 +57,9 @@
     "quote-props": ["error", "as-needed"],
     "quotes": ["error", "single", {"avoidEscape": true}],
     "semi": ["error", "always"],
+    "semi-spacing": ["error"],
     "space-before-blocks": ["error", "always"],
+    "space-before-function-paren": ["error", "never"],
     "space-in-parens": ["error", "never"],
     "space-infix-ops": ["error"],
     "strict": ["error", "global"],
@@ -107,7 +109,9 @@
     "no-tabs": ["error"],
     "no-trailing-spaces": ["error"],
     "no-unneeded-ternary": ["error"],
+    "operator-assignment": ["error"],
     "no-whitespace-before-property": ["error"],
+    "padded-blocks": ["error", "never"],
     "max-statements-per-line": ["error", {"max": 1}],
     "comma-dangle": ["error", "always-multiline"]
   }

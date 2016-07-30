@@ -109,7 +109,6 @@ describe('RTorrent', function() {
         sizeBytes: torrents.ubuntu.size,
       });
     });
-
   });
 
   after('remove torrents', function() {
