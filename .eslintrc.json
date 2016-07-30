@@ -116,6 +116,7 @@
     "no-whitespace-before-property": ["error"],
     "padded-blocks": ["error", "never"],
     "max-statements-per-line": ["error", {"max": 1}],
+    "arrow-spacing": ["error"],
     "comma-dangle": ["error", "always-multiline"]
   }
 }
