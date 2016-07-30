@@ -33,7 +33,7 @@
     "coveralls": "^2.11.9",
     "dirty-chai": "^1.2.2",
     "documentation": "^4.0.0-beta5",
-    "eslint": "^2.12.0",
+    "eslint": "^3.0.0",
     "expect": "^1.20.1",
     "istanbul": "^0.4.3",
     "jsdoc": "^3.4.0",

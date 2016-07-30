@@ -20,13 +20,11 @@ const Header = React.createClass({
   render: function() {
     const dateAdded = moment(this.props.dateAdded).utc().local();
     const dateAddedShortFormat = dateAdded.clone().format('l');
-    const dateAddedLongFormat = dateAdded.clone()
-                                   .format('dddd, MMMM Do YYYY [at] h:mm:ss A');
+    const dateAddedLongFormat = dateAdded.clone().format('dddd, MMMM Do YYYY [at] h:mm:ss A');
 
     const expiresDate = dateAdded.clone().add(EXPIRATION_DURATION);
     const expiresShortFormat = expiresDate.clone().fromNow();
-    const expiresLongFormat = expiresDate.clone()
-                                   .format('dddd, MMMM Do YYYY [at] h:mm:ss A');
+    const expiresLongFormat = expiresDate.clone().format('dddd, MMMM Do YYYY [at] h:mm:ss A');
 
     let expiresOrLocks;
 

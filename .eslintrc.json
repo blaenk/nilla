@@ -96,7 +96,18 @@
     "no-array-constructor": ["error"],
     "no-bitwise": ["error"],
     "no-continue": ["error"],
+    "no-lonely-if": ["error"],
+    "no-negated-condition": ["error"],
+    "no-nested-ternary": ["error"],
+    "no-new-object": ["error"],
+    "no-multiple-empty-lines": ["error"],
+    "no-mixed-operators": ["error"],
     "no-inline-comments": ["error"],
+    "no-spaced-func": ["error"],
+    "no-tabs": ["error"],
+    "no-trailing-spaces": ["error"],
+    "no-unneeded-ternary": ["error"],
+    "no-whitespace-before-property": ["error"],
     "max-statements-per-line": ["error", {"max": 1}],
     "comma-dangle": ["error", "always-multiline"]
   }
