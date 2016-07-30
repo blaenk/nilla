@@ -23,11 +23,11 @@ const AppContainer = React.createClass({
     return (
       <Provider store={this.props.store}>
         <Router history={this.props.history}>
-          <Redirect from="/" to="/downloads" />
+          <Redirect from='/' to='/downloads' />
 
-          <Route path="/" component={InternalPage}>
-            <Route path="downloads" component={FilteredDownloads} />
-            <Route path="downloads/:infoHash(/:name)" component={DownloadContainer} />
+          <Route path='/' component={InternalPage}>
+            <Route path='downloads' component={FilteredDownloads} />
+            <Route path='downloads/:infoHash(/:name)' component={DownloadContainer} />
           </Route>
         </Router>
       </Provider>

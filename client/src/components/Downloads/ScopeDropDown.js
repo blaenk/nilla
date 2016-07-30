@@ -28,7 +28,7 @@ const ScopeDropDown = React.createClass({
 
     return (
       <InputGroup.Button>
-        <DropdownButton id="downloads_scope" title={this.props.scope} styleName='scope'>
+        <DropdownButton id='downloads_scope' title={this.props.scope} styleName='scope'>
           <MenuItem header>Search Scope</MenuItem>
           {['all', 'mine', 'system', 'locked', 'expiring'].map(item)}
         </DropdownButton>

@@ -10,7 +10,7 @@ const Header = function(props) {
     <Navbar styleName={props.isDragging ? 'dragging' : 'navbar'}>
       <Navbar.Header>
         <Navbar.Brand>
-          <a href="https://github.com/blaenk/nilla">NILLA</a>
+          <a href='https://github.com/blaenk/nilla'>NILLA</a>
         </Navbar.Brand>
         <Navbar.Toggle />
       </Navbar.Header>
@@ -31,7 +31,7 @@ const Header = function(props) {
           </LinkContainer>
         </Nav>
         <Nav pullRight>
-          <NavItem eventKey={1} href="/logout">Logout</NavItem>
+          <NavItem eventKey={1} href='/logout'>Logout</NavItem>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

@@ -33,7 +33,7 @@ const OrderDropDown = React.createClass({
 
     return (
       <InputGroup.Button>
-        <Dropdown id="sort_order">
+        <Dropdown id='sort_order'>
           <Dropdown.Toggle noCaret styleName='sort'>
             <Glyphicon glyph='sort' />
           </Dropdown.Toggle>

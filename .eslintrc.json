@@ -80,6 +80,8 @@
     "no-sync": ["error"],
     "valid-jsdoc": ["error"],
     "eol-last": ["error"],
+    "jsx-quotes": ["error", "prefer-single"],
+    "indent": ["error", 2, {"SwitchCase": 1}],
     "comma-dangle": ["error", "always-multiline"]
   }
 }

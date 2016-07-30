@@ -33,10 +33,10 @@ const Header = React.createClass({
     if (this.props.locks.length) {
       const lockedBy = this.props.locks.join(', ');
 
-      expiresOrLocks = <span className="locks">and locked by {lockedBy}</span>;
+      expiresOrLocks = <span className='locks'>and locked by {lockedBy}</span>;
     } else {
       expiresOrLocks = (
-        <span className="expiresAt">
+        <span className='expiresAt'>
           and expires
           {' '}
           <time title={expiresLongFormat}>{expiresShortFormat}</time>
@@ -59,8 +59,8 @@ const Header = React.createClass({
             </div>
           </div>
 
-          <div styleName="meta">
-            <div styleName="date-added">
+          <div styleName='meta'>
+            <div styleName='date-added'>
               added by <strong>{this.props.uploader}</strong> on
               {' '}
               <time title={dateAddedLongFormat}>

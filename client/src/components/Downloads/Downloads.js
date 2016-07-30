@@ -34,7 +34,7 @@ class Downloads extends React.Component {
       body = (
         <Row>
           <Col lg={12} styleName='empty-downloads'>
-            <Glyphicon glyph="ban-circle" />
+            <Glyphicon glyph='ban-circle' />
           </Col>
         </Row>
       );

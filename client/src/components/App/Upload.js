@@ -44,7 +44,7 @@ const RejectedFilesErrorAlert = React.createClass({
       });
 
       return (
-        <ErrorAlert title="Unrecognized File!"
+        <ErrorAlert title='Unrecognized File!'
                     onDismiss={this.props.onDismiss}>
           <p>
             One or more of the files you chose is not a torrent! Please try
