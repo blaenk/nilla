@@ -19,6 +19,7 @@ function decodeRatio(ratio) {
   const fraction = ratio / FULL_RATIO;
 
   const TWO_DECIMAL_PLACES = 2;
+
   return fraction.toFixed(TWO_DECIMAL_PLACES);
 }
 
@@ -112,6 +113,7 @@ function getDownload(infoHash) {
     .then(torrent => {
       torrent.state = getState(torrent);
       torrent.progress = getProgress(torrent.completedBytes, torrent.sizeBytes);
+
       return torrent;
     });
 }
@@ -122,6 +124,7 @@ function getDownloads() {
       return torrents.map(torrent => {
         torrent.state = getState(torrent);
         torrent.progress = getProgress(torrent.completedBytes, torrent.sizeBytes);
+
         return torrent;
       });
     });
@@ -164,6 +167,7 @@ function getFiles(infoHash) {
         file.id = index;
         file.progress = getProgress(file.completedChunks, file.sizeChunks);
         file.isEnabled = file.priority !== 'off';
+
         return file;
       });
     });
@@ -239,6 +243,7 @@ function getCompleteDownload(infoHash) {
     (download, files, trackers) => {
       download.files = files;
       download.trackers = trackers;
+
       return download;
     });
 }

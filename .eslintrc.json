@@ -90,6 +90,8 @@
     "max-nested-callbacks": ["error", {"max": 3}],
     "max-params": ["error", {"max": 4}],
     "new-cap": ["error", {"capIsNew": false, "properties": false}],
+    "new-parens": ["error"],
+    "newline-after-var": ["error"],
     "max-statements-per-line": ["error", {"max": 1}],
     "comma-dangle": ["error", "always-multiline"]
   }

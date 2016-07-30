@@ -12,6 +12,7 @@ export function fuzzyPattern(literalPattern) {
     return new RegExp(literalPattern.replace(/ /g, '.*'), 'i');
   } catch (e) {
     const escaped = _.escapeRegExp(literalPattern);
+
     return new RegExp(escaped.replace(/ /g, '.*', 'i'));
   }
 }

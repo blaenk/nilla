@@ -148,6 +148,7 @@ export function getDownloads() {
       .accept('json')
       .then(res => {
         const normalized = normalizeDownloads(res.body);
+
         dispatch(receiveDownloads(normalized));
       });
   };

@@ -119,12 +119,13 @@ class Transport {
   end() {
     request(this.options, this.body)
       .then(response => {
-        const s = new stream.Readable();
-        s._read = () => {};
-        s.push(response.body);
-        s.push(null);
+        const readStream = new stream.Readable();
 
-        this.callback(s);
+        readStream._read = () => {};
+        readStream.push(response.body);
+        readStream.push(null);
+
+        this.callback(readStream);
       })
       .catch(err => this.emit('error', err));
   }

@@ -34,6 +34,7 @@ const {
 function JWTErrorHandler(err, req, res, _next) {
   if (err.name === 'UnauthorizedError') {
     const redirectPath = req.originalUrl;
+
     res.redirect(`/login?redirect=${redirectPath}`);
   }
 }
@@ -52,6 +53,7 @@ function CSRFValidationError(err, req, res, next) {
     html: () => {
       const { _redirectTo } = req.body;
       const failureRedirect = `/login?redirect=${_redirectTo}`;
+
       res.redirect(failureRedirect);
     },
     json: () => {
@@ -207,6 +209,7 @@ function attachAuthentication(app, options) {
 
     if (SERVE_DOWNLOADS) {
       const downloadPath = path.join(RTORRENT_DOWNLOADS_DIRECTORY, filePath);
+
       res.download(downloadPath, name);
       return;
     }
@@ -292,22 +295,28 @@ function attachAPI(app) {
       }
       case 'addLock': {
         const username = req.body.params;
+
         downloads.addLock(infoHash, username)
           .then(() => res.json({ success: true }))
           .catch(error => console.log(error));
+
         break;
       }
       case 'removeLock': {
         const username = req.body.params;
+
         downloads.removeLock(infoHash, username)
           .then(() => res.json({ success: true }))
           .catch(error => console.log(error));
+
         break;
       }
       case 'setFilePriorities': {
         const priorities = req.body.params;
+
         downloads.setFilePriorities(infoHash, priorities)
           .then(() => res.json({ success: true }));
+
         break;
       }
     }

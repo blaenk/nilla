@@ -32,11 +32,13 @@ const USER = {
 };
 
 const passAuthentication = sinon.stub();
+
 passAuthentication.yields(null, USER);
 
 describe('Server', function() {
   it('should remain on /login on login failure', function(done) {
     const failAuthentication = sinon.stub();
+
     failAuthentication.yields(new Error('failed auth'));
 
     const fail = request.agent(server.createServer({
@@ -105,6 +107,7 @@ describe('Server', function() {
   });
 
   let agent;
+
   it('should login', function(done) {
     agent = request.agent(server.createServer({
       authenticator: passAuthentication,

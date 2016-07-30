@@ -187,7 +187,9 @@ rtorrent._multicallMethodsWithArgs = function _multicallMethodsWithArgs(requests
 
   return requests.map(request => {
     let pruned = _.pick(request, ['methodName', 'params']);
+
     pruned.params = [...args].concat(pruned.params);
+
     return pruned;
   });
 };

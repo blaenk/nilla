@@ -17,6 +17,7 @@ describe('<AppContainer />', function () {
   });
 
   let wrapper;
+
   beforeEach(function() {
     wrapper = shallow(<AppContainer />);
   });
