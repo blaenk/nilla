@@ -119,20 +119,21 @@ rtorrent._transformValue = function _transformValue(request, result) {
   return result;
 };
 
-rtorrent._transformMulticallResponse = function _transformMulticallResponse(itemResponse, requests) {
-  let transformed = {};
+rtorrent._transformMulticallResponse =
+  function _transformMulticallResponse(itemResponse, requests) {
+    let transformed = {};
 
-  itemResponse.map((response, index) => {
-    const request = requests[index];
+    itemResponse.map((response, index) => {
+      const request = requests[index];
 
-    const key = this._transformKey(request);
-    const value = this._transformValue(request, response);
+      const key = this._transformKey(request);
+      const value = this._transformValue(request, response);
 
-    transformed[key] = value;
-  });
+      transformed[key] = value;
+    });
 
-  return transformed;
-};
+    return transformed;
+  };
 
 rtorrent._responseIsError = function _responseIsError(response, index) {
   if (response.faultCode && response.faultString) {
@@ -165,17 +166,21 @@ rtorrent._rejectOnMulticallErrors = function _rejectOnMulticallErrors(responses,
   return Bluebird.reject(augmentedErrors);
 };
 
-rtorrent._multicallAndTransformResponses = function _multicallAndTransformResponses(methods, requests) {
-  return this.multicall(methods)
-    .then(responses => this._rejectOnMulticallErrors(responses, methods))
-    .then(responses => this._transformMulticallResponse(_.flatten(responses), requests));
-};
+rtorrent._multicallAndTransformResponses =
+  function _multicallAndTransformResponses(methods, requests) {
+    return this.multicall(methods)
+      .then(responses => this._rejectOnMulticallErrors(responses, methods))
+      .then(responses => this._transformMulticallResponse(_.flatten(responses), requests));
+  };
 
-rtorrent._callAndTransformResponses = function _callAndTransformResponses(multicallMethod, args, methods, requests) {
-  return this.call(multicallMethod, [...args, ...methods])
-    .then(responses => this._rejectOnMulticallErrors(responses, methods))
-    .then(responses => responses.map(itemResponse => this._transformMulticallResponse(itemResponse, requests)));
-};
+rtorrent._callAndTransformResponses =
+  function _callAndTransformResponses(multicallMethod, args, methods, requests) {
+    return this.call(multicallMethod, [...args, ...methods])
+      .then(responses => this._rejectOnMulticallErrors(responses, methods))
+      .then(responses =>
+            responses.map(itemResponse =>
+                          this._transformMulticallResponse(itemResponse, requests)));
+  };
 
 rtorrent._multicallMethodsWithArgs = function _multicallMethodsWithArgs(requests, args) {
   args = args || [];
