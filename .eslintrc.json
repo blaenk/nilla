@@ -87,6 +87,10 @@
     "indent": ["error", 2, {"SwitchCase": 1}],
     "max-depth": ["error", {"max": 4}],
     "max-len": ["error", {"code": 100}],
+    "max-nested-callbacks": ["error", {"max": 3}],
+    "max-params": ["error", {"max": 4}],
+    "new-cap": ["error", {"capIsNew": false, "properties": false}],
+    "max-statements-per-line": ["error", {"max": 1}],
     "comma-dangle": ["error", "always-multiline"]
   }
 }

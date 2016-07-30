@@ -18,7 +18,7 @@ const Header = React.createClass({
   },
 
   render: function() {
-    const dateAdded = new moment(this.props.dateAdded).utc().local();
+    const dateAdded = moment(this.props.dateAdded).utc().local();
     const dateAddedShortFormat = dateAdded.clone().format('l');
     const dateAddedLongFormat = dateAdded.clone()
                                    .format('dddd, MMMM Do YYYY [at] h:mm:ss A');
