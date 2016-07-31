@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./src/main.js",
     "lint": "eslint src/ test/",
+    "lint-fix": "eslint --fix src/ test/",
     "test": "NODE_ENV=test mocha test/",
     "coverage": "istanbul cover --dir ./coverage/server ./node_modules/mocha/bin/_mocha test/ --report lcovonly -- -R spec",
     "doc": "documentation build -o docs/ -f html -g src/",

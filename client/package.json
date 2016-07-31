@@ -4,6 +4,7 @@
   "description": "An interface to rtorrent - client",
   "scripts": {
     "lint": "eslint src/ test/",
+    "lint-fix": "eslint --fix src/ test/",
     "webpack": "NODE_ENV=production webpack --progress --colors -p",
     "webpack-watch": "NODE_ENV=development webpack --progress --colors --watch -d",
     "test": "NODE_ENV=test karma start karma.conf.js"
