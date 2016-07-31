@@ -29,6 +29,7 @@
     "react/require-optimization": ["error"],
     "react/sort-prop-types": ["error"],
     "react/jsx-boolean-value": ["error", "never"],
+    "react/jsx-closing-bracket-location": ["error", {"selfClosing": "after-props", "nonEmpty": "after-props"}],
     "react/self-closing-comp": ["error"],
     "react/no-unknown-property": ["error"],
     "react/prefer-stateless-function": ["error"],
