@@ -31,7 +31,7 @@ const Header = (props) => {
     );
   }
 
-  const wrappedName = props.name.replace(/\./g, '&#8203');
+  const wrappedName = props.name.replace(/\./g, '\u200b.');
 
   return (
     <div>
