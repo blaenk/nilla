@@ -6,7 +6,7 @@ import styles from './header.module.less';
 
 import { EXPIRATION_DURATION } from 'common';
 
-const Header = (props) => {
+function Header(props) {
   const dateAdded = moment(props.dateAdded).utc().local();
   const dateAddedShortFormat = dateAdded.clone().format('l');
   const dateAddedLongFormat = dateAdded.clone().format('dddd, MMMM Do YYYY [at] h:mm:ss A');
@@ -43,8 +43,7 @@ const Header = (props) => {
         <div styleName='progress'>
           <div styleName={`progress-${props.state}`}
                style={{ width: `${props.progress}%` }}
-               aria-valuenow={props.progress}>
-          </div>
+               aria-valuenow={props.progress} />
         </div>
 
         <div styleName='meta'>
@@ -61,7 +60,7 @@ const Header = (props) => {
       </div>
     </div>
   );
-};
+}
 
 Header.propTypes = {
   dateAdded: React.PropTypes.string.isRequired,

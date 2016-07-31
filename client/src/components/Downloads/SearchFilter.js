@@ -4,26 +4,20 @@ import { FormControl } from 'react-bootstrap';
 
 import styles from './search.module.less';
 
-const SearchFilter = React.createClass({
-  propTypes: {
-    filter: React.PropTypes.string.isRequired,
-    onChangeFilter: React.PropTypes.func.isRequired,
-  },
+function SearchFilter(props) {
+  return (
+    <FormControl type='text'
+                 placeholder='Search'
+                 autoFocus
+                 onChange={props.onChangeFilter}
+                 value={props.filter}
+                 styleName='search-filter' />
+  );
+}
 
-  handleChangeFilter(event) {
-    this.props.onChangeFilter(event.target.value);
-  },
-
-  render() {
-    return (
-      <FormControl type='text'
-                   placeholder='Search'
-                   autoFocus
-                   onChange={this.handleChangeFilter}
-                   value={this.props.filter}
-                   styleName='search-filter' />
-    );
-  },
-});
+SearchFilter.propTypes = {
+  filter: React.PropTypes.string.isRequired,
+  onChangeFilter: React.PropTypes.func.isRequired,
+};
 
 export default CSSModules(SearchFilter, styles);

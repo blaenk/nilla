@@ -22,7 +22,7 @@ const UploadAllButton = connect(
   }
 )(Button);
 
-const Upload = (props) => {
+function Upload(props) {
   let files = props.files.map(file => (
     <FileUpload file={file} key={file.backingFile.preview} />
   ));
@@ -63,7 +63,7 @@ const Upload = (props) => {
       </Row>
     </div>
   );
-};
+}
 
 Upload.propTypes = {
   files: React.PropTypes.array,

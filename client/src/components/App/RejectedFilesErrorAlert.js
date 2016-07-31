@@ -4,7 +4,7 @@ import filesize from 'filesize';
 
 import ErrorAlert from './ErrorAlert';
 
-const RejectedFilesErrorAlert = (props) => {
+function RejectedFilesErrorAlert(props) {
   if (props.rejectedFiles.length > 0) {
     let files = props.rejectedFiles.map(file => {
       return (
@@ -43,7 +43,7 @@ const RejectedFilesErrorAlert = (props) => {
   }
 
   return null;
-};
+}
 
 RejectedFilesErrorAlert.propTypes = {
   onDismiss: React.PropTypes.func.isRequired,

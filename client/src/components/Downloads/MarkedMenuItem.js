@@ -4,7 +4,7 @@ import { MenuItem } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 import styles from './search.module.less';
 
-const MarkedMenuItem = (props) => {
+function MarkedMenuItem(props) {
   return (
     <MenuItem eventKey={props.eventKey}
               className={props.eventKey === props.selected ? 'dropdown-menu-selected' : ''}
@@ -12,7 +12,7 @@ const MarkedMenuItem = (props) => {
       {props.children}
     </MenuItem>
   );
-};
+}
 
 MarkedMenuItem.propTypes = {
   children: React.PropTypes.node.isRequired,

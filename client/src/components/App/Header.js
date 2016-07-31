@@ -5,7 +5,7 @@ import { Navbar, Nav, NavItem } from 'react-bootstrap';
 
 import styles from './header.module.less';
 
-const Header = function(props) {
+function Header(props) {
   return (
     <Navbar styleName={props.isDragging ? 'dragging' : 'navbar'}>
       <Navbar.Header>
@@ -36,7 +36,7 @@ const Header = function(props) {
       </Navbar.Collapse>
     </Navbar>
   );
-};
+}
 
 Header.propTypes = {
   isDragging: React.PropTypes.bool.isRequired,

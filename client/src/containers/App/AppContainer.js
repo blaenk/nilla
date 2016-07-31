@@ -13,7 +13,7 @@ import styles from 'styles/app.module.less';
 // TODO
 // make this Routes.js?
 
-const AppContainer = (props) => {
+function AppContainer(props) {
   return (
     <Provider store={props.store}>
       <Router history={props.history}>
@@ -26,7 +26,7 @@ const AppContainer = (props) => {
       </Router>
     </Provider>
   );
-};
+}
 
 AppContainer.propTypes = {
   history: PropTypes.object.isRequired,

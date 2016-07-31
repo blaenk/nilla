@@ -5,7 +5,7 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import styles from './styles.module.less';
 
-const Download = (props) => {
+function Download(props) {
   const lockedTooltip = (
     <Tooltip id='tooltip_locked'>locked</Tooltip>
   );
@@ -34,8 +34,7 @@ const Download = (props) => {
         <div styleName='progress'>
           <div styleName={`progress-${props.state}`}
                style={{ height: props.progress + '%' }}
-               aria-valuenow={props.progress}>
-          </div>
+               aria-valuenow={props.progress} />
         </div>
       </OverlayTrigger>
       <Link to={`/downloads/${props.infoHash}/${props.name}`} styleName='name'>
@@ -44,7 +43,7 @@ const Download = (props) => {
       {lockStatus()}
     </li>
   );
-};
+}
 
 Download.propTypes = {
   infoHash: React.PropTypes.string.isRequired,

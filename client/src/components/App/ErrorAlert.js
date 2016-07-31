@@ -4,7 +4,7 @@ import CSSModules from 'react-css-modules';
 
 import styles from './error.module.less';
 
-const ErrorAlert = (props) => {
+function ErrorAlert(props) {
   return (
     <Row>
       <Col lg={12}>
@@ -26,7 +26,7 @@ const ErrorAlert = (props) => {
       </Col>
     </Row>
   );
-};
+}
 
 ErrorAlert.propTypes = {
   children: React.PropTypes.node.isRequired,

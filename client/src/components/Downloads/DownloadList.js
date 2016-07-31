@@ -6,7 +6,7 @@ import styles from './styles.module.less';
 
 import Download from './Download';
 
-const DownloadList = (props) => {
+function DownloadList(props) {
   let downloads = props.downloads.map(download => {
     // return React.createElement(Download, Object.assign({}, download));
     return (
@@ -29,7 +29,7 @@ const DownloadList = (props) => {
       </Col>
     </Row>
   );
-};
+}
 
 DownloadList.propTypes = {
   downloads: React.PropTypes.arrayOf(React.PropTypes.shape(Download.propTypes)),

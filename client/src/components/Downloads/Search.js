@@ -14,7 +14,7 @@ import OrderDropDownContainer from 'containers/Downloads/OrderDropDownContainer'
 
 import DownloadCount from 'components/Downloads/DownloadCount';
 
-const Search = (props) => {
+function Search(props) {
   return (
     <Row styleName='search'>
       <Col lg={12}>
@@ -27,7 +27,7 @@ const Search = (props) => {
       </Col>
     </Row>
   );
-};
+}
 
 Search.propTypes = {
   count: React.PropTypes.number.isRequired,
