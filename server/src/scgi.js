@@ -23,9 +23,9 @@ function buildRequest(headers, body) {
 
   // NOTE
   // the scgi headers must come first, with CONTENT_LENGTH at the very beginning
-  let merged = _.merge(scgiHeaders, headers);
+  const merged = _.merge(scgiHeaders, headers);
 
-  let header = _.reduce(merged, (acc, value, key) => {
+  const header = _.reduce(merged, (acc, value, key) => {
     return acc + `${key}\x00${value}\x00`;
   }, '');
 
@@ -40,10 +40,10 @@ function buildRequest(headers, body) {
  */
 function parseResponse(response) {
   const MAX_TWO_SPLITS = 2;
-  let [rawHeaders, body] = response.split('\r\n\r\n', MAX_TWO_SPLITS);
+  const [rawHeaders, body] = response.split('\r\n\r\n', MAX_TWO_SPLITS);
 
   // create headers map
-  let headers = _.fromPairs(rawHeaders.split('\r\n').map(h => h.split(': ')));
+  const headers = _.fromPairs(rawHeaders.split('\r\n').map(h => h.split(': ')));
 
   return { headers, body };
 }

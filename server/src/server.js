@@ -79,7 +79,7 @@ function setCSRFTokenCookie(req, res, next) {
 
 function getJWTFromHeaderOrCookie(req) {
   if (req.headers.authorization) {
-    let [scheme, token] = req.headers.authorization.split(' ');
+    const [scheme, token] = req.headers.authorization.split(' ');
 
     if (scheme === 'Bearer') {
       return token;

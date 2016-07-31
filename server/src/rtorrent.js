@@ -96,7 +96,7 @@ rtorrent._transformKey = function _transformKey(request) {
   }
 
   const nameBody = /^[dfpt]\.(.+)=?$/;
-  let matches = nameBody.exec(request.methodName);
+  const matches = nameBody.exec(request.methodName);
 
   let key = request.methodName;
 
@@ -121,7 +121,7 @@ rtorrent._transformValue = function _transformValue(request, result) {
 
 rtorrent._transformMulticallResponse =
   function _transformMulticallResponse(itemResponse, requests) {
-    let transformed = {};
+    const transformed = {};
 
     itemResponse.map((response, index) => {
       const request = requests[index];
@@ -187,7 +187,7 @@ rtorrent._multicallMethodsWithArgs = function _multicallMethodsWithArgs(requests
   args = args || [];
 
   return requests.map(request => {
-    let pruned = _.pick(request, ['methodName', 'params']);
+    const pruned = _.pick(request, ['methodName', 'params']);
 
     pruned.params = [...args].concat(pruned.params);
 
@@ -202,7 +202,7 @@ rtorrent._callMethods = function _callMethods(requests) {
 rtorrent._getSingle = function _getSingle(options, args, requests) {
   requests = this._normalizeRequests(requests, options);
 
-  let methods = this._multicallMethodsWithArgs(requests, args);
+  const methods = this._multicallMethodsWithArgs(requests, args);
 
   return this._multicallAndTransformResponses(methods, requests);
 };
@@ -237,7 +237,7 @@ rtorrent._getAll = function _getAll(call, args, requests) {
 
   requests = this._normalizeRequests(requests, { prefix });
 
-  let methods = this._callMethods(requests);
+  const methods = this._callMethods(requests);
 
   return this._callAndTransformResponses(call, args, methods, requests);
 };

@@ -18,9 +18,9 @@ const torrents = require('./fixtures/torrents.json');
 //   pass results to a callback
 
 function parseLoginForm(html) {
-  let $ = cheerio.load(html);
-  let csrf = $('input[name=_csrf]').val();
-  let redirectTo = $('input[name=_redirectTo]').val();
+  const $ = cheerio.load(html);
+  const csrf = $('input[name=_csrf]').val();
+  const redirectTo = $('input[name=_redirectTo]').val();
 
   return { csrf, redirectTo };
 }

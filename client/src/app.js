@@ -16,7 +16,7 @@ let store = createStore(
   )
 );
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
   const mountNode = document.querySelector('#root');
 
   ReactDOM.render(

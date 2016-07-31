@@ -5,7 +5,7 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import styles from './styles.module.less';
 
-let Download = React.createClass({
+const Download = React.createClass({
   propTypes: {
     infoHash: React.PropTypes.string.isRequired,
     state: React.PropTypes.oneOf([

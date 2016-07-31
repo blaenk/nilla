@@ -20,7 +20,7 @@ import styles from './filetree.module.less';
  * files.
  */
 function partitionFiles(entries, depth) {
-  let folders = [], files = [], tree = {};
+  const folders = [], files = [], tree = {};
 
   for (const entry of entries) {
     if (depth + 1 < entry.pathComponents.length) {
