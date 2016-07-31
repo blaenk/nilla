@@ -51,11 +51,15 @@ class File extends React.Component {
   }
 }
 
+File.defaultProps = {
+  isHidden: false,
+};
+
 File.propTypes = {
   downloadName: React.PropTypes.string.isRequired,
   id: React.PropTypes.number.isRequired,
   isEnabled: React.PropTypes.bool.isRequired,
-  isHidden: React.PropTypes.bool.isRequired,
+  isHidden: React.PropTypes.bool,
   isMultiFile: React.PropTypes.bool.isRequired,
   pathComponents: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
   progress: React.PropTypes.number.isRequired,
