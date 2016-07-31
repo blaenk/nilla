@@ -43,7 +43,7 @@ const Search = React.createClass({
                      placeholder='Search'
                      autoFocus
                      styleName='search-filter'
-                     onChange={this.props.onChangeFilter}/>
+                     onChange={this.props.onChangeFilter} />
 
         <InputGroup.Addon>
           <Badge styleName='item-count'>{this.props.count}</Badge>
