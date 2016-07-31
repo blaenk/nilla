@@ -28,6 +28,7 @@
     // "react/prefer-es6-class": ["error"],
     "react/require-optimization": ["error"],
     "react/sort-prop-types": ["error"],
+    "react/jsx-boolean-value": ["error", "never"],
     "react/self-closing-comp": ["error"],
     "react/no-unknown-property": ["error"],
     "react/prefer-stateless-function": ["error"],

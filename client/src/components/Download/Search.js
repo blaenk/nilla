@@ -41,7 +41,7 @@ const Search = React.createClass({
 
         <FormControl type='text'
                      placeholder='Search'
-                     autoFocus={true}
+                     autoFocus
                      styleName='search-filter'
                      onChange={this.props.onChangeFilter}/>
 

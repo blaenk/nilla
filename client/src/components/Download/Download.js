@@ -93,7 +93,7 @@ const Download = React.createClass({
           {sectionLabel}
           <FileTree isMultiFile={this.props.isMultiFile}
                     depth={1}
-                    isRoot={true}
+                    isRoot
                     initialCollapse={this.state.globalCollapse}
                     downloadName={this.props.name}
                     files={extractedFiles} />
@@ -125,7 +125,7 @@ const Download = React.createClass({
         <FileTree isMultiFile={this.props.isMultiFile}
                   initialCollapse={this.state.globalCollapse}
                   downloadName={this.props.name}
-                  isRoot={true}
+                  isRoot
                   files={downloadedFiles} />
       </div>
     );

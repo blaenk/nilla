@@ -18,7 +18,7 @@ const App = React.createClass({
     return (
       <DropzoneContainer
         style={{}}
-        disableClick={true}
+        disableClick
         ref={ref => { this.dropzoneRef = ref; }}
         accept='application/x-bittorrent'>
         <Grid>

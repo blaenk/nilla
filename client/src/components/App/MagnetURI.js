@@ -37,12 +37,12 @@ const MagnetURI = React.createClass({
         <FormControl type='text'
                      ref={ref => { this.uriInput = ReactDOM.findDOMNode(ref); }}
                      placeholder='Magnet URI'
-                     autoFocus={true}
+                     autoFocus
                      styleName='magnet-uri' />
 
         <InputGroup.Addon styleName='start-magnet'>
           <Checkbox inline
-                    defaultChecked={true}
+                    defaultChecked
                     styleName='start-magnet'
                     inputRef={ref => { this.startCheckbox = ref; }}>
             start
