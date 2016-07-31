@@ -121,6 +121,11 @@ class FileTree extends React.Component {
     });
 
     files = files.map(file => {
+      // The key should be e.g. FolderName:3
+      // There can't be multiple adjacent folders with the same name, and the
+      // key only needs to be unique between siblings?
+      const key = file.pathComponents[this.props.depth] + ':' + file.id;
+
       return (
         <File size={file.size}
               styles={this.props.styles}
@@ -131,7 +136,7 @@ class FileTree extends React.Component {
               isEnabled={file.isEnabled}
               pathComponents={file.pathComponents}
               id={file.id}
-              key={file.id} />
+              key={key} />
       );
     });
 
