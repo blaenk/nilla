@@ -32,8 +32,9 @@
     "react/jsx-pascal-case": ["error"],
     "react/jsx-space-before-closing": ["error"],
     "react/jsx-uses-react": ["error"],
-    "react/no-comment-textnodes": ["error"],
+    "react/jsx-no-comment-textnodes": ["error"],
     "react/no-deprecated": ["error"],
+    "react/no-find-dom-node": ["off"],
     "react/no-did-mount-set-state": ["error"],
     "react/no-did-update-set-state": ["error"],
     "react/no-is-mounted": ["error"],
@@ -46,6 +47,6 @@
     "react/require-optimization": ["error"],
     "react/self-closing-comp": ["error"],
     "react/sort-prop-types": ["error"],
-    "react/wrap-multilines": ["error"]
+    "react/jsx-wrap-multilines": ["error"]
   }
 }

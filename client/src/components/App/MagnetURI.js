@@ -13,7 +13,15 @@ import request from 'superagent';
 
 import Cookies from 'js-cookie';
 
-const MagnetURI = React.createClass({
+class MagnetURI extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.setInputRef = this.setInputRef.bind(this);
+    this.setCheckboxRef = this.setCheckboxRef.bind(this);
+    this.handleSubmitMagnet = this.handleSubmitMagnet.bind(this);
+  }
+
   handleSubmitMagnet() {
     request.post('/api/downloads')
       .type('json')
@@ -25,19 +33,16 @@ const MagnetURI = React.createClass({
       .then(_json => {
         this.uriInput.value = '';
         this.startCheckbox.checked = true;
-      })
-      .catch(error => {
-        throw error;
       });
-  },
+  }
 
   setInputRef(ref) {
     this.uriInput = ReactDOM.findDOMNode(ref);
-  },
+  }
 
   setCheckboxRef(ref) {
     this.startCheckbox = ref;
-  },
+  }
 
   render() {
     return (
@@ -64,7 +69,7 @@ const MagnetURI = React.createClass({
         </InputGroup.Button>
       </InputGroup>
     );
-  },
-});
+  }
+}
 
 export default CSSModules(MagnetURI, styles);

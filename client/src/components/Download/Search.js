@@ -10,25 +10,20 @@ import {
 
 import styles from './search.module.less';
 
-const Search = React.createClass({
-  propTypes: {
-    count: React.PropTypes.number.isRequired,
-    initialCollapse: React.PropTypes.bool,
-    onChangeFilter: React.PropTypes.func.isRequired,
-    onCollapse: React.PropTypes.func.isRequired,
-  },
+class Search extends React.Component {
+  constructor(props) {
+    super(props);
 
-  getInitialState() {
-    return {
-      isCollapsed: true,
-    };
-  },
+    this.state = { isCollapsed: true };
+
+    this.handleCollapse = this.handleCollapse.bind(this);
+  }
 
   handleCollapse(event) {
     this.setState({ isCollapsed: !this.state.isCollapsed });
 
     this.props.onCollapse(event);
-  },
+  }
 
   render() {
     return (
@@ -50,7 +45,14 @@ const Search = React.createClass({
         </InputGroup.Addon>
       </InputGroup>
     );
-  },
-});
+  }
+}
+
+Search.propTypes = {
+  count: React.PropTypes.number.isRequired,
+  initialCollapse: React.PropTypes.bool,
+  onChangeFilter: React.PropTypes.func.isRequired,
+  onCollapse: React.PropTypes.func.isRequired,
+};
 
 export default CSSModules(Search, styles);

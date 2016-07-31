@@ -5,18 +5,7 @@ import filesize from 'filesize';
 
 import styles from './filetree.module.less';
 
-const File = React.createClass({
-  propTypes: {
-    downloadName: React.PropTypes.string.isRequired,
-    id: React.PropTypes.number.isRequired,
-    isEnabled: React.PropTypes.bool.isRequired,
-    isHidden: React.PropTypes.bool.isRequired,
-    isMultiFile: React.PropTypes.bool.isRequired,
-    pathComponents: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
-    progress: React.PropTypes.number.isRequired,
-    size: React.PropTypes.number.isRequired,
-  },
-
+class File extends React.Component {
   render() {
     const basename = this.props.pathComponents[this.props.pathComponents.length - 1];
     const size = filesize(this.props.size);
@@ -59,7 +48,18 @@ const File = React.createClass({
         {badge}
       </li>
     );
-  },
-});
+  }
+}
+
+File.propTypes = {
+  downloadName: React.PropTypes.string.isRequired,
+  id: React.PropTypes.number.isRequired,
+  isEnabled: React.PropTypes.bool.isRequired,
+  isHidden: React.PropTypes.bool.isRequired,
+  isMultiFile: React.PropTypes.bool.isRequired,
+  pathComponents: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+  progress: React.PropTypes.number.isRequired,
+  size: React.PropTypes.number.isRequired,
+};
 
 export default CSSModules(File, styles);
