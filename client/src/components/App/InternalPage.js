@@ -14,20 +14,27 @@ const App = React.createClass({
     children: React.PropTypes.node.isRequired,
   },
 
+  setDropzoneRef(ref) {
+    this.dropzoneRef = ref;
+  },
+
+  handleOpenFileDialog() {
+    this.dropzoneRef.getWrappedInstance().open();
+  },
+
   render() {
     return (
       <DropzoneContainer
         style={{}}
         disableClick
-        ref={ref => { this.dropzoneRef = ref; }}
+        ref={this.setDropzoneRef}
         accept='application/x-bittorrent'>
         <Grid>
           <HeaderContainer />
 
           <CollapseContainer>
             <div>
-              <UploadContainer
-                onClickFiles={() => this.dropzoneRef.getWrappedInstance().open()} />
+              <UploadContainer onClickFiles={this.handleOpenFileDialog} />
             </div>
           </CollapseContainer>
 
