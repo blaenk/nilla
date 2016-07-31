@@ -83,7 +83,7 @@ const FileTree = CSSModules(React.createClass({
       this.state.isCollapsed !== nextState.isCollapsed;
   },
 
-  collapse(_event) {
+  handleTabClick(_event) {
     this.setState({ isCollapsed: !this.state.isCollapsed });
   },
 
@@ -98,7 +98,7 @@ const FileTree = CSSModules(React.createClass({
 
     if (!this.props.isRoot) {
       tab = (
-        <div styleName='folder-tab' onClick={this.collapse}>
+        <div styleName='folder-tab' onClick={this.handleTabClick}>
           <Glyphicon styleName='collapse-mark'
                      glyph={this.state.isCollapsed ? 'chevron-down' : 'chevron-up'} />
           <div styleName='folder-name'>

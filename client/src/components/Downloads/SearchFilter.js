@@ -10,7 +10,7 @@ const SearchFilter = React.createClass({
     onChangeFilter: React.PropTypes.func.isRequired,
   },
 
-  onChangeFilter(event) {
+  handleChangeFilter(event) {
     this.props.onChangeFilter(event.target.value);
   },
 
@@ -19,7 +19,7 @@ const SearchFilter = React.createClass({
       <FormControl type='text'
                    placeholder='Search'
                    autoFocus
-                   onChange={this.onChangeFilter}
+                   onChange={this.handleChangeFilter}
                    value={this.props.filter}
                    styleName='search-filter' />
     );

@@ -24,7 +24,7 @@ const Search = React.createClass({
     };
   },
 
-  onCollapse(event) {
+  handleCollapse(event) {
     this.setState({ isCollapsed: !this.state.isCollapsed });
 
     this.props.onCollapse(event);
@@ -34,7 +34,7 @@ const Search = React.createClass({
     return (
       <InputGroup styleName='search'>
         <InputGroup.Button>
-          <Button styleName='global-collapse' onClick={this.onCollapse}>
+          <Button styleName='global-collapse' onClick={this.handleCollapse}>
             <Glyphicon glyph={this.state.isCollapsed ? 'chevron-down' : 'chevron-up'} />
           </Button>
         </InputGroup.Button>

@@ -17,7 +17,7 @@ const OrderDropDown = React.createClass({
     order: React.PropTypes.string.isRequired,
   },
 
-  onChangeOrder(eventKey, _event) {
+  handleChangeOrder(eventKey, _event) {
     this.props.onChangeOrder(eventKey);
   },
 
@@ -25,7 +25,7 @@ const OrderDropDown = React.createClass({
     const item = (name) => {
       return (
         <MarkedMenuItem eventKey={name} selected={this.props.order}
-                        onSelect={this.onChangeOrder} key={name}>
+                        onSelect={this.handleChangeOrder} key={name}>
           {name}
         </MarkedMenuItem>
       );

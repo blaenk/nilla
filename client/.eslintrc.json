@@ -30,7 +30,10 @@
     "react/sort-prop-types": ["error"],
     "react/jsx-boolean-value": ["error", "never"],
     "react/jsx-closing-bracket-location": ["error", {"selfClosing": "after-props", "nonEmpty": "after-props"}],
+    "react/jsx-curly-spacing": ["error", "never", {"allowMultiline": false}],
+    "react/jsx-equals-spacing": ["error", "never"],
     "react/self-closing-comp": ["error"],
+    "react/jsx-handler-names": ["error"],
     "react/no-unknown-property": ["error"],
     "react/prefer-stateless-function": ["error"],
     "react/no-did-update-set-state": ["error"]

@@ -49,11 +49,11 @@ const Download = React.createClass({
     dispatch(getDownload(this.props.params.infoHash));
   },
 
-  onGlobalCollapse(_event) {
+  handleGlobalCollapse(_event) {
     this.setState({ globalCollapse: !this.state.globalCollapse });
   },
 
-  onChangeFilter(event) {
+  handleChangeFilter(event) {
     this.setState({ filter: event.target.value });
   },
 
@@ -149,8 +149,8 @@ const Download = React.createClass({
         <Row>
           <Col lg={12}>
             <Search count={totalVisibleCount}
-                    onChangeFilter={this.onChangeFilter}
-                    onCollapse={this.onGlobalCollapse} />
+                    onChangeFilter={this.handleChangeFilter}
+                    onCollapse={this.handleGlobalCollapse} />
           </Col>
         </Row>
 

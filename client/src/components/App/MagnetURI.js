@@ -14,7 +14,7 @@ import request from 'superagent';
 import Cookies from 'js-cookie';
 
 const MagnetURI = React.createClass({
-  onSubmitMagnet() {
+  handleSubmitMagnet() {
     request.post('/api/downloads')
       .type('json')
       .set('X-CSRF-TOKEN', Cookies.get('csrf-token'))
@@ -50,7 +50,7 @@ const MagnetURI = React.createClass({
         </InputGroup.Addon>
 
         <InputGroup.Button>
-          <Button bsStyle='success' styleName='button' onClick={this.onSubmitMagnet}>
+          <Button bsStyle='success' styleName='button' onClick={this.handleSubmitMagnet}>
             submit
           </Button>
         </InputGroup.Button>
