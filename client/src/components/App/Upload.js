@@ -22,56 +22,54 @@ const UploadAllButton = connect(
   }
 )(Button);
 
-const Upload = React.createClass({
-  propTypes: {
-    files: React.PropTypes.array,
-    rejectedFiles: React.PropTypes.array,
-    onClickFiles: React.PropTypes.func.isRequired,
-    onDismissRejectionAlert: React.PropTypes.func.isRequired,
-  },
+const Upload = (props) => {
+  let files = props.files.map(file => (
+    <FileUpload file={file} key={file.backingFile.preview} />
+  ));
 
-  render() {
-    let files = this.props.files.map(file => (
-      <FileUpload file={file} key={file.backingFile.preview} />
-    ));
+  return (
+    <div styleName='upload'>
+      <RejectedFilesErrorAlert rejectedFiles={props.rejectedFiles}
+                               onDismiss={props.onDismissRejectionAlert} />
 
-    return (
-      <div styleName='upload'>
-        <RejectedFilesErrorAlert rejectedFiles={this.props.rejectedFiles}
-                                 onDismiss={this.props.onDismissRejectionAlert} />
+      <Row>
+        <Col lg={12}>
+          <MagnetURI />
+        </Col>
+      </Row>
 
-        <Row>
-          <Col lg={12}>
-            <MagnetURI />
-          </Col>
-        </Row>
+      <hr styleName='separator' />
 
-        <hr styleName='separator' />
+      <Row>
+        <Col xs={6} styleName='choose-files'>
+          <Button bsStyle='primary' styleName='button' onClick={props.onClickFiles}>
+            choose files
+          </Button>
+        </Col>
 
-        <Row>
-          <Col xs={6} styleName='choose-files'>
-            <Button bsStyle='primary' styleName='button' onClick={this.props.onClickFiles}>
-              choose files
-            </Button>
-          </Col>
+        <Col xs={6}>
+          <UploadAllButton bsStyle='success' styleName='button'>
+            upload all
+          </UploadAllButton>
+        </Col>
+      </Row>
 
-          <Col xs={6}>
-            <UploadAllButton bsStyle='success' styleName='button'>
-              upload all
-            </UploadAllButton>
-          </Col>
-        </Row>
+      <Row>
+        <Col lg={12}>
+          <ul styleName='files'>
+            {files}
+          </ul>
+        </Col>
+      </Row>
+    </div>
+  );
+};
 
-        <Row>
-          <Col lg={12}>
-            <ul styleName='files'>
-              {files}
-            </ul>
-          </Col>
-        </Row>
-      </div>
-    );
-  },
-});
+Upload.propTypes = {
+  files: React.PropTypes.array,
+  rejectedFiles: React.PropTypes.array,
+  onClickFiles: React.PropTypes.func.isRequired,
+  onDismissRejectionAlert: React.PropTypes.func.isRequired,
+};
 
 export default CSSModules(Upload, styles);

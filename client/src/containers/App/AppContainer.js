@@ -13,26 +13,24 @@ import styles from 'styles/app.module.less';
 // TODO
 // make this Routes.js?
 
-const AppContainer = React.createClass({
-  propTypes: {
-    history: PropTypes.object.isRequired,
-    store: PropTypes.object.isRequired,
-  },
+const AppContainer = (props) => {
+  return (
+    <Provider store={props.store}>
+      <Router history={props.history}>
+        <Redirect from='/' to='/downloads' />
 
-  render() {
-    return (
-      <Provider store={this.props.store}>
-        <Router history={this.props.history}>
-          <Redirect from='/' to='/downloads' />
+        <Route path='/' component={InternalPage}>
+          <Route path='downloads' component={FilteredDownloads} />
+          <Route path='downloads/:infoHash(/:name)' component={DownloadContainer} />
+        </Route>
+      </Router>
+    </Provider>
+  );
+};
 
-          <Route path='/' component={InternalPage}>
-            <Route path='downloads' component={FilteredDownloads} />
-            <Route path='downloads/:infoHash(/:name)' component={DownloadContainer} />
-          </Route>
-        </Router>
-      </Provider>
-    );
-  },
-});
+AppContainer.propTypes = {
+  history: PropTypes.object.isRequired,
+  store: PropTypes.object.isRequired,
+};
 
 export default CSSModules(AppContainer, styles);

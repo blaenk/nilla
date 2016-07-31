@@ -14,25 +14,23 @@ import OrderDropDownContainer from 'containers/Downloads/OrderDropDownContainer'
 
 import DownloadCount from 'components/Downloads/DownloadCount';
 
-const Search = React.createClass({
-  propTypes: {
-    count: React.PropTypes.number.isRequired,
-  },
+const Search = (props) => {
+  return (
+    <Row styleName='search'>
+      <Col lg={12}>
+        <InputGroup>
+          <ScopeDropDownContainer />
+          <SearchFilterContainer />
+          <OrderDropDownContainer />
+          <DownloadCount count={props.count} />
+        </InputGroup>
+      </Col>
+    </Row>
+  );
+};
 
-  render() {
-    return (
-      <Row styleName='search'>
-        <Col lg={12}>
-          <InputGroup>
-            <ScopeDropDownContainer />
-            <SearchFilterContainer />
-            <OrderDropDownContainer />
-            <DownloadCount count={this.props.count} />
-          </InputGroup>
-        </Col>
-      </Row>
-    );
-  },
-});
+Search.propTypes = {
+  count: React.PropTypes.number.isRequired,
+};
 
 export default CSSModules(Search, styles);

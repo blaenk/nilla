@@ -25,53 +25,51 @@ const StartCheckbox = connect(
   }
 )(Checkbox);
 
-let FileUpload = React.createClass({
-  propTypes: {
-    file: React.PropTypes.object.isRequired,
-    onRemove: React.PropTypes.func.isRequired,
-    onSubmit: React.PropTypes.func.isRequired,
-  },
+let FileUpload = (props) => {
+  let right;
 
-  render() {
-    let right;
-
-    if (this.props.file.progress > 0) {
-      right = (
-        <ProgressBar styleName='upload-progress'
-                     now={this.props.file.progress}
-                     label={`${this.props.file.progress}%`} />
-      );
-    } else {
-      right = (
-        <div>
-          <StartCheckbox inline file={this.props.file} defaultChecked={this.props.file.start}>
-            start
-          </StartCheckbox>
-
-          <Button bsStyle='danger' bsSize='xsmall' styleName='file-button' title='remove'
-                  onClick={this.props.onRemove}>
-            <Glyphicon glyph='remove' />
-          </Button>
-
-          <Button bsStyle='success' bsSize='xsmall' styleName='file-button' title='upload'
-                  onClick={this.props.onSubmit}>
-            <Glyphicon glyph='arrow-up' />
-          </Button>
-        </div>
-      );
-    }
-
-    return (
-      <li styleName='file'>
-        <span styleName='name'>{this.props.file.backingFile.name}</span>
-
-        <Label styleName='size'>{filesize(this.props.file.backingFile.size)}</Label>
-
-        {right}
-      </li>
+  if (props.file.progress > 0) {
+    right = (
+      <ProgressBar styleName='upload-progress'
+                   now={props.file.progress}
+                   label={`${props.file.progress}%`} />
     );
-  },
-});
+  } else {
+    right = (
+      <div>
+        <StartCheckbox inline file={props.file} defaultChecked={props.file.start}>
+          start
+        </StartCheckbox>
+
+        <Button bsStyle='danger' bsSize='xsmall' styleName='file-button' title='remove'
+                onClick={props.onRemove}>
+          <Glyphicon glyph='remove' />
+        </Button>
+
+        <Button bsStyle='success' bsSize='xsmall' styleName='file-button' title='upload'
+                onClick={props.onSubmit}>
+          <Glyphicon glyph='arrow-up' />
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <li styleName='file'>
+      <span styleName='name'>{props.file.backingFile.name}</span>
+
+      <Label styleName='size'>{filesize(props.file.backingFile.size)}</Label>
+
+      {right}
+    </li>
+  );
+};
+
+FileUpload.propTypes = {
+  file: React.PropTypes.object.isRequired,
+  onRemove: React.PropTypes.func.isRequired,
+  onSubmit: React.PropTypes.func.isRequired,
+};
 
 FileUpload = CSSModules(FileUpload, styles);
 
