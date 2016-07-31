@@ -46,46 +46,31 @@ function partitionFiles(entries, depth) {
   };
 }
 
-const FileTree = CSSModules(React.createClass({
-  displayName: 'FileTree',
-  propTypes: {
-    depth: React.PropTypes.number,
-    downloadName: React.PropTypes.string.isRequired,
-    files: React.PropTypes.arrayOf(React.PropTypes.shape(File.propTypes)),
-    initialCollapse: React.PropTypes.bool,
-    isEnabled: React.PropTypes.bool,
-    isMultiFile: React.PropTypes.bool.isRequired,
-    isRoot: React.PropTypes.bool,
-    name: React.PropTypes.string,
-  },
+class FileTree extends React.Component {
+  constructor(props) {
+    super(props);
 
-  getDefaultProps() {
-    return {
-      depth: 0,
-      isRoot: false,
-    };
-  },
-
-  getInitialState() {
-    return {
+    this.state = {
       isCollapsed: this.props.initialCollapse,
     };
-  },
+
+    this.handleTabClick = this.handleTabClick.bind(this);
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.initialCollapse !== nextProps.initialCollapse) {
       this.setState({ isCollapsed: nextProps.initialCollapse });
     }
-  },
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.files !== nextProps.files ||
       this.state.isCollapsed !== nextState.isCollapsed;
-  },
+  }
 
   handleTabClick(_event) {
     this.setState({ isCollapsed: !this.state.isCollapsed });
-  },
+  }
 
   render() {
     const visibleCount = this.props.files.reduce((acc, file) => {
@@ -98,14 +83,14 @@ const FileTree = CSSModules(React.createClass({
 
     if (!this.props.isRoot) {
       tab = (
-        <div styleName='folder-tab' onClick={this.handleTabClick}>
-          <Glyphicon styleName='collapse-mark'
+        <div className={this.props.styles['folder-tab']} onClick={this.handleTabClick}>
+          <Glyphicon className={this.props.styles['collapse-mark']}
                      glyph={this.state.isCollapsed ? 'chevron-down' : 'chevron-up'} />
-          <div styleName='folder-name'>
+          <div className={this.props.styles['folder-name']}>
             {this.props.name}
           </div>
 
-          <Badge styleName='entry-count'>
+          <Badge className={this.props.styles['entry-count']}>
             {visibleCount}
           </Badge>
         </div>
@@ -114,7 +99,7 @@ const FileTree = CSSModules(React.createClass({
 
     if (!this.props.isRoot && this.state.isCollapsed) {
       return (
-        <div styleName='file-tree' style={maybeHide}>
+        <div className={this.props.styles['file-tree']} style={maybeHide}>
           {tab}
         </div>
       );
@@ -126,6 +111,7 @@ const FileTree = CSSModules(React.createClass({
       return (
         <FileTree name={folder.name}
                   key={folder.name}
+                  styles={this.props.styles}
                   depth={this.props.depth + 1}
                   initialCollapse={this.props.initialCollapse}
                   isMultiFile={this.props.isMultiFile}
@@ -137,6 +123,7 @@ const FileTree = CSSModules(React.createClass({
     files = files.map(file => {
       return (
         <File size={file.size}
+              styles={this.props.styles}
               isMultiFile={this.props.isMultiFile}
               isHidden={file.isHidden}
               downloadName={this.props.downloadName}
@@ -148,18 +135,40 @@ const FileTree = CSSModules(React.createClass({
       );
     });
 
+    let treeClass = this.props.styles['file-tree'];
+
+    if (this.props.isRoot) {
+      treeClass = this.props.styles['root-file-tree'];
+    }
+
     return (
-      <div styleName={this.props.isRoot ? 'root-file-tree' : 'file-tree'}
-           style={maybeHide}>
+      <div className={treeClass} style={maybeHide}>
         {tab}
 
-        <ul styleName='entries'>
+        <ul className={this.props.styles.entries}>
           {folders}
           {files}
         </ul>
       </div>
     );
-  },
-}), styles);
+  }
+}
 
-export default FileTree;
+FileTree.defaultProps = {
+  depth: 0,
+  isRoot: false,
+};
+
+FileTree.propTypes = {
+  depth: React.PropTypes.number,
+  downloadName: React.PropTypes.string.isRequired,
+  files: React.PropTypes.arrayOf(React.PropTypes.shape(File.propTypes)),
+  initialCollapse: React.PropTypes.bool,
+  isEnabled: React.PropTypes.bool,
+  isMultiFile: React.PropTypes.bool.isRequired,
+  isRoot: React.PropTypes.bool,
+  name: React.PropTypes.string,
+  styles: React.PropTypes.object,
+};
+
+export default CSSModules(FileTree, styles);
