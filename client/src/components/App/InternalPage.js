@@ -9,18 +9,21 @@ import DropzoneContainer from 'containers/App/DropzoneContainer';
 
 import styles from 'styles/app.module.less';
 
-const App = React.createClass({
-  propTypes: {
-    children: React.PropTypes.node.isRequired,
-  },
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.setDropzoneRef = this.setDropzoneRef.bind(this);
+    this.handleOpenFileDialog = this.handleOpenFileDialog.bind(this);
+  }
 
   setDropzoneRef(ref) {
     this.dropzoneRef = ref;
-  },
+  }
 
   handleOpenFileDialog() {
     this.dropzoneRef.getWrappedInstance().open();
-  },
+  }
 
   render() {
     return (
@@ -42,7 +45,11 @@ const App = React.createClass({
         </Grid>
       </DropzoneContainer>
     );
-  },
-});
+  }
+}
+
+App.propTypes = {
+  children: React.PropTypes.node.isRequired,
+};
 
 module.exports = CSSModules(App, styles);
