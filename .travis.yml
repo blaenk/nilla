@@ -26,12 +26,12 @@ script:
   - pushd server
   - npm run -s lint
   - npm test
-  - nsp check
+  # - nsp check
   - popd
   - pushd client
   - npm run -s lint
   - npm test
-  - nsp check
+  # - nsp check
   - popd
 
 after_success:
