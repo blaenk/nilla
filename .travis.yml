@@ -18,6 +18,14 @@ before_install:
   - sudo apt-get install -y rtorrent tmux
   - npm install -g nsp
 
+install:
+  - pushd server
+  - npm install
+  - popd
+  - pushd client
+  - npm install
+  - popd
+
 before_script:
   - mkdir -p ~/rtorrent/{session,downloads,watch}/
   - cp .travis/.rtorrent.rc ~
