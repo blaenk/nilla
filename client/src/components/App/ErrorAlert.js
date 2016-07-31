@@ -11,7 +11,7 @@ const ErrorAlert = React.createClass({
     children: React.PropTypes.node.isRequired,
   },
 
-  render: function() {
+  render() {
     return (
       <Row>
         <Col lg={12}>

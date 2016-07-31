@@ -36,28 +36,28 @@ const Download = React.createClass({
     locks: React.PropTypes.array.isRequired,
   },
 
-  getInitialState: function() {
+  getInitialState() {
     return {
       filter: '',
       globalCollapse: true,
     };
   },
 
-  componentDidMount: function() {
+  componentDidMount() {
     const { dispatch } = this.props;
 
     dispatch(getDownload(this.props.params.infoHash));
   },
 
-  onGlobalCollapse: function(_event) {
+  onGlobalCollapse(_event) {
     this.setState({ globalCollapse: !this.state.globalCollapse });
   },
 
-  onChangeFilter: function(event) {
+  onChangeFilter(event) {
     this.setState({ filter: event.target.value });
   },
 
-  render: function() {
+  render() {
     if (!('files' in this.props)) {
       return null;
     }

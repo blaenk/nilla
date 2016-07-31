@@ -14,7 +14,7 @@ const App = React.createClass({
     children: React.PropTypes.node.isRequired,
   },
 
-  render: function() {
+  render() {
     return (
       <DropzoneContainer
         style={{}}

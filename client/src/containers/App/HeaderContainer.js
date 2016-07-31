@@ -15,7 +15,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   const { dispatch } = dispatchProps;
 
   return Object.assign({}, ownProps, stateProps, dispatchProps, {
-    onUpload: function() {
+    onUpload() {
       dispatch(setUploading(!stateProps.isUploading));
     },
   });

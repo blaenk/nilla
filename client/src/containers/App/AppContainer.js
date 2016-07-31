@@ -19,7 +19,7 @@ const AppContainer = React.createClass({
     store: PropTypes.object.isRequired,
   },
 
-  render: function() {
+  render() {
     return (
       <Provider store={this.props.store}>
         <Router history={this.props.history}>

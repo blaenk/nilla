@@ -19,19 +19,19 @@ const Search = React.createClass({
     onChangeFilter: React.PropTypes.func.isRequired,
   },
 
-  getInitialState: function() {
+  getInitialState() {
     return {
       isCollapsed: true,
     };
   },
 
-  onCollapse: function(event) {
+  onCollapse(event) {
     this.setState({ isCollapsed: !this.state.isCollapsed });
 
     this.props.onCollapse(event);
   },
 
-  render: function() {
+  render() {
     return (
       <InputGroup styleName='search'>
         <InputGroup.Button>

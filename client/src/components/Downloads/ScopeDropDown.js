@@ -12,11 +12,11 @@ const ScopeDropDown = React.createClass({
     onChangeScope: React.PropTypes.func.isRequired,
   },
 
-  onChangeScope: function(eventKey, _event) {
+  onChangeScope(eventKey, _event) {
     this.props.onChangeScope(eventKey);
   },
 
-  render: function() {
+  render() {
     const item = (name) => {
       return (
         <MarkedMenuItem eventKey={name} selected={this.props.scope}

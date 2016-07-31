@@ -10,11 +10,11 @@ const SearchFilter = React.createClass({
     onChangeFilter: React.PropTypes.func.isRequired,
   },
 
-  onChangeFilter: function(event) {
+  onChangeFilter(event) {
     this.props.onChangeFilter(event.target.value);
   },
 
-  render: function() {
+  render() {
     return (
       <FormControl type='text'
                    placeholder='Search'

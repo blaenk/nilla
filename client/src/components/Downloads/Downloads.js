@@ -11,10 +11,6 @@ import styles from './styles.module.less';
 import { getDownloads } from 'actions';
 
 class Downloads extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     this.props.dispatch(getDownloads());
   }

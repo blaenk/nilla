@@ -213,7 +213,7 @@ function getExtractedFiles(infoHash) {
 
           return {
             id: index,
-            pathComponents: pathComponents,
+            pathComponents,
             size: stats.size,
             progress: obj.isExtracting ? 0 : PROGRESS_COMPLETE,
             isEnabled: true,

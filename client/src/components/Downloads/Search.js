@@ -19,7 +19,7 @@ const Search = React.createClass({
     count: React.PropTypes.number.isRequired,
   },
 
-  render: function() {
+  render() {
     return (
       <Row styleName='search'>
         <Col lg={12}>

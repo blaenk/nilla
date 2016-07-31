@@ -21,7 +21,7 @@ let Download = React.createClass({
     isHidden: React.PropTypes.bool.isRequired,
   },
 
-  render: function() {
+  render() {
     const lockedTooltip = (
       <Tooltip id='tooltip_locked'>locked</Tooltip>
     );

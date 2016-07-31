@@ -19,7 +19,7 @@ const File = React.createClass({
     isMultiFile: React.PropTypes.bool.isRequired,
   },
 
-  render: function() {
+  render() {
     const basename = this.props.pathComponents[this.props.pathComponents.length - 1];
     const size = filesize(this.props.size);
 

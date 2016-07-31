@@ -17,11 +17,11 @@ const OrderDropDown = React.createClass({
     onChangeOrder: React.PropTypes.func.isRequired,
   },
 
-  onChangeOrder: function(eventKey, _event) {
+  onChangeOrder(eventKey, _event) {
     this.props.onChangeOrder(eventKey);
   },
 
-  render: function() {
+  render() {
     const item = (name) => {
       return (
         <MarkedMenuItem eventKey={name} selected={this.props.order}

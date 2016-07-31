@@ -61,35 +61,35 @@ const FileTree = CSSModules(React.createClass({
     isMultiFile: React.PropTypes.bool.isRequired,
   },
 
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       depth: 0,
       isRoot: false,
     };
   },
 
-  getInitialState: function() {
+  getInitialState() {
     return {
       isCollapsed: this.props.initialCollapse,
     };
   },
 
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (this.props.initialCollapse !== nextProps.initialCollapse) {
       this.setState({ isCollapsed: nextProps.initialCollapse });
     }
   },
 
-  shouldComponentUpdate: function(nextProps, nextState) {
+  shouldComponentUpdate(nextProps, nextState) {
     return this.props.files !== nextProps.files ||
       this.state.isCollapsed !== nextState.isCollapsed;
   },
 
-  collapse: function(_event) {
+  collapse(_event) {
     this.setState({ isCollapsed: !this.state.isCollapsed });
   },
 
-  render: function() {
+  render() {
     const visibleCount = this.props.files.reduce((acc, file) => {
       return acc + (file.isHidden ? 0 : 1);
     }, 0);

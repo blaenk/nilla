@@ -31,7 +31,7 @@ const RejectedFilesErrorAlert = React.createClass({
     onDismiss: React.PropTypes.func.isRequired,
   },
 
-  render: function() {
+  render() {
     if (this.props.rejectedFiles.length > 0) {
       let files = this.props.rejectedFiles.map(file => {
         return (
@@ -77,7 +77,7 @@ const StartCheckbox = connect(
   null,
   (dispatch, ownProps) => {
     return {
-      onChange: function(event) {
+      onChange(event) {
         dispatch(setFileStart(ownProps.file, event.target.checked));
       },
     };
@@ -91,7 +91,7 @@ let FileUpload = React.createClass({
     onSubmit: React.PropTypes.func.isRequired,
   },
 
-  render: function() {
+  render() {
     let right;
 
     if (this.props.file.progress > 0) {
@@ -138,10 +138,10 @@ FileUpload = connect(
   null,
   (dispatch, ownProps) => {
     return {
-      onSubmit: function() {
+      onSubmit() {
         dispatch(submitFile(ownProps.file));
       },
-      onRemove: function() {
+      onRemove() {
         dispatch(removeFile(ownProps.file));
       },
     };
@@ -152,7 +152,7 @@ const UploadAllButton = connect(
   null,
   (dispatch) => {
     return {
-      onClick: function() {
+      onClick() {
         dispatch(submitAllFiles());
       },
     };
@@ -160,7 +160,7 @@ const UploadAllButton = connect(
 )(Button);
 
 let MagnetURI = React.createClass({
-  onSubmitMagnet: function() {
+  onSubmitMagnet() {
     request.post('/api/downloads')
       .type('json')
       .set('X-CSRF-TOKEN', Cookies.get('csrf-token'))
@@ -177,7 +177,7 @@ let MagnetURI = React.createClass({
       });
   },
 
-  render: function() {
+  render() {
     return (
       <InputGroup>
         <FormControl type='text'
@@ -215,7 +215,7 @@ const Upload = React.createClass({
     onDismissRejectionAlert: React.PropTypes.func.isRequired,
   },
 
-  render: function() {
+  render() {
     let files = this.props.files.map(file => (
       <FileUpload file={file} key={file.backingFile.preview} />
     ));
