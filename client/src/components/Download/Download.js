@@ -18,44 +18,32 @@ const filesProps = File.propTypes;
 delete filesProps.isMultiFile;
 delete filesProps.downloadName;
 
-const Download = React.createClass({
-  propTypes: {
-    dateAdded: React.PropTypes.string.isRequired,
-    dispatch: React.PropTypes.func.isRequired,
-    files: React.PropTypes.shape({
-      downloaded: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
-      extracted: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
-    }),
-    infoHash: React.PropTypes.string.isRequired,
-    isMultiFile: React.PropTypes.bool.isRequired,
-    locks: React.PropTypes.array.isRequired,
-    name: React.PropTypes.string.isRequired,
-    params: React.PropTypes.object.isRequired,
-    progress: React.PropTypes.number.isRequired,
-    state: React.PropTypes.string.isRequired,
-    uploader: React.PropTypes.string.isRequired,
-  },
+class Download extends React.Component {
+  constructor(props) {
+    super(props);
 
-  getInitialState() {
-    return {
+    this.state = {
       filter: '',
       globalCollapse: true,
     };
-  },
+
+    this.handleGlobalCollapse = this.handleGlobalCollapse.bind(this);
+    this.handleChangeFilter = this.handleChangeFilter.bind(this);
+  }
 
   componentDidMount() {
     const { dispatch } = this.props;
 
     dispatch(getDownload(this.props.params.infoHash));
-  },
+  }
 
   handleGlobalCollapse(_event) {
     this.setState({ globalCollapse: !this.state.globalCollapse });
-  },
+  }
 
   handleChangeFilter(event) {
     this.setState({ filter: event.target.value });
-  },
+  }
 
   render() {
     if (!('files' in this.props)) {
@@ -91,9 +79,9 @@ const Download = React.createClass({
       extractedFilesSection = (
         <div styleName='files'>
           {sectionLabel}
-          <FileTree isMultiFile={this.props.isMultiFile}
+          <FileTree isRoot
+                    isMultiFile={this.props.isMultiFile}
                     depth={1}
-                    isRoot
                     initialCollapse={this.state.globalCollapse}
                     downloadName={this.props.name}
                     files={extractedFiles} />
@@ -122,10 +110,10 @@ const Download = React.createClass({
     const downloadedFilesSection = (
       <div styleName='files'>
         {downloadedSectionLabel}
-        <FileTree isMultiFile={this.props.isMultiFile}
+        <FileTree isRoot
+                  isMultiFile={this.props.isMultiFile}
                   initialCollapse={this.state.globalCollapse}
                   downloadName={this.props.name}
-                  isRoot
                   files={downloadedFiles} />
       </div>
     );
@@ -162,7 +150,24 @@ const Download = React.createClass({
         </Row>
       </div>
     );
-  },
-});
+  }
+}
+
+Download.propTypes = {
+  dateAdded: React.PropTypes.string.isRequired,
+  dispatch: React.PropTypes.func.isRequired,
+  files: React.PropTypes.shape({
+    downloaded: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
+    extracted: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
+  }),
+  infoHash: React.PropTypes.string.isRequired,
+  isMultiFile: React.PropTypes.bool.isRequired,
+  locks: React.PropTypes.array.isRequired,
+  name: React.PropTypes.string.isRequired,
+  params: React.PropTypes.object.isRequired,
+  progress: React.PropTypes.number.isRequired,
+  state: React.PropTypes.string.isRequired,
+  uploader: React.PropTypes.string.isRequired,
+};
 
 export default CSSModules(Download, styles);
