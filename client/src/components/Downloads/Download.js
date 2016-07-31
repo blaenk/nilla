@@ -48,6 +48,10 @@ const Download = (props) => {
 
 Download.propTypes = {
   infoHash: React.PropTypes.string.isRequired,
+  isHidden: React.PropTypes.bool.isRequired,
+  locks: React.PropTypes.array.isRequired,
+  name: React.PropTypes.string.isRequired,
+  progress: React.PropTypes.number.isRequired,
   state: React.PropTypes.oneOf([
     'seeding',
     'closed',
@@ -55,10 +59,6 @@ Download.propTypes = {
     'hashing',
     'stopped',
   ]).isRequired,
-  progress: React.PropTypes.number.isRequired,
-  name: React.PropTypes.string.isRequired,
-  locks: React.PropTypes.array.isRequired,
-  isHidden: React.PropTypes.bool.isRequired,
 };
 
 export default CSSModules(Download, styles);

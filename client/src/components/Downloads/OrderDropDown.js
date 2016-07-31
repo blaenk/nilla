@@ -13,8 +13,8 @@ import MarkedMenuItem from './MarkedMenuItem';
 
 const OrderDropDown = React.createClass({
   propTypes: {
-    order: React.PropTypes.string.isRequired,
     onChangeOrder: React.PropTypes.func.isRequired,
+    order: React.PropTypes.string.isRequired,
   },
 
   onChangeOrder(eventKey, _event) {
@@ -47,9 +47,5 @@ const OrderDropDown = React.createClass({
     );
   },
 });
-
-OrderDropDown.propTypes = {
-  onChangeOrder: React.PropTypes.func.isRequired,
-};
 
 export default CSSModules(OrderDropDown, styles);

@@ -15,8 +15,8 @@ const MarkedMenuItem = (props) => {
 };
 
 MarkedMenuItem.propTypes = {
-  eventKey: React.PropTypes.string.isRequired,
   children: React.PropTypes.node.isRequired,
+  eventKey: React.PropTypes.string.isRequired,
   onSelect: React.PropTypes.func.isRequired,
   selected: React.PropTypes.string.isRequired,
 };

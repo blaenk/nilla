@@ -26,6 +26,9 @@
     "react/no-render-return-value": ["error"],
     "react/no-string-refs": ["error"],
     // "react/prefer-es6-class": ["error"],
+    "react/require-optimization": ["error"],
+    "react/sort-prop-types": ["error"],
+    "react/self-closing-comp": ["error"],
     "react/no-unknown-property": ["error"],
     "react/prefer-stateless-function": ["error"],
     "react/no-did-update-set-state": ["error"]

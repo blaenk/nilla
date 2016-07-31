@@ -64,13 +64,13 @@ const Header = (props) => {
 };
 
 Header.propTypes = {
-  infoHash: React.PropTypes.string.isRequired,
   dateAdded: React.PropTypes.string.isRequired,
-  name: React.PropTypes.string.isRequired,
-  state: React.PropTypes.string.isRequired,
-  progress: React.PropTypes.number.isRequired,
-  uploader: React.PropTypes.string.isRequired,
+  infoHash: React.PropTypes.string.isRequired,
   locks: React.PropTypes.array.isRequired,
+  name: React.PropTypes.string.isRequired,
+  progress: React.PropTypes.number.isRequired,
+  state: React.PropTypes.string.isRequired,
+  uploader: React.PropTypes.string.isRequired,
 };
 
 export default CSSModules(Header, styles);

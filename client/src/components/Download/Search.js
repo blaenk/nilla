@@ -14,9 +14,8 @@ const Search = React.createClass({
   propTypes: {
     count: React.PropTypes.number.isRequired,
     initialCollapse: React.PropTypes.bool,
-
-    onCollapse: React.PropTypes.func.isRequired,
     onChangeFilter: React.PropTypes.func.isRequired,
+    onCollapse: React.PropTypes.func.isRequired,
   },
 
   getInitialState() {

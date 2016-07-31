@@ -29,9 +29,9 @@ const ErrorAlert = (props) => {
 };
 
 ErrorAlert.propTypes = {
-  title: React.PropTypes.string.isRequired,
-  onDismiss: React.PropTypes.func.isRequired,
   children: React.PropTypes.node.isRequired,
+  onDismiss: React.PropTypes.func.isRequired,
+  title: React.PropTypes.string.isRequired,
 };
 
 export default CSSModules(ErrorAlert, styles);

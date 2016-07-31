@@ -46,8 +46,8 @@ const RejectedFilesErrorAlert = (props) => {
 };
 
 RejectedFilesErrorAlert.propTypes = {
-  rejectedFiles: React.PropTypes.array,
   onDismiss: React.PropTypes.func.isRequired,
+  rejectedFiles: React.PropTypes.array,
 };
 
 export default RejectedFilesErrorAlert;

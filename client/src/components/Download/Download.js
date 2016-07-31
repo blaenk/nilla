@@ -20,20 +20,20 @@ delete filesProps.downloadName;
 
 const Download = React.createClass({
   propTypes: {
-    dispatch: React.PropTypes.func.isRequired,
-    params: React.PropTypes.object.isRequired,
-    infoHash: React.PropTypes.string.isRequired,
     dateAdded: React.PropTypes.string.isRequired,
-    name: React.PropTypes.string.isRequired,
-    state: React.PropTypes.string.isRequired,
-    progress: React.PropTypes.number.isRequired,
-    isMultiFile: React.PropTypes.bool.isRequired,
-    uploader: React.PropTypes.string.isRequired,
+    dispatch: React.PropTypes.func.isRequired,
     files: React.PropTypes.shape({
       downloaded: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
       extracted: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
     }),
+    infoHash: React.PropTypes.string.isRequired,
+    isMultiFile: React.PropTypes.bool.isRequired,
     locks: React.PropTypes.array.isRequired,
+    name: React.PropTypes.string.isRequired,
+    params: React.PropTypes.object.isRequired,
+    progress: React.PropTypes.number.isRequired,
+    state: React.PropTypes.string.isRequired,
+    uploader: React.PropTypes.string.isRequired,
   },
 
   getInitialState() {

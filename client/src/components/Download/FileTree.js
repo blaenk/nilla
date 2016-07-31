@@ -49,16 +49,14 @@ function partitionFiles(entries, depth) {
 const FileTree = CSSModules(React.createClass({
   displayName: 'FileTree',
   propTypes: {
-    name: React.PropTypes.string,
-    files: React.PropTypes.arrayOf(React.PropTypes.shape(File.propTypes)),
     depth: React.PropTypes.number,
-    isRoot: React.PropTypes.bool,
-    isEnabled: React.PropTypes.bool,
-
-    initialCollapse: React.PropTypes.bool,
-
     downloadName: React.PropTypes.string.isRequired,
+    files: React.PropTypes.arrayOf(React.PropTypes.shape(File.propTypes)),
+    initialCollapse: React.PropTypes.bool,
+    isEnabled: React.PropTypes.bool,
     isMultiFile: React.PropTypes.bool.isRequired,
+    isRoot: React.PropTypes.bool,
+    name: React.PropTypes.string,
   },
 
   getDefaultProps() {

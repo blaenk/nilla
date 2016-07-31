@@ -7,16 +7,14 @@ import styles from './filetree.module.less';
 
 const File = React.createClass({
   propTypes: {
-    pathComponents: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
-    size: React.PropTypes.number.isRequired,
+    downloadName: React.PropTypes.string.isRequired,
     id: React.PropTypes.number.isRequired,
-    progress: React.PropTypes.number.isRequired,
     isEnabled: React.PropTypes.bool.isRequired,
     isHidden: React.PropTypes.bool.isRequired,
-
-    // download-props
-    downloadName: React.PropTypes.string.isRequired,
     isMultiFile: React.PropTypes.bool.isRequired,
+    pathComponents: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+    progress: React.PropTypes.number.isRequired,
+    size: React.PropTypes.number.isRequired,
   },
 
   render() {

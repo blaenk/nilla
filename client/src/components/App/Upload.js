@@ -67,9 +67,9 @@ const Upload = (props) => {
 
 Upload.propTypes = {
   files: React.PropTypes.array,
-  rejectedFiles: React.PropTypes.array,
   onClickFiles: React.PropTypes.func.isRequired,
   onDismissRejectionAlert: React.PropTypes.func.isRequired,
+  rejectedFiles: React.PropTypes.array,
 };
 
 export default CSSModules(Upload, styles);

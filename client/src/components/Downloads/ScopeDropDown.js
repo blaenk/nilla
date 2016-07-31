@@ -8,8 +8,8 @@ import MarkedMenuItem from './MarkedMenuItem';
 
 const ScopeDropDown = React.createClass({
   propTypes: {
-    scope: React.PropTypes.string.isRequired,
     onChangeScope: React.PropTypes.func.isRequired,
+    scope: React.PropTypes.string.isRequired,
   },
 
   onChangeScope(eventKey, _event) {
@@ -36,9 +36,5 @@ const ScopeDropDown = React.createClass({
     );
   },
 });
-
-ScopeDropDown.propTypes = {
-  onChangeScope: React.PropTypes.func.isRequired,
-};
 
 export default CSSModules(ScopeDropDown, styles);
