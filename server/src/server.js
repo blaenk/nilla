@@ -1,6 +1,8 @@
 'use strict';
 
-require('dotenv').config();
+require('dotenv').config({
+  silent: Boolean(process.env.TRAVIS),
+});
 
 const rtorrent = require('./rtorrent');
 const downloads = require('./models/downloads');

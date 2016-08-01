@@ -1,1 +1,2 @@
 scgi_local = ~/rtorrent/rpc.socket
+directory = /home/travis/rtorrent/downloads
