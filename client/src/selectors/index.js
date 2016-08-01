@@ -45,7 +45,7 @@ export const getScopedDownloads = createSelector(
           // don't hard-code expiration time
           // perhaps store some TTL in metadata?
           const expiresAt =
-                moment(download['date-added']).add(EXPIRATION_DURATION).subtract(1, 'day');
+                moment(download.dateAdded).add(EXPIRATION_DURATION).subtract(1, 'day');
 
           return Object.assign({}, download, {
             isHidden: moment().isBefore(expiresAt),
@@ -77,8 +77,8 @@ export const getOrderedDownloads = createSelector(
 
         sortedByDate.sort((a, b) => {
           // it's possible to simply string-compare uniform ISO 8601 timestamps
-          const left = a['date-added'];
-          const right = b['date-added'];
+          const left = a.dateAdded;
+          const right = b.dateAdded;
 
           if (left > right) {
             return -1;
