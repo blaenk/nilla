@@ -43,9 +43,9 @@
     "mocha": "^2.5.3",
     "mocha-lcov-reporter": "^1.2.0",
     "sinon": "^1.17.4",
-    "sinon-as-promised": "^3.0.1",
+    "sinon-as-promised": "^4.0.0",
     "sinon-chai": "^2.8.0",
-    "supertest": "^1.2.0"
+    "supertest": "^2.0.0"
   },
   "dependencies": {
     "bcrypt": "^0.8.7",
