@@ -9,6 +9,9 @@
   "extends": [
     "eslint:recommended"
   ],
+  "plugins": [
+    "import"
+  ],
   "rules": {
     "array-bracket-spacing": ["error", "never"],
     "arrow-spacing": ["error"],
@@ -29,6 +32,7 @@
     "global-require": ["error"],
     "guard-for-in": ["error"],
     "handle-callback-err": ["error"],
+    "import/no-unresolved": ["error", {"commonjs": true}],
     "indent": ["error", 2, {"SwitchCase": 1}],
     "jsx-quotes": ["error", "prefer-single"],
     "key-spacing": ["error", {"beforeColon": false, "afterColon": true, "mode": "minimum"}],
