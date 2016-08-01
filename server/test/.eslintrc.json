@@ -8,8 +8,12 @@
     "assert": true,
     "expect": true
   },
+  "plugins": [
+    "mocha"
+  ],
   "rules": {
     "max-nested-callbacks": ["off"],
-    "prefer-arrow-callback": ["off"]
+    "prefer-arrow-callback": ["off"],
+    "mocha/no-mocha-arrows": ["error"]
   }
 }

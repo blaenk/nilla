@@ -8,7 +8,7 @@ const scgi = require('../src/scgi.js');
 
 describe('SCGI', function() {
   context('Protocol', function() {
-    it('should build a request', () => {
+    it('should build a request', function() {
       const request = scgi.buildRequest({
         REQUEST_METHOD: 'POST',
         REQUEST_URI: '/deepthought',
@@ -28,7 +28,7 @@ describe('SCGI', function() {
       expect(raw).to.equal(request);
     });
 
-    it('should parse a response', () => {
+    it('should parse a response', function() {
       const response =
         'Status: 200 OK\r\n' +
         'Content-Type: text/plain\r\n' +
