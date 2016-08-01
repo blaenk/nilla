@@ -52,4 +52,4 @@ App.propTypes = {
   children: React.PropTypes.node.isRequired,
 };
 
-module.exports = CSSModules(App, styles);
+export default CSSModules(App, styles);

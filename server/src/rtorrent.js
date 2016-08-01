@@ -2,7 +2,6 @@
 
 const Bluebird = require('bluebird');
 
-const process = require('process');
 const path = require('path');
 const fs = Bluebird.promisifyAll(require('fs'));
 
