@@ -25,7 +25,7 @@ const StartCheckbox = connect(
   }
 )(Checkbox);
 
-let FileUpload = (props) => {
+let FileUpload_ = (props) => {
   let right;
 
   if (props.file.progress > 0) {
@@ -65,15 +65,15 @@ let FileUpload = (props) => {
   );
 };
 
-FileUpload.propTypes = {
+FileUpload_.propTypes = {
   file: React.PropTypes.object.isRequired,
   onRemove: React.PropTypes.func.isRequired,
   onSubmit: React.PropTypes.func.isRequired,
 };
 
-FileUpload = CSSModules(FileUpload, styles);
+FileUpload_ = CSSModules(FileUpload_, styles);
 
-FileUpload = connect(
+FileUpload_ = connect(
   null,
   (dispatch, ownProps) => {
     return {
@@ -85,6 +85,8 @@ FileUpload = connect(
       },
     };
   }
-)(FileUpload);
+)(FileUpload_);
+
+const FileUpload = FileUpload_;
 
 export default FileUpload;
