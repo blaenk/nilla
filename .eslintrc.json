@@ -43,6 +43,16 @@
     "import/no-extraneous-dependencies": ["error"],
     "import/no-mutable-exports": ["error"],
     "import/imports-first": ["error"],
+    "import/no-duplicates": ["error"],
+    "import/extensions": ["error"],
+    "import/order": ["error", {
+      "groups": [
+        "builtin",
+        "external",
+        ["internal", "parent", "sibling"],
+        "index"
+      ]
+    }],
     "indent": ["error", 2, {"SwitchCase": 1}],
     "jsx-quotes": ["error", "prefer-single"],
     "key-spacing": ["error", {"beforeColon": false, "afterColon": true, "mode": "minimum"}],

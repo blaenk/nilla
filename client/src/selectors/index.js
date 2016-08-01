@@ -1,8 +1,8 @@
 import { createSelector } from 'reselect';
-import { fuzzyPattern, EXPIRATION_DURATION } from 'common';
-
 import moment from 'moment';
 import _ from 'lodash';
+
+import { fuzzyPattern, EXPIRATION_DURATION } from 'common';
 
 const getDownloads = (state) => state.downloads;
 const getFilter = (state) => state.search.filter;

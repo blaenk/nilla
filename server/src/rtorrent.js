@@ -1,16 +1,16 @@
 'use strict';
 
-const Bluebird = require('bluebird');
-
 const path = require('path');
-const fs = Bluebird.promisifyAll(require('fs'));
+const fs = require('fs');
 
+const Bluebird = require('bluebird');
+const _ = require('lodash');
 const xmlrpc = require('xmlrpc');
-const scgi = require('./scgi.js');
-
 const parseTorrent = require('parse-torrent');
 
-const _ = require('lodash');
+const scgi = require('./scgi.js');
+
+Bluebird.promisifyAll(fs);
 
 const rtorrent = exports = module.exports = {};
 

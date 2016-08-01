@@ -1,11 +1,17 @@
 'use strict';
 
-const rtorrent = require('../rtorrent');
-const Bluebird = require('bluebird');
+const path = require('path');
+const fs = require('fs');
 
-const recursiveReaddirAsync = Bluebird.promisify(require('recursive-readdir'));
-const path = Bluebird.promisifyAll(require('path'));
-const fs = Bluebird.promisifyAll(require('fs'));
+const Bluebird = require('bluebird');
+const recursiveReaddir = require('recursive-readdir');
+
+const rtorrent = require('../rtorrent');
+
+Bluebird.promisifyAll(path);
+Bluebird.promisifyAll(fs);
+
+const recursiveReaddirAsync = Bluebird.promisify(recursiveReaddir);
 
 /**
  * Decodes an integer-encoded ratio e.g. 750 to a floating-point ratio e.g.

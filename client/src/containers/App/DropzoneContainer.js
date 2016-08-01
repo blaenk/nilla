@@ -1,8 +1,7 @@
 import { connect } from 'react-redux';
+import Dropzone from 'react-dropzone';
 
 import { addFiles, rejectFiles, setDragging, setUploading } from 'actions';
-
-import Dropzone from 'react-dropzone';
 
 const mapDispatchToProps = (dispatch) => {
   return {

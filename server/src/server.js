@@ -4,14 +4,11 @@ require('dotenv').config({
   silent: Boolean(process.env.TRAVIS),
 });
 
-const rtorrent = require('./rtorrent');
-const downloads = require('./models/downloads');
-const users = require('./models/users');
+const path = require('path');
 
 const csurf = require('csurf');
 const express = require('express');
 const expressHandlebars = require('express-handlebars');
-
 const HttpStatus = require('http-status-codes');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
@@ -21,8 +18,11 @@ const helmet = require('helmet');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const multer = require('multer');
-const path = require('path');
 const sqlite3 = require('sqlite3');
+
+const rtorrent = require('./rtorrent');
+const downloads = require('./models/downloads');
+const users = require('./models/users');
 
 const db = new sqlite3.cached.Database('./db/nilla.db');
 

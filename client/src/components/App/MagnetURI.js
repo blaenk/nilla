@@ -7,11 +7,10 @@ import {
   InputGroup,
 } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
+import request from 'superagent';
+import Cookies from 'js-cookie';
 
 import styles from './upload.module.less';
-import request from 'superagent';
-
-import Cookies from 'js-cookie';
 
 class MagnetURI extends React.Component {
   constructor(props) {
