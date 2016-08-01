@@ -11,9 +11,10 @@ sudo: required
 dist: trusty
 
 env:
-  - RTORRENT_SOCKET=$HOME/rtorrent/rpc.socket
-  - RTORRENT_DOWNLOADS_DIRECTORY=$HOME/rtorrent/downloads
-  - JWT_SECRET=secret
+  global:
+    - RTORRENT_SOCKET=$HOME/rtorrent/rpc.socket
+    - RTORRENT_DOWNLOADS_DIRECTORY=$HOME/rtorrent/downloads
+    - JWT_SECRET=secret
 
 before_install:
   - sudo apt-get -qq update
