@@ -1,15 +1,15 @@
 import chai from 'chai';
 import chaiEnzyme from 'chai-enzyme';
 
-chai.use(chaiEnzyme());
-
-expect = chai.expect;
-assert = chai.assert;
-
 import React from 'react';
 import { shallow } from 'enzyme';
 
 import AppContainer from 'containers/App/AppContainer';
+
+chai.use(chaiEnzyme());
+
+expect = chai.expect;
+assert = chai.assert;
 
 describe('<AppContainer />', function() {
   it('should pass', function() {
