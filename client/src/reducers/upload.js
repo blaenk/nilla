@@ -1,9 +1,3 @@
-/**
- * The upload reducer.
- * @param {Object} state The current upload state.
- * @param {Object} action The dispatched action.
- * @returns {Object} The new upload state.
- */
 export default function upload(state, action) {
   switch (action.type) {
     case 'ADD_FILES': {

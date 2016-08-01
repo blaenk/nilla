@@ -2,21 +2,15 @@ import React from 'react';
 import CSSModules from 'react-css-modules';
 import { Row, Col } from 'react-bootstrap';
 
-import Header from './Header';
-import Search from './Search';
-import FileTree from './FileTree';
-import File from './File';
-
-import styles from './download.module.less';
-
 import { fuzzyPattern } from 'common';
-
 import { getDownload } from 'actions';
 
-const filesProps = File.propTypes;
+import Header from './Header';
+import Search from './Search';
+import File from './File';
+import FilesSection from './FilesSection';
 
-delete filesProps.isMultiFile;
-delete filesProps.downloadName;
+import styles from './download.module.less';
 
 class Download extends React.Component {
   constructor(props) {
@@ -46,76 +40,77 @@ class Download extends React.Component {
   }
 
   render() {
-    if (!('files' in this.props)) {
+    const download = this.props;
+
+    if (!('files' in download)) {
       return null;
     }
 
+    // TODO
+    // use a spinner
+    // if (isFetching) {
+    //   console.log('fetching ...');
+
+    //   return (
+    //     <p>Fetching ...</p>
+    //   );
+    // }
+
     const filterRE = fuzzyPattern(this.state.filter);
 
-    // TODO
+    // FIXME
     // DRY this all up.
 
-    let extractedVisibleCount = 0;
+    function hideFiltered(files, filterRE) {
+      let visibleCount = 0;
 
-    let extractedFilesSection = null;
+      // TODO
+      // this seems to be mutating the state given by the reducer, which AFAIK
+      // is a bad idea. perhaps it should be the case that on filter change,
+      // this stuff should be computed in the reducer?
+      // then visibleCount could be set somewhere
+      const filteredFiles = files.map(file => {
+        let isHidden = false;
 
-    if (this.props.files.extracted.length > 0) {
-      const extractedFiles = this.props.files.extracted.map(file => {
-        file.isHidden = !file.pathComponents.some(c => filterRE.test(c));
+        if (file.pathComponents.some(c => filterRE.test(c))) {
+          visibleCount += 1;
+        } else {
+          isHidden = true;
+        }
 
-        extractedVisibleCount += file.isHidden ? 0 : 1;
-
-        return file;
+        return Object.assign({}, file, { isHidden });
       });
 
-      let sectionLabel = null;
+      return {
+        files: filteredFiles,
+        visibleCount,
+      };
+    }
 
-      if (extractedVisibleCount > 0) {
-        sectionLabel = (
-          <p styleName='section-label'>EXTRACTED ({extractedVisibleCount})</p>
-        );
-      }
+    const { files: extractedFiles, visibleCount: extractedVisibleCount }
+          = hideFiltered(download.files.extracted, filterRE);
 
-      extractedFilesSection = (
-        <div styleName='files'>
-          {sectionLabel}
-          <FileTree isRoot
-                    isMultiFile={this.props.isMultiFile}
+    const extractedFilesSection = (
+      <FilesSection label='EXTRACTED'
+                    files={extractedFiles}
+                    visibleCount={extractedVisibleCount}
                     depth={1}
+                    isMultiFile={download.isMultiFile}
                     initialCollapse={this.state.globalCollapse}
-                    downloadName={this.props.name}
-                    files={extractedFiles} />
-        </div>
-      );
-    }
+                    downloadName={download.name} />
+    );
 
-    let downloadedVisibleCount = 0;
-
-    const downloadedFiles = this.props.files.downloaded.map(file => {
-      file.isHidden = !file.pathComponents.some(c => filterRE.test(c));
-
-      downloadedVisibleCount += file.isHidden ? 0 : 1;
-
-      return file;
-    });
-
-    let downloadedSectionLabel = null;
-
-    if (extractedFilesSection && downloadedVisibleCount > 0) {
-      downloadedSectionLabel = (
-        <p styleName='section-label'>DOWNLOADED ({downloadedVisibleCount})</p>
-      );
-    }
+    const { files: downloadedFiles, visibleCount: downloadedVisibleCount }
+          = hideFiltered(download.files.downloaded, filterRE);
 
     const downloadedFilesSection = (
-      <div styleName='files'>
-        {downloadedSectionLabel}
-        <FileTree isRoot
-                  isMultiFile={this.props.isMultiFile}
-                  initialCollapse={this.state.globalCollapse}
-                  downloadName={this.props.name}
-                  files={downloadedFiles} />
-      </div>
+      <FilesSection label='DOWNLOADED'
+                    showLabelIf={extractedFilesSection !== null}
+                    files={downloadedFiles}
+                    visibleCount={downloadedVisibleCount}
+                    isMultiFile={download.isMultiFile}
+                    initialCollapse={this.state.globalCollapse}
+                    downloadName={download.name} />
     );
 
     const totalVisibleCount = extractedVisibleCount + downloadedVisibleCount;
@@ -124,13 +119,13 @@ class Download extends React.Component {
       <div>
         <Row>
           <Col lg={12}>
-            <Header infoHash={this.props.infoHash}
-                    dateAdded={this.props.dateAdded}
-                    name={this.props.name}
-                    state={this.props.state}
-                    progress={this.props.progress}
-                    uploader={this.props.uploader}
-                    locks={this.props.locks} />
+            <Header infoHash={download.infoHash}
+                    dateAdded={download.dateAdded}
+                    name={download.name}
+                    state={download.state}
+                    progress={download.progress}
+                    uploader={download.uploader}
+                    locks={download.locks} />
           </Col>
         </Row>
 
@@ -153,21 +148,29 @@ class Download extends React.Component {
   }
 }
 
+const filesProps = File.propTypes;
+
 Download.propTypes = {
-  dateAdded: React.PropTypes.string.isRequired,
-  dispatch: React.PropTypes.func.isRequired,
-  files: React.PropTypes.shape({
-    downloaded: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
-    extracted: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
+  data: React.PropTypes.shape({
+    dateAdded: React.PropTypes.string.isRequired,
+    files: React.PropTypes.shape({
+      downloaded: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
+      extracted: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
+    }),
+    infoHash: React.PropTypes.string.isRequired,
+    isMultiFile: React.PropTypes.bool.isRequired,
+    locks: React.PropTypes.array.isRequired,
+    name: React.PropTypes.string.isRequired,
+    params: React.PropTypes.object.isRequired,
+    progress: React.PropTypes.number.isRequired,
+    state: React.PropTypes.string.isRequired,
+    uploader: React.PropTypes.string.isRequired,
   }),
-  infoHash: React.PropTypes.string.isRequired,
-  isMultiFile: React.PropTypes.bool.isRequired,
-  locks: React.PropTypes.array.isRequired,
-  name: React.PropTypes.string.isRequired,
+  dispatch: React.PropTypes.func.isRequired,
   params: React.PropTypes.object.isRequired,
-  progress: React.PropTypes.number.isRequired,
-  state: React.PropTypes.string.isRequired,
-  uploader: React.PropTypes.string.isRequired,
+  ui: React.PropTypes.shape({
+    isFetching: React.PropTypes.bool.isRequired,
+  }),
 };
 
 export default CSSModules(Download, styles);
