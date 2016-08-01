@@ -12,7 +12,7 @@ import filesize from 'filesize';
 
 import styles from './upload.module.less';
 
-import { removeFile, submitFile, setFileStart } from 'actions';
+import { setFileStart } from 'actions';
 
 const StartCheckbox = connect(
   null,
@@ -25,7 +25,7 @@ const StartCheckbox = connect(
   }
 )(Checkbox);
 
-let FileUpload_ = (props) => {
+function FileUpload(props) {
   let right;
 
   if (props.file.progress > 0) {
@@ -63,30 +63,12 @@ let FileUpload_ = (props) => {
       {right}
     </li>
   );
-};
+}
 
-FileUpload_.propTypes = {
+FileUpload.propTypes = {
   file: React.PropTypes.object.isRequired,
   onRemove: React.PropTypes.func.isRequired,
   onSubmit: React.PropTypes.func.isRequired,
 };
 
-FileUpload_ = CSSModules(FileUpload_, styles);
-
-FileUpload_ = connect(
-  null,
-  (dispatch, ownProps) => {
-    return {
-      onSubmit() {
-        dispatch(submitFile(ownProps.file));
-      },
-      onRemove() {
-        dispatch(removeFile(ownProps.file));
-      },
-    };
-  }
-)(FileUpload_);
-
-const FileUpload = FileUpload_;
-
-export default FileUpload;
+export default CSSModules(FileUpload, styles);
