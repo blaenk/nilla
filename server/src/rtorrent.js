@@ -129,6 +129,8 @@ rtorrent._transformMulticallResponse =
       const value = this._transformValue(request, response);
 
       transformed[key] = value;
+
+      return null;
     });
 
     return transformed;
