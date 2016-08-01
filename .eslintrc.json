@@ -45,6 +45,8 @@
     "import/imports-first": ["error"],
     "import/no-duplicates": ["error"],
     "import/extensions": ["error"],
+    "import/newline-after-import": ["error"],
+    "import/prefer-default-export": ["error"],
     "import/order": ["error", {
       "groups": [
         "builtin",
