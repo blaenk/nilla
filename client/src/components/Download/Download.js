@@ -134,6 +134,7 @@ class Download extends React.Component {
         <Row>
           <Col lg={12}>
             <Search count={totalVisibleCount}
+                    filter={ui.filter}
                     onChangeFilter={this.handleChangeFilter}
                     onCollapse={this.handleGlobalCollapse} />
           </Col>
@@ -153,7 +154,8 @@ class Download extends React.Component {
 const filesProps = File.propTypes;
 
 Download.propTypes = {
-  data: React.PropTypes.shape({
+  dispatch: React.PropTypes.func.isRequired,
+  download: React.PropTypes.shape({
     dateAdded: React.PropTypes.string.isRequired,
     files: React.PropTypes.shape({
       downloaded: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
@@ -168,7 +170,7 @@ Download.propTypes = {
     state: React.PropTypes.string.isRequired,
     uploader: React.PropTypes.string.isRequired,
   }),
-  dispatch: React.PropTypes.func.isRequired,
+  infoHash: React.PropTypes.string.isRequired,
   params: React.PropTypes.object.isRequired,
   ui: React.PropTypes.shape({
     isFetching: React.PropTypes.bool.isRequired,

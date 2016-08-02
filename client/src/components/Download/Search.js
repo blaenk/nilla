@@ -38,6 +38,7 @@ class Search extends React.Component {
                      placeholder='Search'
                      autoFocus
                      styleName='search-filter'
+                     value={this.props.filter}
                      onChange={this.props.onChangeFilter} />
 
         <InputGroup.Addon>
@@ -50,6 +51,7 @@ class Search extends React.Component {
 
 Search.propTypes = {
   count: React.PropTypes.number.isRequired,
+  filter: React.PropTypes.string.isRequired,
   initialCollapse: React.PropTypes.bool,
   onChangeFilter: React.PropTypes.func.isRequired,
   onCollapse: React.PropTypes.func.isRequired,

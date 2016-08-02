@@ -5,6 +5,19 @@ import {
 } from 'actions';
 
 function downloadsUIByInfoHash(state, action) {
+  const defaultState = {
+    isFetching: false,
+    isAugmented: false,
+    lastFetch: null,
+    filter: '',
+    collapsed: {
+      extracted: [],
+      downloaded: [],
+    },
+  };
+
+  state = state || defaultState;
+
   switch (action.type) {
     case SET_DOWNLOAD_FILTER:
       return Object.assign({}, state, {
@@ -20,20 +33,11 @@ function downloadsUIByInfoHash(state, action) {
         isAugmented: true,
       });
     default:
-      return state || {
-        isFetching: false,
-        isAugmented: false,
-        lastFetch: null,
-        filter: '',
-        collapsed: {
-          extracted: [],
-          downloaded: ['Sample/CD1'],
-        },
-      };
+      return state;
   }
 }
 
-export default function downloadsUI(state, action) {
+export default function downloadsUI(state = {}, action) {
   switch (action.type) {
     case SET_DOWNLOAD_FILTER:
     case REQUEST_DOWNLOAD:
@@ -42,6 +46,6 @@ export default function downloadsUI(state, action) {
         [action.infoHash]: downloadsUIByInfoHash(state[action.infoHash], action),
       });
     default:
-      return state || {};
+      return state;
   }
 }

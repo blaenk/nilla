@@ -6,8 +6,8 @@ import Download from 'components/Download/Download';
 // fetchIfNecessary, cache in state
 const mapStateToProps = (state, props) => {
   const infoHash = props.params.infoHash;
-  const download = state.downloads[props.params.infoHash] || {};
-  const ui = state.ui.downloads[props.params.infoHash] || {};
+  const download = state.downloads[infoHash] || {};
+  const ui = state.ui.downloads[infoHash] || {};
 
   // TODO
   // need to set .isHidden = false?
