@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import SearchFilter from 'components/Downloads/SearchFilter';
-import { setFilter } from 'actions';
+import { setDownloadsFilter } from 'actions';
 
 const mapStateToProps = (state) => {
   return {
@@ -12,7 +12,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onChangeFilter: (event) => {
-      dispatch(setFilter(event.target.value));
+      dispatch(setDownloadsFilter(event.target.value));
     },
   };
 };

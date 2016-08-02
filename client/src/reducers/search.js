@@ -14,7 +14,7 @@ export default function search(state, action) {
       return Object.assign({}, state, {
         order: action.order,
       });
-    case 'SET_FILTER':
+    case 'SET_DOWNLOADS_FILTER':
       return Object.assign({}, state, {
         filter: action.filter,
       });

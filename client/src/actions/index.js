@@ -31,9 +31,9 @@ export function setOrder(order) {
  * @param {string} filter The pattern used to filter the downloads by name.
  * @returns {Object} The action.
  */
-export function setFilter(filter) {
+export function setDownloadsFilter(filter) {
   return {
-    type: 'SET_FILTER',
+    type: 'SET_DOWNLOADS_FILTER',
     filter,
   };
 }
