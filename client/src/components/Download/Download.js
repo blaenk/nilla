@@ -14,25 +14,10 @@ import SearchContainer from 'containers/Download/SearchContainer';
 import styles from './download.module.less';
 
 class Download extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      filter: '',
-      globalCollapse: true,
-    };
-
-    this.handleGlobalCollapse = this.handleGlobalCollapse.bind(this);
-  }
-
   componentDidMount() {
     const { dispatch } = this.props;
 
     dispatch(getDownload(this.props.infoHash));
-  }
-
-  handleGlobalCollapse(_event) {
-    this.setState({ globalCollapse: !this.state.globalCollapse });
   }
 
   render() {
@@ -92,7 +77,7 @@ class Download extends React.Component {
                     visibleCount={extractedVisibleCount}
                     depth={1}
                     isMultiFile={download.isMultiFile}
-                    initialCollapse={this.state.globalCollapse}
+                    initialCollapse={ui.isCollapsed}
                     downloadName={download.name} />
     );
 
@@ -105,7 +90,7 @@ class Download extends React.Component {
                     files={downloadedFiles}
                     visibleCount={downloadedVisibleCount}
                     isMultiFile={download.isMultiFile}
-                    initialCollapse={this.state.globalCollapse}
+                    initialCollapse={ui.isCollapsed}
                     downloadName={download.name} />
     );
 
@@ -127,9 +112,7 @@ class Download extends React.Component {
 
         <Row>
           <Col lg={12}>
-            <SearchContainer count={totalVisibleCount}
-                             infoHash={this.props.infoHash}
-                             onCollapse={this.handleGlobalCollapse} />
+            <SearchContainer count={totalVisibleCount} infoHash={this.props.infoHash} />
           </Col>
         </Row>
 

@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 import Search from 'components/Download/Search';
 
-import { setDownloadFilter } from 'actions';
+import { setDownloadFilter, setDownloadGlobalCollapse } from 'actions';
 
 const mapStateToProps = (state, props) => {
   const { infoHash } = props;
@@ -10,18 +10,24 @@ const mapStateToProps = (state, props) => {
   let filter = '';
 
   if (infoHash in state.ui.downloads) {
-    filter = state.ui.downloads[infoHash].filter;
+    const {
+      filter,
+      isCollapsed,
+    } = state.ui.downloads[infoHash];
+
+    return { filter, isCollapsed };
   }
 
-  return {
-    filter,
-  };
+  return {};
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onChangeFilter(event) {
       dispatch(setDownloadFilter(ownProps.infoHash, event.target.value));
+    },
+    collapse(infoHash, isCollapsed) {
+      dispatch(setDownloadGlobalCollapse(infoHash, isCollapsed));
     },
   };
 };

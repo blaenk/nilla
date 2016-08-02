@@ -54,6 +54,16 @@ export function setDownloadFilter(infoHash, filter) {
   };
 }
 
+export const SET_DOWNLOAD_GLOBAL_COLLAPSE = 'SET_DOWNLOAD_GLOBAL_COLLAPSE';
+
+export function setDownloadGlobalCollapse(infoHash, isCollapsed) {
+  return {
+    type: SET_DOWNLOAD_GLOBAL_COLLAPSE,
+    infoHash,
+    isCollapsed,
+  };
+}
+
 export const ADD_FILES = 'ADD_FILES';
 
 export function addFiles(files) {

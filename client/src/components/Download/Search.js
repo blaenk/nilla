@@ -14,15 +14,11 @@ class Search extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { isCollapsed: true };
-
     this.handleCollapse = this.handleCollapse.bind(this);
   }
 
-  handleCollapse(event) {
-    this.setState({ isCollapsed: !this.state.isCollapsed });
-
-    this.props.onCollapse(event);
+  handleCollapse(_event) {
+    this.props.collapse(this.props.infoHash, !this.props.isCollapsed);
   }
 
   render() {
@@ -30,7 +26,7 @@ class Search extends React.Component {
       <InputGroup styleName='search'>
         <InputGroup.Button>
           <Button styleName='global-collapse' onClick={this.handleCollapse}>
-            <Glyphicon glyph={this.state.isCollapsed ? 'chevron-down' : 'chevron-up'} />
+            <Glyphicon glyph={this.props.isCollapsed ? 'chevron-down' : 'chevron-up'} />
           </Button>
         </InputGroup.Button>
 
@@ -50,9 +46,11 @@ class Search extends React.Component {
 }
 
 Search.propTypes = {
+  collapse: React.PropTypes.func.isRequired,
   count: React.PropTypes.number.isRequired,
   filter: React.PropTypes.string.isRequired,
-  initialCollapse: React.PropTypes.bool,
+  infoHash: React.PropTypes.string.isRequired,
+  isCollapsed: React.PropTypes.bool,
   onChangeFilter: React.PropTypes.func.isRequired,
   onCollapse: React.PropTypes.func.isRequired,
 };
