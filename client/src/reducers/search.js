@@ -1,12 +1,18 @@
 import { SET_SCOPE, SET_ORDER, SET_DOWNLOADS_FILTER } from 'actions';
 
+const defaultState = {
+  scope: 'all',
+  order: 'recent',
+  filter: '',
+};
+
 /**
  * The search reducer.
  * @param {Object} state The current search state.
  * @param {Object} action The dispatched action.
  * @returns {Object} The new search state.
  */
-export default function search(state, action) {
+export default function search(state = defaultState, action) {
   switch (action.type) {
     case SET_SCOPE:
       return Object.assign({}, state, {
@@ -21,10 +27,6 @@ export default function search(state, action) {
         filter: action.filter,
       });
     default:
-      return state || {
-        scope: 'all',
-        order: 'recent',
-        filter: '',
-      };
+      return state;
   }
 }

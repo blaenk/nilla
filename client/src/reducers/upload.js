@@ -12,7 +12,15 @@ import {
   UPLOAD_FILE_FAILURE,
 } from 'actions';
 
-export default function upload(state, action) {
+const defaultState = {
+  files: [],
+  rejectedFiles: [],
+  isDragging: false,
+  isUploading: false,
+  showUpload: false,
+};
+
+export default function upload(state = defaultState, action) {
   switch (action.type) {
     case ADD_FILES: {
       return Object.assign({}, state, {
@@ -78,12 +86,6 @@ export default function upload(state, action) {
     case UPLOAD_FILE_SUCCESS:
     case UPLOAD_FILE_FAILURE:
     default:
-      return state || {
-        files: [],
-        rejectedFiles: [],
-        isDragging: false,
-        isUploading: false,
-        showUpload: false,
-      };
+      return state;
   }
 }

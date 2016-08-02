@@ -1,6 +1,6 @@
 import { RECEIVE_DOWNLOADS, RECEIVE_DOWNLOAD } from 'actions';
 
-export default function downloads(state, action) {
+export default function downloads(state = {}, action) {
   switch (action.type) {
     case RECEIVE_DOWNLOADS:
       // TODO
@@ -11,6 +11,6 @@ export default function downloads(state, action) {
         [action.infoHash]: action.download,
       });
     default:
-      return state || {};
+      return state;
   }
 }
