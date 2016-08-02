@@ -11,7 +11,7 @@ const getOrder = (state) => state.search.order;
 
 export const getDownloadsValues = createSelector(
   [getDownloads],
-  (downloads) => _.values(downloads)
+  (downloads) => _.cloneDeep(_.values(downloads))
 );
 
 export const getScopedDownloads = createSelector(
