@@ -3,12 +3,13 @@ import CSSModules from 'react-css-modules';
 import { Row, Col } from 'react-bootstrap';
 
 import { fuzzyPattern } from 'common';
-import { getDownload, setDownloadFilter } from 'actions';
+import { getDownload } from 'actions';
 
 import Header from './Header';
-import Search from './Search';
 import File from './File';
 import FilesSection from './FilesSection';
+
+import SearchContainer from 'containers/Download/SearchContainer';
 
 import styles from './download.module.less';
 
@@ -22,7 +23,6 @@ class Download extends React.Component {
     };
 
     this.handleGlobalCollapse = this.handleGlobalCollapse.bind(this);
-    this.handleChangeFilter = this.handleChangeFilter.bind(this);
   }
 
   componentDidMount() {
@@ -33,12 +33,6 @@ class Download extends React.Component {
 
   handleGlobalCollapse(_event) {
     this.setState({ globalCollapse: !this.state.globalCollapse });
-  }
-
-  handleChangeFilter(event) {
-    const { dispatch } = this.props;
-
-    dispatch(setDownloadFilter(this.props.infoHash, event.target.value));
   }
 
   render() {
@@ -133,10 +127,9 @@ class Download extends React.Component {
 
         <Row>
           <Col lg={12}>
-            <Search count={totalVisibleCount}
-                    filter={ui.filter}
-                    onChangeFilter={this.handleChangeFilter}
-                    onCollapse={this.handleGlobalCollapse} />
+            <SearchContainer count={totalVisibleCount}
+                             infoHash={this.props.infoHash}
+                             onCollapse={this.handleGlobalCollapse} />
           </Col>
         </Row>
 
