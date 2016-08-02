@@ -3,19 +3,19 @@ import { setScope } from 'actions';
 
 import ScopeDropDown from 'components/Downloads/ScopeDropDown';
 
-const mapStateToProps = (state) => {
+function mapStateToProps(state) {
   return {
     scope: state.search.scope,
   };
-};
+}
 
-const mapDispatchToProps = (dispatch) => {
+function mapDispatchToProps(dispatch) {
   return {
     onChangeScope: (scope) => {
       dispatch(setScope(scope));
     },
   };
-};
+}
 
 const ScopeDropDownContainer = connect(
   mapStateToProps,

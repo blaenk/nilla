@@ -3,19 +3,19 @@ import { setOrder } from 'actions';
 
 import OrderDropDown from 'components/Downloads/OrderDropDown';
 
-const mapStateToProps = (state) => {
+function mapStateToProps(state) {
   return {
     order: state.search.order,
   };
-};
+}
 
-const mapDispatchToProps = (dispatch) => {
+function mapDispatchToProps(dispatch) {
   return {
     onChangeOrder: (order) => {
       dispatch(setOrder(order));
     },
   };
-};
+}
 
 const OrderDropDownContainer = connect(
   mapStateToProps,

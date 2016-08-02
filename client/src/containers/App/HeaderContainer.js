@@ -4,14 +4,14 @@ import { setUploading } from 'actions';
 
 import Header from 'components/App/Header';
 
-const mapStateToProps = (state) => {
+function mapStateToProps(state) {
   return {
     isDragging: state.upload.isDragging,
     isUploading: state.upload.isUploading,
   };
-};
+}
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => {
+function mergeProps(stateProps, dispatchProps, ownProps) {
   const { dispatch } = dispatchProps;
 
   return Object.assign({}, ownProps, stateProps, dispatchProps, {
@@ -19,7 +19,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
       dispatch(setUploading(!stateProps.isUploading));
     },
   });
-};
+}
 
 const HeaderContainer = connect(
   mapStateToProps,

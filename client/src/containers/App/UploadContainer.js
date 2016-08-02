@@ -4,20 +4,20 @@ import { clearRejectedFiles } from 'actions';
 
 import Upload from 'components/App/Upload';
 
-const mapStateToProps = (state) => {
+function mapStateToProps(state) {
   return {
     files: state.upload.files,
     rejectedFiles: state.upload.rejectedFiles,
   };
-};
+}
 
-const mapDispatchToProps = (dispatch) => {
+function mapDispatchToProps(dispatch) {
   return {
     onDismissRejectionAlert() {
       dispatch(clearRejectedFiles());
     },
   };
-};
+}
 
 const UploadContainer = connect(
   mapStateToProps,

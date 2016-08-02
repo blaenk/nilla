@@ -4,7 +4,7 @@ import Download from 'components/Download/Download';
 
 // TODO
 // fetchIfNecessary, cache in state
-const mapStateToProps = (state, props) => {
+function mapStateToProps(state, props) {
   const infoHash = props.params.infoHash;
   const download = state.downloads[infoHash] || {};
   const ui = state.ui.downloads[infoHash] || {};
@@ -14,7 +14,7 @@ const mapStateToProps = (state, props) => {
   // or use defaultProps?
 
   return { infoHash, download, ui };
-};
+}
 
 const DownloadContainer = connect(
   mapStateToProps

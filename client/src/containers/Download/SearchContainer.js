@@ -4,10 +4,11 @@ import Search from 'components/Download/Search';
 
 import { setDownloadFilter, setDownloadGlobalCollapse } from 'actions';
 
-const mapStateToProps = (state, props) => {
+function mapStateToProps(state, props) {
   const { infoHash } = props;
 
-  let filter = '';
+  // TODO
+  // dispatch(initDownload(infoHash))?
 
   if (infoHash in state.ui.downloads) {
     const {
@@ -19,9 +20,9 @@ const mapStateToProps = (state, props) => {
   }
 
   return {};
-};
+}
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+function mapDispatchToProps(dispatch, ownProps) {
   return {
     onChangeFilter(event) {
       dispatch(setDownloadFilter(ownProps.infoHash, event.target.value));
@@ -30,7 +31,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(setDownloadGlobalCollapse(infoHash, isCollapsed));
     },
   };
-};
+}
 
 const SearchContainer = connect(
   mapStateToProps,

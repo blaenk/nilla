@@ -3,11 +3,11 @@ import { getFilteredDownloads } from 'selectors';
 
 import Downloads from 'components/Downloads/Downloads';
 
-const mapStateToProps = (state) => {
+function mapStateToProps(state) {
   return {
     downloads: getFilteredDownloads(state),
   };
-};
+}
 
 const FilteredDownloads = connect(
   mapStateToProps
