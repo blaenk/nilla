@@ -44,6 +44,16 @@ export function setDownloadsFilter(filter) {
   };
 }
 
+export const SET_DOWNLOAD_FILTER = 'SET_DOWNLOAD_FILTER';
+
+export function setDownloadFilter(infoHash, filter) {
+  return {
+    type: SET_DOWNLOAD_FILTER,
+    infoHash,
+    filter,
+  };
+}
+
 export const ADD_FILES = 'ADD_FILES';
 
 export function addFiles(files) {
@@ -152,11 +162,21 @@ export function receiveDownloads(downloads) {
   };
 }
 
+export const REQUEST_DOWNLOAD = 'REQUEST_DOWNLOAD';
+
+export function requestDownload(infoHash) {
+  return {
+    type: REQUEST_DOWNLOADS,
+    infoHash,
+  };
+}
+
 export const RECEIVE_DOWNLOAD = 'RECEIVE_DOWNLOAD';
 
-export function receiveDownload(download) {
+export function receiveDownload(infoHash, download) {
   return {
     type: RECEIVE_DOWNLOAD,
+    infoHash,
     download,
     receivedAt: Date.now(),
   };
@@ -188,11 +208,11 @@ export function getDownloads() {
 
 export function getDownload(infoHash) {
   return dispatch => {
-    // dispatch(requestDownloads());
+    dispatch(requestDownload(infoHash));
 
     return request.get(`/api/downloads/${infoHash}`)
       .accept('json')
-      .then(res => dispatch(receiveDownload(res.body)));
+      .then(res => dispatch(receiveDownload(infoHash, res.body)));
   };
 }
 

@@ -3,7 +3,7 @@ import CSSModules from 'react-css-modules';
 import { Row, Col } from 'react-bootstrap';
 
 import { fuzzyPattern } from 'common';
-import { getDownload } from 'actions';
+import { getDownload, setDownloadFilter } from 'actions';
 
 import Header from './Header';
 import Search from './Search';
@@ -28,7 +28,7 @@ class Download extends React.Component {
   componentDidMount() {
     const { dispatch } = this.props;
 
-    dispatch(getDownload(this.props.params.infoHash));
+    dispatch(getDownload(this.props.infoHash));
   }
 
   handleGlobalCollapse(_event) {
@@ -36,13 +36,15 @@ class Download extends React.Component {
   }
 
   handleChangeFilter(event) {
-    this.setState({ filter: event.target.value });
+    const { dispatch } = this.props;
+
+    dispatch(setDownloadFilter(this.props.infoHash, event.target.value));
   }
 
   render() {
-    const download = this.props;
+    const { download, ui } = this.props;
 
-    if (!('files' in download)) {
+    if (!ui.isAugmented) {
       return null;
     }
 
@@ -56,7 +58,7 @@ class Download extends React.Component {
     //   );
     // }
 
-    const filterRE = fuzzyPattern(this.state.filter);
+    const filterRE = fuzzyPattern(ui.filter);
 
     // FIXME
     // DRY this all up.
