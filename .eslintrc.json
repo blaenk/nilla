@@ -129,6 +129,7 @@
     "no-useless-rename": ["error"],
     "no-var": ["error"],
     "no-void": ["error"],
+    "no-warning-comments": ["warn"],
     "no-whitespace-before-property": ["error"],
     "no-with": ["error"],
     "object-curly-spacing": ["error", "always"],
@@ -156,6 +157,5 @@
     "valid-jsdoc": ["error"],
     "wrap-iife": ["error"],
     "yoda": ["error"]
-    // "no-warning-comments": ["error"]
   }
 }
