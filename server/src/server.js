@@ -31,6 +31,7 @@ const {
   RTORRENT_DOWNLOADS_DIRECTORY,
   SERVE_ASSETS,
   SERVE_DOWNLOADS,
+  USE_SSL,
 } = process.env;
 
 function JWTErrorHandler(err, req, res, _next) {
@@ -71,8 +72,7 @@ function CSRFValidationError(err, req, res, next) {
 function setCSRFTokenCookie(req, res, next) {
   res.cookie('csrf-token', req.csrfToken(), {
     httpOnly: false,
-    // TODO
-    // secure: true,
+    secure: Boolean(USE_SSL),
     expires: 0,
   });
 
@@ -188,8 +188,6 @@ function attachAuthentication(app, options) {
       return;
     }
 
-    // TODO
-    // support DI on `authenticate`
     options.authenticator(username, password, (error, user) => {
       if (error) {
         res.redirect(failureRedirect);
@@ -204,8 +202,7 @@ function attachAuthentication(app, options) {
       // downloads since it's much more convenient that way.
       res.cookie('token', token, {
         httpOnly: true,
-        // TODO
-        // secure: true,
+        secure: Boolean(USE_SSL),
         expires: expiration,
       });
 
@@ -227,8 +224,6 @@ function attachAuthentication(app, options) {
 
     const sendFilePath = path.join('sendfile', filePath);
 
-    // TODO
-    // maybe Content-Type needs to be empty?
     res.attachment(name);
     res.header('X-Accel-Redirect', sendFilePath);
     res.end();
