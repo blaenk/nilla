@@ -22,5 +22,12 @@ export function fuzzyPattern(literalPattern) {
 // and perhaps it should instead be within used within a function like
 // expiresAt(moment)
 
+// TODO
+// don't hard-code expiration time. perhaps store some TTL in metadata?
+
 // eslint-disable-next-line no-magic-numbers
-export const EXPIRATION_DURATION = moment.duration(2, 'weeks');
+const EXPIRATION_DURATION = moment.duration(2, 'weeks');
+
+export function expiresAt(date) {
+  return moment(date).add(EXPIRATION_DURATION);
+}

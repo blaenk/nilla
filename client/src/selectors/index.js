@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 import moment from 'moment';
 import _ from 'lodash';
 
-import { fuzzyPattern, EXPIRATION_DURATION } from 'common';
+import { fuzzyPattern, expiresAt } from 'common';
 
 const getDownloads = (state) => state.downloads;
 const getFilter = (state) => state.search.filter;
@@ -41,14 +41,10 @@ export const getScopedDownloads = createSelector(
       case 'expiring':
         // get downloads expiring within the next 24 hours
         return downloads.map(download => {
-          // TODO
-          // don't hard-code expiration time
-          // perhaps store some TTL in metadata?
-          const expiresAt =
-                moment(download.dateAdded).add(EXPIRATION_DURATION).subtract(1, 'day');
+          const expirationDate = expiresAt(download.dateAdded).subtract(1, 'day');
 
           return Object.assign({}, download, {
-            isHidden: moment().isBefore(expiresAt),
+            isHidden: moment().isBefore(expirationDate),
           });
         });
       case 'all':

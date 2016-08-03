@@ -4,16 +4,16 @@ import moment from 'moment';
 
 import styles from './header.module.less';
 
-import { EXPIRATION_DURATION } from 'common';
+import { expiresAt } from 'common';
 
 function Header(props) {
   const dateAdded = moment(props.dateAdded).utc().local();
-  const dateAddedShortFormat = dateAdded.clone().format('l');
-  const dateAddedLongFormat = dateAdded.clone().format('dddd, MMMM Do YYYY [at] h:mm:ss A');
+  const dateAddedShortFormat = moment(dateAdded).format('l');
+  const dateAddedLongFormat = moment(dateAdded).format('dddd, MMMM Do YYYY [at] h:mm:ss A');
 
-  const expiresDate = dateAdded.clone().add(EXPIRATION_DURATION);
-  const expiresShortFormat = expiresDate.clone().fromNow();
-  const expiresLongFormat = expiresDate.clone().format('dddd, MMMM Do YYYY [at] h:mm:ss A');
+  const expiresDate = expiresAt(dateAdded);
+  const expiresShortFormat = moment(expiresDate).fromNow();
+  const expiresLongFormat = moment(expiresDate).format('dddd, MMMM Do YYYY [at] h:mm:ss A');
 
   let expiresOrLocks;
 
