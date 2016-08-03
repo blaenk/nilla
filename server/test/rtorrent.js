@@ -9,12 +9,6 @@ const torrents = require('./fixtures/torrents.json');
 
 describe('RTorrent', function() {
   before('should ensure a connection', function() {
-    // TODO
-    // should perform some isolation?
-    //
-    // * session.path.set to set the session directory?
-    // * directory.default.set to set download dir?
-
     return rtorrent.call('system.client_version')
       .then(function(version) {
         expect(version).to.satisfy(version => semver.gt(version, '0.9.0'));

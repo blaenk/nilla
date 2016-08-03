@@ -20,8 +20,6 @@ export const getScopedDownloads = createSelector(
     switch (scope) {
       case 'mine':
         return downloads.map(download => {
-          // TODO
-          // get username from auth
           return Object.assign({}, download, {
             isHidden: download.uploader !== 'blaenk',
           });

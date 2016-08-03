@@ -10,9 +10,6 @@ import InternalPage from 'components/App/InternalPage';
 
 import styles from 'styles/app.module.less';
 
-// TODO
-// make this Routes.js?
-
 function AppContainer(props) {
   return (
     <Provider store={props.store}>

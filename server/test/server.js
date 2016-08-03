@@ -11,12 +11,6 @@ const server = require('../src/server');
 const rtorrent = require('../src/rtorrent');
 const torrents = require('./fixtures/torrents.json');
 
-// TODO
-//
-// - need to be able to DI rtorrent function?
-// - need to be able to DI database used to auth, perhaps make auth functions
-//   pass results to a callback
-
 function parseLoginForm(html) {
   const $ = cheerio.load(html);
   const csrf = $('input[name=_csrf]').val();

@@ -212,10 +212,6 @@ rtorrent.system = function system(requests) {
   return this._getSingle({}, [], requests);
 };
 
-// TODO
-// optimize for methods is not array, in which case make a direct call?
-// resource('torrent', [infoHash], 'get_name')
-// invokes: call('d.get_name', infoHash)
 rtorrent.torrent = function torrent(infoHash, requests) {
   return this._getSingle({ prefix: 'd.' }, [infoHash], requests);
 };
