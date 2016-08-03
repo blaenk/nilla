@@ -7,10 +7,11 @@ import { browserHistory } from 'react-router';
 import AppContainer from 'containers/App/AppContainer';
 import Reducer from './reducers';
 
-// TODO
-// second param is optional bootstrap data
+let defaultState;
+
 let store = createStore(
   Reducer,
+  defaultState,
   applyMiddleware(
     thunkMiddleware
   )
