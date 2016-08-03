@@ -40,9 +40,9 @@ describe('Downloads Model', function() {
       ['0'],
       ['0'],
       ['0'],
-      ['c3lzdGVt'],
-      ['W10='],
-      ['MjAxNi0wNy0yNFQyMzo1NDowN1o='],
+      ['system'],
+      ['[]'],
+      ['2016-07-24T23:54:07.000Z'],
     ];
 
     const output = {

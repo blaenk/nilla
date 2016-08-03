@@ -29,22 +29,6 @@ function decodeRatio(ratio) {
   return fraction.toFixed(TWO_DECIMAL_PLACES);
 }
 
-function encodeBase64(string) {
-  return new Buffer(string).toString('base64');
-}
-
-function decodeBase64(string) {
-  return new Buffer(string, 'base64').toString('ascii');
-}
-
-function serializeCustomJSON(object) {
-  return encodeBase64(JSON.stringify(object));
-}
-
-function deserializeCustomJSON(json) {
-  return JSON.parse(decodeBase64(json));
-}
-
 const PROGRESS_COMPLETE = 100;
 
 function getProgress(completed, totalSize) {
@@ -73,7 +57,19 @@ function getState(torrent) {
 }
 
 function onLoadSetUploader(uploader) {
-  return 'd.custom.set=levee-uploader,' + encodeBase64(uploader);
+  return 'd.custom.set=nilla-uploader,' + uploader;
+}
+
+function serializeLocks(locks) {
+  return JSON.stringify(locks);
+}
+
+function deserializeLocks(locks) {
+  if (locks === '') {
+    return [];
+  }
+
+  return JSON.parse(locks);
 }
 
 const DOWNLOADS_METHODS = [
@@ -99,18 +95,22 @@ const DOWNLOADS_METHODS = [
 
   { methodName: 'get_up_total', as: 'totalUploaded', map: parseInt },
 
-  { methodName: 'get_custom', params: ['levee-uploader'], as: 'uploader', map: decodeBase64 },
   {
     methodName: 'get_custom',
-    params: ['levee-locks'],
-    as: 'locks',
-    map: deserializeCustomJSON,
+    params: ['nilla-uploader'],
+    as: 'uploader',
   },
   {
     methodName: 'get_custom',
-    params: ['levee-date-added'],
+    params: ['nilla-locks'],
+    as: 'locks',
+    map: deserializeLocks,
+  },
+  {
+    methodName: 'get_custom',
+    params: ['nilla-date-added'],
     as: 'dateAdded',
-    map: data => new Date(decodeBase64(data)),
+    map: data => new Date(data),
   },
 ];
 
@@ -277,18 +277,18 @@ function getLocks(infoHash) {
   return rtorrent.torrent(
     infoHash, {
       methodName: 'get_custom',
-      params: ['levee-locks'],
+      params: ['nilla-locks'],
       as: 'locks',
-      map: deserializeCustomJSON,
+      map: deserializeLocks,
     }).get('locks');
 }
 
 function setLocks(infoHash, locks) {
-  const serialized = serializeCustomJSON(locks);
+  const serialized = serializeLocks(locks);
 
   return rtorrent.torrent(infoHash, {
     methodName: 'set_custom',
-    params: ['levee-locks', serialized],
+    params: ['nilla-locks', serialized],
   });
 }
 
