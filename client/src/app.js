@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { browserHistory } from 'react-router';
+import _ from 'lodash';
 
 import AppContainer from 'containers/App/AppContainer';
 import Reducer from './reducers';
@@ -31,7 +32,9 @@ store.subscribe(() => {
   currentState = store.getState();
 
   if (previousState !== currentState) {
-    window.localStorage.setItem('redux', JSON.stringify(currentState));
+    const filteredState = _.omit(currentState, 'upload');
+
+    window.localStorage.setItem('redux', JSON.stringify(filteredState));
   }
 });
 
