@@ -8,6 +8,8 @@ import _ from 'lodash';
 import AppContainer from 'containers/App/AppContainer';
 import Reducer from './reducers';
 
+import { getCurrentUser } from 'actions';
+
 const localState = window.localStorage.getItem('redux');
 let defaultState;
 
@@ -32,11 +34,13 @@ store.subscribe(() => {
   currentState = store.getState();
 
   if (previousState !== currentState) {
-    const filteredState = _.omit(currentState, 'upload');
+    const filteredState = _.omit(currentState, ['upload', 'users']);
 
     window.localStorage.setItem('redux', JSON.stringify(filteredState));
   }
 });
+
+store.dispatch(getCurrentUser());
 
 document.addEventListener('DOMContentLoaded', () => {
   const mountNode = document.querySelector('#root');

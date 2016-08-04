@@ -226,6 +226,36 @@ export function getDownload(infoHash) {
   };
 }
 
+export const RECEIVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
+
+export function receiveCurrentUser(user) {
+  return {
+    type: RECEIVE_CURRENT_USER,
+    user,
+  };
+}
+
+export const RECEIVE_USER = 'RECEIVE_USER';
+
+export function receiveUser(id, user) {
+  return {
+    type: RECEIVE_USER,
+    id,
+    user,
+  };
+}
+
+export function getCurrentUser() {
+  return dispatch => {
+    return request.get('/api/users/current')
+      .accept('json')
+      .then(res => {
+        dispatch(receiveUser(res.body));
+        dispatch(receiveCurrentUser(res.body));
+      });
+  };
+}
+
 export function submitFile(file) {
   return (dispatch, getState) => {
     let fileObject = getState().upload.files.find(f => f === file);

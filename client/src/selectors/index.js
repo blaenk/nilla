@@ -55,6 +55,7 @@ const getDownloads = (state) => state.downloads;
 const getDownloadsFilter = (state) => state.search.filter;
 const getScope = (state) => state.search.scope;
 const getOrder = (state) => state.search.order;
+const getCurrentUser = (state) => state.users.current;
 
 export const getDownloadsValues = createSelector(
   [getDownloads],
@@ -62,13 +63,13 @@ export const getDownloadsValues = createSelector(
 );
 
 export const getScopedDownloads = createSelector(
-  [getDownloadsValues, getScope],
-  (downloads, scope) => {
+  [getDownloadsValues, getScope, getCurrentUser],
+  (downloads, scope, user) => {
     switch (scope) {
       case 'mine':
         return downloads.map(download => {
           return Object.assign({}, download, {
-            isHidden: download.uploader !== 'blaenk',
+            isHidden: download.uploader !== user.username,
           });
         });
       case 'system':
