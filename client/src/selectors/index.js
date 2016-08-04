@@ -4,8 +4,56 @@ import _ from 'lodash';
 
 import { fuzzyPattern, expiresAt } from 'common';
 
+const getDownload = (state, props) => state.downloads[props.params.infoHash];
+const getDownloadUI = (state, props) => state.ui.downloads[props.params.infoHash];
+
+export function makeGetFiles() {
+  return createSelector(
+    [getDownload],
+    (download) => {
+      return download.files;
+    }
+  );
+}
+
+export function makeGetFilesFilter() {
+  return createSelector(
+    [getDownloadUI],
+    (download) => {
+      return download.filter;
+    }
+  );
+}
+
+function filterFiles(files, filterRE) {
+  return files.filter(file => {
+    return file.pathComponents.some(c => filterRE.test(c));
+  });
+}
+
+export function makeGetFilesPattern() {
+  return createSelector(
+    [makeGetFilesFilter()],
+    (filter) => {
+      return fuzzyPattern(filter);
+    }
+  );
+}
+
+export function makeGetFilteredFiles() {
+  return createSelector(
+    [makeGetFiles(), makeGetFilesPattern()],
+    (files, pattern) => {
+      return {
+        downloaded: filterFiles(files.downloaded, pattern),
+        extracted: filterFiles(files.extracted, pattern),
+      };
+    }
+  );
+}
+
 const getDownloads = (state) => state.downloads;
-const getFilter = (state) => state.search.filter;
+const getDownloadsFilter = (state) => state.search.filter;
 const getScope = (state) => state.search.scope;
 const getOrder = (state) => state.search.order;
 
@@ -90,7 +138,7 @@ export const getOrderedDownloads = createSelector(
 );
 
 export const getFilteredDownloads = createSelector(
-  [getOrderedDownloads, getFilter],
+  [getOrderedDownloads, getDownloadsFilter],
   (downloads, filter) => {
     const filterRE = fuzzyPattern(filter);
 

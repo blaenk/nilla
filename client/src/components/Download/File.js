@@ -40,10 +40,8 @@ class File extends React.Component {
       badge = <Badge styleName={disabledOr('file-progress')}>{this.props.progress}</Badge>;
     }
 
-    let maybeHide = this.props.isHidden ? { display: 'none' } : {};
-
     return (
-      <li styleName='file' style={maybeHide}>
+      <li styleName='file'>
         {nameTag}
         {badge}
       </li>
@@ -51,15 +49,10 @@ class File extends React.Component {
   }
 }
 
-File.defaultProps = {
-  isHidden: false,
-};
-
 File.propTypes = {
   downloadName: React.PropTypes.string.isRequired,
   id: React.PropTypes.number.isRequired,
   isEnabled: React.PropTypes.bool.isRequired,
-  isHidden: React.PropTypes.bool,
   isMultiFile: React.PropTypes.bool.isRequired,
   pathComponents: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
   progress: React.PropTypes.number.isRequired,

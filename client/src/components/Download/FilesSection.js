@@ -6,7 +6,9 @@ import FileTree from './FileTree';
 import styles from './download.module.less';
 
 function FilesSection(props) {
-  if (props.files.length === 0 || props.visibleCount === 0) {
+  const fileCount = props.files.length;
+
+  if (props.files.length === 0 || fileCount === 0) {
     return null;
   }
 
@@ -14,7 +16,7 @@ function FilesSection(props) {
 
   if (props.showLabelIf) {
     sectionLabel = (
-      <p styleName='section-label'>{props.label} ({props.visibleCount})</p>
+      <p styleName='section-label'>{props.label} ({fileCount})</p>
     );
   }
 

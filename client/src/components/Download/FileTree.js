@@ -73,11 +73,9 @@ class FileTree extends React.Component {
   }
 
   render() {
-    const visibleCount = this.props.files.reduce((acc, file) => {
-      return acc + (file.isHidden ? 0 : 1);
-    }, 0);
+    const fileCount = this.props.files.length;
 
-    const maybeHide = (visibleCount > 0) ? {} : { display: 'none' };
+    const maybeHide = (fileCount > 0) ? {} : { display: 'none' };
 
     let tab;
 
@@ -91,7 +89,7 @@ class FileTree extends React.Component {
           </div>
 
           <Badge className={this.props.styles['entry-count']}>
-            {visibleCount}
+            {fileCount}
           </Badge>
         </div>
       );
@@ -130,7 +128,6 @@ class FileTree extends React.Component {
         <File size={file.size}
               styles={this.props.styles}
               isMultiFile={this.props.isMultiFile}
-              isHidden={file.isHidden}
               downloadName={this.props.downloadName}
               progress={file.progress}
               isEnabled={file.isEnabled}
