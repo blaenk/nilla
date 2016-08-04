@@ -25,8 +25,18 @@ function download(state = DEFAULT_STATE, action) {
 
 export default function downloads(state = {}, action) {
   switch (action.type) {
-    case RECEIVE_DOWNLOADS:
-      return _.merge(_.cloneDeep(state), action.downloads);
+    case RECEIVE_DOWNLOADS: {
+      const oldState = state;
+      const newState = action.downloads;
+
+      for (const infoHash in newState) {
+        if (infoHash in oldState) {
+          newState[infoHash] = _.merge(oldState[infoHash], newState[infoHash]);
+        }
+      }
+
+      return newState;
+    }
     case RECEIVE_DOWNLOAD:
     case REQUEST_DOWNLOAD:
       return Object.assign({}, state, {
