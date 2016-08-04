@@ -268,8 +268,10 @@ function attachAPI(app) {
     });
   });
 
-  api.get('/user', JWT, (req, res) => {
-    res.status(HttpStatus.OK).json(req.user);
+  api.get('/users/current', JWT, (req, res) => {
+    const { id, username, permissions } = req.user;
+
+    res.status(HttpStatus.OK).json({ id, username, permissions });
   });
 
   api.get('/downloads', JWT, (req, res) => {

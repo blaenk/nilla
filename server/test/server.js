@@ -133,9 +133,9 @@ describe('Server', function() {
       });
   });
 
-  it('GET /user', function(done) {
+  it('GET /users/current', function(done) {
     agent
-      .get('/api/user')
+      .get('/api/users/current')
       .accept('json')
       .expect(HttpStatus.OK)
       .expect('Content-Type', /json/)
