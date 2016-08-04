@@ -5,21 +5,19 @@ import {
   SET_DOWNLOAD_GLOBAL_COLLAPSE,
 } from 'actions';
 
-function downloadsUIByInfoHash(state, action) {
-  const defaultState = {
-    isFetching: false,
-    isAugmented: false,
-    lastFetch: null,
-    filter: '',
-    isCollapsed: true,
-    collapsed: {
-      extracted: [],
-      downloaded: [],
-    },
-  };
+export const DEFAULT_STATE = {
+  isFetching: false,
+  isAugmented: false,
+  lastFetch: null,
+  filter: '',
+  isCollapsed: true,
+  collapsed: {
+    extracted: [],
+    downloaded: [],
+  },
+};
 
-  state = state || defaultState;
-
+function downloadUI(state = DEFAULT_STATE, action) {
   switch (action.type) {
     case SET_DOWNLOAD_GLOBAL_COLLAPSE:
       return Object.assign({}, state, {
@@ -50,7 +48,7 @@ export default function downloadsUI(state = {}, action) {
     case REQUEST_DOWNLOAD:
     case RECEIVE_DOWNLOAD:
       return Object.assign({}, state, {
-        [action.infoHash]: downloadsUIByInfoHash(state[action.infoHash], action),
+        [action.infoHash]: downloadUI(state[action.infoHash], action),
       });
     default:
       return state;

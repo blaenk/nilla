@@ -4,24 +4,25 @@ import _ from 'lodash';
 
 import { fuzzyPattern, expiresAt } from 'common';
 
-const getDownload = (state, props) => state.downloads[props.params.infoHash];
-const getDownloadUI = (state, props) => state.ui.downloads[props.params.infoHash];
+function getDownload(state, props) {
+  return state.downloads[props.params.infoHash];
+}
+
+function getDownloadUI(state, props) {
+  return state.ui.downloads[props.params.infoHash];
+}
 
 export function makeGetFiles() {
   return createSelector(
     [getDownload],
-    (download) => {
-      return download.files;
-    }
+    (download) => download.files
   );
 }
 
 export function makeGetFilesFilter() {
   return createSelector(
     [getDownloadUI],
-    (download) => {
-      return download.filter;
-    }
+    (download) => download.filter
   );
 }
 
@@ -34,9 +35,7 @@ function filterFiles(files, filterRE) {
 export function makeGetFilesPattern() {
   return createSelector(
     [makeGetFilesFilter()],
-    (filter) => {
-      return fuzzyPattern(filter);
-    }
+    (filter) => fuzzyPattern(filter)
   );
 }
 

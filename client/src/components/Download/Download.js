@@ -13,7 +13,7 @@ import SearchContainer from 'containers/Download/SearchContainer';
 import styles from './download.module.less';
 
 class Download extends React.Component {
-  componentDidMount() {
+  componentWillMount() {
     const { dispatch } = this.props;
 
     dispatch(getDownload(this.props.infoHash));
@@ -22,7 +22,7 @@ class Download extends React.Component {
   render() {
     const { download, ui, files } = this.props;
 
-    if (!ui.isAugmented) {
+    if (!download || !ui.isAugmented) {
       return null;
     }
 

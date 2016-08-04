@@ -1,6 +1,6 @@
 import { SET_SCOPE, SET_ORDER, SET_DOWNLOADS_FILTER } from 'actions';
 
-const defaultState = {
+export const DEFAULT_STATE = {
   scope: 'all',
   order: 'recent',
   filter: '',
@@ -12,7 +12,7 @@ const defaultState = {
  * @param {Object} action The dispatched action.
  * @returns {Object} The new search state.
  */
-export default function search(state = defaultState, action) {
+export default function search(state = DEFAULT_STATE, action) {
   switch (action.type) {
     case SET_SCOPE:
       return Object.assign({}, state, {

@@ -9,19 +9,16 @@ function makeMapStateToProps() {
 
   return function mapStateToProps(state, props) {
     const infoHash = props.params.infoHash;
-    const download = state.downloads[infoHash] || {};
-    const ui = state.ui.downloads[infoHash] || {};
 
-    // TODO
-    // there should be a way to initialize the download state here
-    let files = {
-      downloaded: [],
-      extracted: [],
-    };
-
-    if ('files' in download) {
-      files = getFilteredFiles(state, props);
+    if (!(infoHash in state.downloads) ||
+        !(infoHash in state.ui.downloads) ||
+        !('files' in state.downloads[infoHash])) {
+      return { infoHash };
     }
+
+    const download = state.downloads[infoHash];
+    const ui = state.ui.downloads[infoHash];
+    const files = getFilteredFiles(state, props);
 
     return { infoHash, download, ui, files };
   };
