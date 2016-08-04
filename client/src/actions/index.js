@@ -176,7 +176,7 @@ export const REQUEST_DOWNLOAD = 'REQUEST_DOWNLOAD';
 
 export function requestDownload(infoHash) {
   return {
-    type: REQUEST_DOWNLOADS,
+    type: REQUEST_DOWNLOAD,
     infoHash,
   };
 }
