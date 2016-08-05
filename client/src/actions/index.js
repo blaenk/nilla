@@ -1,31 +1,31 @@
 import request from 'superagent';
 import Cookies from 'js-cookie';
 
-export const SET_SCOPE = 'SET_SCOPE';
+export const SET_DOWNLOADS_SCOPE = 'SET_DOWNLOADS_SCOPE';
 
 /**
  * Action to set the scope.
- * @param {string} scope The scope to set to. One of 'all', 'mine', 'system',
- * 'locked', or 'expiring.
+ * @param {string} scope The scope to set to. One of 'ALL', 'MINE', 'SYSTEM',
+ * 'LOCKED', or 'EXPIRING'.
  * @returns {Object} The action.
  */
-export function setScope(scope) {
+export function setDownloadsScope(scope) {
   return {
-    type: SET_SCOPE,
+    type: SET_DOWNLOADS_SCOPE,
     scope,
   };
 }
 
-export const SET_ORDER = 'SET_ORDER';
+export const SET_DOWNLOADS_ORDER = 'SET_DOWNLOADS_ORDER';
 
 /**
  * Action to set the sort order.
- * @param {string} order The sort order. One of 'recent' or 'name'.
+ * @param {string} order The sort order. One of 'RECENT' or 'NAME'.
  * @returns {Object} The action.
  */
-export function setOrder(order) {
+export function setDownloadsOrder(order) {
   return {
-    type: SET_ORDER,
+    type: SET_DOWNLOADS_ORDER,
     order,
   };
 }
@@ -204,7 +204,7 @@ function normalizeDownloads(downloads) {
 
 export function getDownloads() {
   return dispatch => {
-    // dispatch(requestDownloads());
+    dispatch(requestDownloads());
 
     return request.get('/api/downloads')
       .accept('json')
@@ -265,7 +265,7 @@ export function getCurrentUser() {
     return request.get('/api/users/current')
       .accept('json')
       .then(res => {
-        dispatch(receiveUser(res.body));
+        dispatch(receiveUser(res.body.id, res.body));
         dispatch(receiveCurrentUser(res.body));
       });
   };

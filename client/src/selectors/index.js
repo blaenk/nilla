@@ -5,11 +5,11 @@ import _ from 'lodash';
 import { fuzzyPattern, expiresAt } from 'common';
 
 function getDownload(state, props) {
-  return state.downloads[props.params.infoHash];
+  return state.data.downloads[props.params.infoHash];
 }
 
 function getDownloadUI(state, props) {
-  return state.ui.downloads[props.params.infoHash];
+  return state.ui.download[props.params.infoHash];
 }
 
 export function makeGetFiles() {
@@ -51,11 +51,11 @@ export function makeGetFilteredFiles() {
   );
 }
 
-const getDownloads = (state) => state.downloads;
-const getDownloadsFilter = (state) => state.search.filter;
-const getScope = (state) => state.search.scope;
-const getOrder = (state) => state.search.order;
-const getCurrentUser = (state) => state.users.current;
+const getDownloads = (state) => state.data.downloads;
+const getDownloadsFilter = (state) => state.ui.downloads.filter;
+const getDownloadsScope = (state) => state.ui.downloads.scope;
+const getDownloadsOrder = (state) => state.ui.downloads.order;
+const getCurrentUser = (state) => state.data.users.current;
 
 export const getDownloadsValues = createSelector(
   [getDownloads],
@@ -63,28 +63,28 @@ export const getDownloadsValues = createSelector(
 );
 
 export const getScopedDownloads = createSelector(
-  [getDownloadsValues, getScope, getCurrentUser],
+  [getDownloadsValues, getDownloadsScope, getCurrentUser],
   (downloads, scope, user) => {
     switch (scope) {
-      case 'mine':
+      case 'MINE':
         return downloads.map(download => {
           return Object.assign({}, download, {
             isHidden: download.uploader !== user.username,
           });
         });
-      case 'system':
+      case 'SYSTEM':
         return downloads.map(download => {
           return Object.assign({}, download, {
             isHidden: download.uploader !== 'system',
           });
         });
-      case 'locked':
+      case 'LOCKED':
         return downloads.map(download => {
           return Object.assign({}, download, {
             isHidden: download.locks.length === 0,
           });
         });
-      case 'expiring':
+      case 'EXPIRING':
         // get downloads expiring within the next 24 hours
         return downloads.map(download => {
           const expirationDate = expiresAt(download.dateAdded).subtract(1, 'day');
@@ -93,7 +93,7 @@ export const getScopedDownloads = createSelector(
             isHidden: moment().isBefore(expirationDate),
           });
         });
-      case 'all':
+      case 'ALL':
       default:
         return downloads;
     }
@@ -101,10 +101,10 @@ export const getScopedDownloads = createSelector(
 );
 
 export const getOrderedDownloads = createSelector(
-  [getScopedDownloads, getOrder],
+  [getScopedDownloads, getDownloadsOrder],
   (downloads, order) => {
     switch (order) {
-      case 'name': {
+      case 'NAME': {
         const sortedByName = downloads.slice();
 
         sortedByName.sort((a, b) => {
@@ -113,7 +113,7 @@ export const getOrderedDownloads = createSelector(
 
         return sortedByName;
       }
-      case 'recent':
+      case 'RECENT':
       default: {
         const sortedByDate = downloads.slice();
 

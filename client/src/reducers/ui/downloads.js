@@ -1,54 +1,39 @@
 import {
-  RECEIVE_DOWNLOAD,
-  REQUEST_DOWNLOAD,
-  SET_DOWNLOAD_FILTER,
-  SET_DOWNLOAD_GLOBAL_COLLAPSE,
+  REQUEST_DOWNLOADS,
+  RECEIVE_DOWNLOADS,
+  SET_DOWNLOADS_FILTER,
+  SET_DOWNLOADS_ORDER,
+  SET_DOWNLOADS_SCOPE,
 } from 'actions';
 
-export const DEFAULT_STATE = {
+const DEFAULT_DOWNLOAD_STATE = {
   isFetching: false,
-  isAugmented: false,
-  lastFetch: null,
+  scope: 'ALL',
+  order: 'RECENT',
   filter: '',
-  isCollapsed: true,
-  collapsed: {
-    extracted: [],
-    downloaded: [],
-  },
 };
 
-function downloadUI(state = DEFAULT_STATE, action) {
+export default function downloadsUI(state = DEFAULT_DOWNLOAD_STATE, action) {
   switch (action.type) {
-    case SET_DOWNLOAD_GLOBAL_COLLAPSE:
-      return Object.assign({}, state, {
-        isCollapsed: action.isCollapsed,
-      });
-    case SET_DOWNLOAD_FILTER:
-      return Object.assign({}, state, {
-        filter: action.filter,
-      });
-    case REQUEST_DOWNLOAD:
+    case REQUEST_DOWNLOADS:
       return Object.assign({}, state, {
         isFetching: true,
       });
-    case RECEIVE_DOWNLOAD:
+    case RECEIVE_DOWNLOADS:
       return Object.assign({}, state, {
-        lastFetch: Date.now(),
-        isAugmented: true,
+        isFetching: false,
       });
-    default:
-      return state;
-  }
-}
-
-export default function downloadsUI(state = {}, action) {
-  switch (action.type) {
-    case SET_DOWNLOAD_GLOBAL_COLLAPSE:
-    case SET_DOWNLOAD_FILTER:
-    case REQUEST_DOWNLOAD:
-    case RECEIVE_DOWNLOAD:
+    case SET_DOWNLOADS_FILTER:
       return Object.assign({}, state, {
-        [action.infoHash]: downloadUI(state[action.infoHash], action),
+        filter: action.filter,
+      });
+    case SET_DOWNLOADS_SCOPE:
+      return Object.assign({}, state, {
+        scope: action.scope,
+      });
+    case SET_DOWNLOADS_ORDER:
+      return Object.assign({}, state, {
+        order: action.order,
       });
     default:
       return state;

@@ -30,7 +30,7 @@ function OrderDropDown(props) {
 
         <Dropdown.Menu style={{ left: 'auto', right: 0 }}>
           <MenuItem header>Sort By</MenuItem>
-          {['name', 'recent'].map(item)}
+          {['NAME', 'RECENT'].map(item)}
         </Dropdown.Menu>
       </Dropdown>
     </InputGroup.Button>

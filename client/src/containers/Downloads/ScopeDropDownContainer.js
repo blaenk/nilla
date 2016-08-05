@@ -1,18 +1,18 @@
 import { connect } from 'react-redux';
-import { setScope } from 'actions';
+import { setDownloadsScope } from 'actions';
 
 import ScopeDropDown from 'components/Downloads/ScopeDropDown';
 
 function mapStateToProps(state) {
   return {
-    scope: state.search.scope,
+    scope: state.ui.downloads.scope,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     onChangeScope: (scope) => {
-      dispatch(setScope(scope));
+      dispatch(setDownloadsScope(scope));
     },
   };
 }

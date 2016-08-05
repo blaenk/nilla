@@ -7,14 +7,11 @@ import { setDownloadFilter, setDownloadGlobalCollapse } from 'actions';
 function mapStateToProps(state, props) {
   const { infoHash } = props;
 
-  // TODO
-  // dispatch(initDownload(infoHash))?
-
-  if (infoHash in state.ui.downloads) {
+  if (infoHash in state.ui.download) {
     const {
       filter,
       isCollapsed,
-    } = state.ui.downloads[infoHash];
+    } = state.ui.download[infoHash];
 
     return { filter, isCollapsed };
   }

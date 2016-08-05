@@ -1,18 +1,20 @@
 import { combineReducers } from 'redux';
 
-import upload from './upload';
 import downloads from './downloads';
 import users from './users';
-import search from './search';
 
+import upload from './ui/upload';
 import downloadsUI from './ui/downloads';
+import downloadUI from './ui/download';
 
 export default combineReducers({
-  upload,
-  downloads,
-  search,
-  users,
+  data: combineReducers({
+    downloads,
+    users,
+  }),
   ui: combineReducers({
+    upload,
     downloads: downloadsUI,
+    download: downloadUI,
   }),
 });

@@ -1,18 +1,18 @@
 import { connect } from 'react-redux';
-import { setOrder } from 'actions';
+import { setDownloadsOrder } from 'actions';
 
 import OrderDropDown from 'components/Downloads/OrderDropDown';
 
 function mapStateToProps(state) {
   return {
-    order: state.search.order,
+    order: state.ui.downloads.order,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     onChangeOrder: (order) => {
-      dispatch(setOrder(order));
+      dispatch(setDownloadsOrder(order));
     },
   };
 }

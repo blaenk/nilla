@@ -6,8 +6,8 @@ import Upload from 'components/App/Upload';
 
 function mapStateToProps(state) {
   return {
-    files: state.upload.files,
-    rejectedFiles: state.upload.rejectedFiles,
+    files: state.ui.upload.files,
+    rejectedFiles: state.ui.upload.rejectedFiles,
   };
 }
 

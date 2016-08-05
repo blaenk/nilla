@@ -5,7 +5,7 @@ import { setDownloadsFilter } from 'actions';
 
 function mapStateToProps(state) {
   return {
-    filter: state.search.filter,
+    filter: state.ui.downloads.filter,
   };
 }
 

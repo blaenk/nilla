@@ -10,14 +10,14 @@ function makeMapStateToProps() {
   return function mapStateToProps(state, props) {
     const infoHash = props.params.infoHash;
 
-    if (!(infoHash in state.downloads) ||
-        !(infoHash in state.ui.downloads) ||
-        !('files' in state.downloads[infoHash])) {
+    if (!(infoHash in state.data.downloads) ||
+        !(infoHash in state.ui.download) ||
+        !('files' in state.data.downloads[infoHash])) {
       return { infoHash };
     }
 
-    const download = state.downloads[infoHash];
-    const ui = state.ui.downloads[infoHash];
+    const download = state.data.downloads[infoHash];
+    const ui = state.ui.download[infoHash];
     const files = getFilteredFiles(state, props);
 
     return { infoHash, download, ui, files };

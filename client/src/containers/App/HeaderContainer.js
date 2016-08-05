@@ -6,8 +6,8 @@ import Header from 'components/App/Header';
 
 function mapStateToProps(state) {
   return {
-    isDragging: state.upload.isDragging,
-    isUploading: state.upload.isUploading,
+    isDragging: state.ui.upload.isDragging,
+    isUploading: state.ui.upload.isUploading,
   };
 }
 

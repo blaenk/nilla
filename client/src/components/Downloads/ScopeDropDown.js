@@ -20,7 +20,7 @@ function ScopeDropDown(props) {
     <InputGroup.Button>
       <DropdownButton id='downloads_scope' title={props.scope} styleName='scope'>
         <MenuItem header>Search Scope</MenuItem>
-        {['all', 'mine', 'system', 'locked', 'expiring'].map(item)}
+        {['ALL', 'MINE', 'SYSTEM', 'LOCKED', 'EXPIRING'].map(item)}
       </DropdownButton>
     </InputGroup.Button>
   );
