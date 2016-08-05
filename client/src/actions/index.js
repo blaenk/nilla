@@ -209,6 +209,10 @@ export function getDownloads() {
     return request.get('/api/downloads')
       .accept('json')
       .then(res => {
+        if (res.body.error) {
+          return;
+        }
+
         const normalized = normalizeDownloads(res.body);
 
         dispatch(receiveDownloads(normalized));
