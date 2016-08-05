@@ -222,7 +222,18 @@ export function getDownload(infoHash) {
 
     return request.get(`/api/downloads/${infoHash}`)
       .accept('json')
-      .then(res => dispatch(receiveDownload(infoHash, res.body)));
+      .then(res => {
+        const download = res.body;
+
+        // TODO
+        // If we're navigating to a specific download, perhaps set a flag that
+        // we should navigate back to /downloads
+        if (download.error) {
+          return;
+        }
+
+        dispatch(receiveDownload(infoHash, download));
+      });
   };
 }
 
