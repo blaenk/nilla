@@ -14,7 +14,14 @@ const localState = window.localStorage.getItem('redux');
 let defaultState;
 
 if (localState !== null) {
-  defaultState = JSON.parse(localState);
+  try {
+    defaultState = JSON.parse(localState);
+  } catch (e) {
+    // Leaving defaultState undefined is expected behavior for redux to
+    // initialize with each states' default state.
+    //
+    // The corrupted localStorage state will be overwritten by redux.
+  }
 }
 
 let store = createStore(
