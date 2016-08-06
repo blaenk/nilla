@@ -301,19 +301,21 @@ function attachAPI(app) {
           .then(() => res.json({ success: true }));
         break;
       }
+      // TODO
+      // rename acquireLock and releaseLock
       case 'addLock': {
-        const username = req.body.params;
+        const userID = req.body.params;
 
-        downloads.addLock(infoHash, username)
+        downloads.addLock(infoHash, userID)
           .then(() => res.json({ success: true }))
           .catch(error => console.log(error));
 
         break;
       }
       case 'removeLock': {
-        const username = req.body.params;
+        const userID = req.body.params;
 
-        downloads.removeLock(infoHash, username)
+        downloads.removeLock(infoHash, userID)
           .then(() => res.json({ success: true }))
           .catch(error => console.log(error));
 

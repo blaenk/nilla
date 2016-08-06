@@ -292,11 +292,11 @@ function setLocks(infoHash, locks) {
   });
 }
 
-function addLock(infoHash, username) {
+function addLock(infoHash, userID) {
   return getLocks(infoHash)
     .then(locks => {
-      if (!locks.includes(username)) {
-        locks.push(username);
+      if (!locks.includes(userID)) {
+        locks.push(userID);
 
         return setLocks(infoHash, locks);
       }
@@ -305,10 +305,10 @@ function addLock(infoHash, username) {
     });
 }
 
-function removeLock(infoHash, username) {
+function removeLock(infoHash, userID) {
   return getLocks(infoHash)
     .then(locks => {
-      const index = locks.indexOf(username);
+      const index = locks.indexOf(userID);
 
       if (index !== -1) {
         locks.splice(index, 1);
