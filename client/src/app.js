@@ -41,9 +41,12 @@ store.subscribe(() => {
   currentState = store.getState();
 
   if (previousState !== currentState) {
-    const filteredState = _.omit(currentState, ['upload', 'users']);
+    const state = _.cloneDeep(currentState);
 
-    window.localStorage.setItem('redux', JSON.stringify(filteredState));
+    _.unset(state, 'ui.upload');
+    _.unset(state, 'data.users');
+
+    window.localStorage.setItem('redux', JSON.stringify(state));
   }
 });
 
