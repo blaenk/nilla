@@ -273,14 +273,14 @@ export function getCurrentUser() {
 
 export function submitFile(file) {
   return (dispatch, getState) => {
-    let fileObject = getState().upload.files.find(f => f === file);
+    let fileObject = getState().ui.upload.files.find(f => f === file);
 
     if (!file) {
       return Promise.reject(new Error(`file not found: ${file}`));
     }
 
     const getFileObject = () => {
-      return getState().upload.files.find(f => f.backingFile === fileObject.backingFile);
+      return getState().ui.upload.files.find(f => f.backingFile === fileObject.backingFile);
     };
 
     return request.post('/api/downloads')
@@ -299,7 +299,7 @@ export function submitFile(file) {
 
 export function submitAllFiles() {
   return (dispatch, getState) => {
-    for (const file of getState().upload.files) {
+    for (const file of getState().ui.upload.files) {
       dispatch(submitFile(file));
     }
   };
