@@ -9,6 +9,7 @@ import File from './File';
 import FilesSection from './FilesSection';
 
 import SearchContainer from 'containers/Download/SearchContainer';
+import CommandBarContainer from 'containers/Download/CommandBarContainer';
 
 import styles from './download.module.less';
 
@@ -42,6 +43,12 @@ class Download extends React.Component {
                     progress={download.progress}
                     uploader={download.uploader}
                     locks={download.locks} />
+          </Col>
+        </Row>
+
+        <Row>
+          <Col lg={12}>
+            <CommandBarContainer infoHash={this.props.infoHash} />
           </Col>
         </Row>
 
