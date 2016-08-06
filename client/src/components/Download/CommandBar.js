@@ -8,40 +8,54 @@ import {
 
 import styles from './download.module.less';
 
-function CommandBar(props) {
-  return (
-    <ButtonGroup styleName='command-bar'>
-      <Button bsSize='xsmall'
-              styleName='command-button'
-              onClick={() => console.log('stop')}>
-        <Glyphicon glyph={true ? 'pause' : 'play'} />
-      </Button>
+class CommandBar extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-      <Button bsSize='xsmall'
-              styleName='command-button'
-              onClick={() => console.log('lock')}>
-        <Glyphicon glyph='lock' />
-      </Button>
+  render() {
+    if (!this.props.user || !this.props.download) {
+      return null;
+    }
 
-      <Button bsSize='xsmall'
-              styleName='command-button'
-              onClick={() => console.log('edit files')}>
-        <Glyphicon glyph='cog' />
-      </Button>
+    const isDownloading = this.props.download.state === 'downloading';
+    const isLocked = this.props.download.locks.includes(this.props.user.id);
 
-      <Button bsSize='xsmall'
-              styleName='command-button'
-              onClick={() => console.log('stats')}>
-        <Glyphicon glyph='stats' />
-      </Button>
+    return (
+      <ButtonGroup styleName='command-bar'>
+        <Button bsSize='xsmall'
+                styleName='command-button'
+                title={isDownloading ? 'pause' : 'play'}
+                onClick={isDownloading ? this.props.stop : this.props.start}>
+          <Glyphicon glyph={isDownloading ? 'pause' : 'play'} />
+        </Button>
 
-      <Button bsSize='xsmall'
-              styleName='command-button'
-              onClick={() => console.log('remove')}>
-        <Glyphicon glyph='remove' />
-      </Button>
-    </ButtonGroup>
-  );
+        <Button bsSize='xsmall'
+                styleName='command-button'
+                onClick={isLocked ? this.props.unlock : this.props.lock}>
+          <Glyphicon glyph={isLocked ? 'link' : 'lock'} />
+        </Button>
+
+        <Button bsSize='xsmall'
+                styleName='command-button'
+                onClick={this.props.edit}>
+          <Glyphicon glyph='cog' />
+        </Button>
+
+        <Button bsSize='xsmall'
+                styleName='command-button'
+                onClick={this.props.stats}>
+          <Glyphicon glyph='stats' />
+        </Button>
+
+        <Button bsSize='xsmall'
+                styleName='command-button'
+                onClick={this.props.erase}>
+          <Glyphicon glyph='remove' />
+        </Button>
+      </ButtonGroup>
+    );
+  }
 }
 
 export default CSSModules(CommandBar, styles);

@@ -1,5 +1,10 @@
 import { connect } from 'react-redux';
 
+import {
+  acquireLock,
+  releaseLock,
+} from 'actions';
+
 import CommandBar from 'components/Download/CommandBar';
 
 function mapStateToProps(state, props) {
@@ -7,29 +12,46 @@ function mapStateToProps(state, props) {
 
   const download = state.data.downloads[infoHash];
   const ui = state.ui.download[infoHash];
+  const user = state.data.users.current;
 
-  return { download, ui };
+  if (!download || !ui || !user) {
+    return {};
+  }
+
+  return { download, ui, user };
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
+  const { infoHash } = ownProps;
+
   return {
-    lock(infoHash, toLock) {
+    lock() {
       console.log('lock');
+      dispatch(acquireLock(infoHash));
     },
 
-    start(infoHash) {
+    unlock() {
+      console.log('unlock');
+      dispatch(releaseLock(infoHash));
+    },
+
+    start() {
       console.log('start');
     },
 
-    stop(infoHash) {
-      console.log('pause');
+    stop() {
+      console.log('stop');
     },
 
-    erase(infoHash) {
+    edit() {
+      console.log('edit');
+    },
+
+    erase() {
       console.log('erase');
     },
 
-    stats(infoHash) {
+    stats() {
       console.log('stats');
     },
   };

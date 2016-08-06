@@ -241,6 +241,66 @@ export function getDownload(infoHash) {
   };
 }
 
+export const SET_DOWNLOAD_LOCK = 'SET_DOWNLOAD_LOCK';
+
+export function setDownloadLock(infoHash, toLock) {
+  return {
+    type: SET_DOWNLOAD_LOCK,
+    infoHash,
+    toLock,
+  };
+}
+
+export function acquireLock(infoHash) {
+  return (dispatch, getState) => {
+    const currentUser = getState().data.users.current;
+
+    return request.patch(`/api/downloads/${infoHash}`)
+      .accept('json')
+      .send({
+        action: 'addLock',
+        params: currentUser.id,
+      })
+      .then(res => {
+        if (res.body.error) {
+          return Promise.resolve();
+        }
+
+        // TODO
+        // save the round-trip
+        // dispatch(setDownloadLock(infoHash, true));
+
+        return getDownload(infoHash)(dispatch);
+      });
+  };
+}
+
+export function releaseLock(infoHash) {
+  return (dispatch, getState) => {
+    const currentUser = getState().data.users.current;
+
+    console.log('currentUser', currentUser);
+
+    return request.patch(`/api/downloads/${infoHash}`)
+      .accept('json')
+      .send({
+        action: 'removeLock',
+        params: currentUser.id,
+      })
+      .then(res => {
+        if (res.body.error) {
+          return Promise.resolve();
+        }
+
+        // TODO
+        // save the round-trip
+        // dispatch(setDownloadLock(infoHash, false));
+
+        return getDownload(infoHash)(dispatch);
+      });
+  };
+}
+
 export const RECEIVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
 
 export function receiveCurrentUser(user) {
