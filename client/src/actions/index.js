@@ -296,7 +296,18 @@ export function eraseDownload(infoHash, callback) {
         }
 
         callback();
+
+        return Promise.resolve();
       });
+  };
+}
+
+export const REQUEST_USER = 'REQUEST_USER';
+
+export function requestUser(id) {
+  return {
+    type: REQUEST_USER,
+    id,
   };
 }
 
@@ -321,6 +332,8 @@ export function receiveUser(id, user) {
 
 export function getUser(userID) {
   return dispatch => {
+    dispatch(requestUser(userID));
+
     return request.get(`/api/users/${userID}`)
       .accept('json')
       .then(res => {

@@ -21,8 +21,6 @@ class Download extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // TODO
-    // prevent overlapping requests
     for (const userID of nextProps.download.locks) {
       if (!(userID in nextProps.users)) {
         this.props.dispatch(getUser(userID));
