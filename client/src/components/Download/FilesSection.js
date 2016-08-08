@@ -24,6 +24,7 @@ function FilesSection(props) {
     <div styleName='files'>
       {sectionLabel}
       <FileTree isRoot
+                isEditing={props.isEditing}
                 isMultiFile={props.isMultiFile}
                 depth={props.depth}
                 initialCollapse={props.initialCollapse}

@@ -53,7 +53,8 @@ class FileTree extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.files !== nextProps.files ||
-      this.state.isCollapsed !== nextState.isCollapsed;
+      this.state.isCollapsed !== nextState.isCollapsed ||
+      this.props.isEditing !== nextProps.isEditing;
   }
 
   handleTabClick(_event) {
@@ -97,6 +98,7 @@ class FileTree extends React.Component {
       return (
         <FileTree name={folder.name}
                   key={folder.name}
+                  isEditing={this.props.isEditing}
                   styles={this.props.styles}
                   depth={this.props.depth + 1}
                   initialCollapse={this.props.initialCollapse}
@@ -114,6 +116,7 @@ class FileTree extends React.Component {
 
       return (
         <File size={file.size}
+              isEditing={this.props.isEditing}
               styles={this.props.styles}
               isMultiFile={this.props.isMultiFile}
               downloadName={this.props.downloadName}
