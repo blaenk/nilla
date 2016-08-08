@@ -14,6 +14,11 @@ class CommandBar extends React.Component {
     super(props);
 
     this._erase = this._erase.bind(this);
+    this._edit = this._edit.bind(this);
+  }
+
+  _edit() {
+    this.props.edit(this.props.infoHash, !this.props.ui.isEditing);
   }
 
   _erase() {
@@ -51,7 +56,7 @@ class CommandBar extends React.Component {
         <Button bsSize='xsmall'
                 styleName='command-button'
                 title='enable/disable files'
-                onClick={this.props.edit}>
+                onClick={this._edit}>
           <Glyphicon glyph='cog' />
         </Button>
 

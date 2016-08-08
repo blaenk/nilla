@@ -6,6 +6,7 @@ import {
   startDownload,
   stopDownload,
   eraseDownload,
+  editDownloadFiles,
 } from 'actions';
 
 import CommandBar from 'components/Download/CommandBar';
@@ -48,8 +49,8 @@ function mapDispatchToProps(dispatch, ownProps) {
       dispatch(eraseDownload(infoHash, callback));
     },
 
-    edit() {
-      console.log('edit');
+    edit(infoHash, isEditing) {
+      dispatch(editDownloadFiles(infoHash, isEditing));
     },
 
     stats() {

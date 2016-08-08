@@ -302,6 +302,16 @@ export function eraseDownload(infoHash, callback) {
   };
 }
 
+export const EDIT_DOWNLOAD_FILES = 'EDIT_DOWNLOAD_FILES';
+
+export function editDownloadFiles(infoHash, isEditing) {
+  return {
+    type: EDIT_DOWNLOAD_FILES,
+    infoHash,
+    isEditing,
+  };
+}
+
 export const REQUEST_USER = 'REQUEST_USER';
 
 export function requestUser(id) {

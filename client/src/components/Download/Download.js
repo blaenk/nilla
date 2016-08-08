@@ -81,6 +81,7 @@ class Download extends React.Component {
                           files={files.downloaded}
                           isMultiFile={download.isMultiFile}
                           initialCollapse={ui.isCollapsed}
+                          isEditing={ui.isEditing}
                           downloadName={download.name} />
           </Col>
         </Row>
