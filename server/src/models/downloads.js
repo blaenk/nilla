@@ -174,6 +174,15 @@ function getFiles(infoHash) {
         file.progress = getProgress(file.completedChunks, file.sizeChunks);
         file.isEnabled = file.priority !== 'off';
 
+        // Some torrents start file paths with a leading slash, /Some/File.txt
+        // This seems to cause rtorrent's get_path_components to split it as
+        // ["", "Some","File.txt"] which causes issues on the client FileTree
+        // Ultimately such a split joins to the same path so it's fine to simply
+        // remove the first component in this case.
+        if (file.pathComponents[0] === '') {
+          file.pathComponents.shift();
+        }
+
         return file;
       });
     });
