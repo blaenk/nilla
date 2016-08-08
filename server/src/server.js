@@ -303,19 +303,15 @@ function attachAPI(app) {
       }
       // TODO
       // rename acquireLock and releaseLock
-      case 'addLock': {
-        const userID = req.body.params;
-
-        downloads.addLock(infoHash, userID)
+      case 'acquireLock': {
+        downloads.addLock(infoHash, req.user.id)
           .then(() => res.json({ success: true }))
           .catch(error => console.log(error));
 
         break;
       }
-      case 'removeLock': {
-        const userID = req.body.params;
-
-        downloads.removeLock(infoHash, userID)
+      case 'releaseLock': {
+        downloads.removeLock(infoHash, req.user.id)
           .then(() => res.json({ success: true }))
           .catch(error => console.log(error));
 
@@ -332,6 +328,8 @@ function attachAPI(app) {
     }
   });
 
+  // TODO
+  // validation
   api.delete('/downloads/:infoHash', JWT, (req, res) => {
     rtorrent.torrent(req.params.infoHash, 'erase')
       .then(() => res.json({ success: true }))

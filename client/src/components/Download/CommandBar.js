@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import CSSModules from 'react-css-modules';
 import {
   Button,
@@ -11,6 +12,16 @@ import styles from './download.module.less';
 class CommandBar extends React.Component {
   constructor(props) {
     super(props);
+
+    this._erase = this._erase.bind(this);
+  }
+
+  _erase() {
+    if (confirm('are you sure you want to erase this?')) {
+      this.props.erase(() => {
+        this.props.router.push('/downloads');
+      });
+    }
   }
 
   render() {
@@ -50,7 +61,7 @@ class CommandBar extends React.Component {
 
         <Button bsSize='xsmall'
                 styleName='command-button'
-                onClick={this.props.erase}>
+                onClick={this._erase}>
           <Glyphicon glyph='remove' />
         </Button>
       </ButtonGroup>
@@ -58,4 +69,4 @@ class CommandBar extends React.Component {
   }
 }
 
-export default CSSModules(CommandBar, styles);
+export default withRouter(CSSModules(CommandBar, styles));

@@ -251,16 +251,11 @@ export function setDownloadLock(infoHash, toLock) {
   };
 }
 
-export function acquireLock(infoHash) {
-  return (dispatch, getState) => {
-    const currentUser = getState().data.users.current;
-
+function patchDownload(infoHash, action) {
+  return (dispatch) => {
     return request.patch(`/api/downloads/${infoHash}`)
       .accept('json')
-      .send({
-        action: 'addLock',
-        params: currentUser.id,
-      })
+      .send({ action })
       .then(res => {
         if (res.body.error) {
           return Promise.resolve();
@@ -275,28 +270,32 @@ export function acquireLock(infoHash) {
   };
 }
 
+export function acquireLock(infoHash) {
+  return patchDownload(infoHash, 'acquireLock');
+}
+
 export function releaseLock(infoHash) {
-  return (dispatch, getState) => {
-    const currentUser = getState().data.users.current;
+  return patchDownload(infoHash, 'releaseLock');
+}
 
-    console.log('currentUser', currentUser);
+export function startDownload(infoHash) {
+  return patchDownload(infoHash, 'start');
+}
 
-    return request.patch(`/api/downloads/${infoHash}`)
+export function stopDownload(infoHash) {
+  return patchDownload(infoHash, 'stop');
+}
+
+export function eraseDownload(infoHash, callback) {
+  return (_dispatch) => {
+    return request.delete(`/api/downloads/${infoHash}`)
       .accept('json')
-      .send({
-        action: 'removeLock',
-        params: currentUser.id,
-      })
       .then(res => {
         if (res.body.error) {
           return Promise.resolve();
         }
 
-        // TODO
-        // save the round-trip
-        // dispatch(setDownloadLock(infoHash, false));
-
-        return getDownload(infoHash)(dispatch);
+        callback();
       });
   };
 }

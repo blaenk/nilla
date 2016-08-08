@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import {
   acquireLock,
   releaseLock,
+  startDownload,
+  stopDownload,
+  eraseDownload,
 } from 'actions';
 
 import CommandBar from 'components/Download/CommandBar';
@@ -26,29 +29,27 @@ function mapDispatchToProps(dispatch, ownProps) {
 
   return {
     lock() {
-      console.log('lock');
       dispatch(acquireLock(infoHash));
     },
 
     unlock() {
-      console.log('unlock');
       dispatch(releaseLock(infoHash));
     },
 
     start() {
-      console.log('start');
+      dispatch(startDownload(infoHash));
     },
 
     stop() {
-      console.log('stop');
+      dispatch(stopDownload(infoHash));
+    },
+
+    erase(callback) {
+      dispatch(eraseDownload(infoHash, callback));
     },
 
     edit() {
       console.log('edit');
-    },
-
-    erase() {
-      console.log('erase');
     },
 
     stats() {
