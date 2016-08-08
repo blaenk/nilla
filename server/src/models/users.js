@@ -7,6 +7,11 @@ function getUserByUsername(db, username, callback) {
          (error, row) => callback(error, row));
 }
 
+function getUserById(db, id, callback) {
+  db.get('SELECT * FROM users WHERE id = ?', id,
+         (error, row) => callback(error, row));
+}
+
 function createRefreshToken(callback) {
   const BYTE_COUNT = 64;
 
@@ -23,5 +28,6 @@ function createRefreshToken(callback) {
 
 module.exports = {
   getUserByUsername,
+  getUserById,
   createRefreshToken,
 };

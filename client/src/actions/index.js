@@ -319,6 +319,16 @@ export function receiveUser(id, user) {
   };
 }
 
+export function getUser(userID) {
+  return dispatch => {
+    return request.get(`/api/users/${userID}`)
+      .accept('json')
+      .then(res => {
+        dispatch(receiveUser(res.body.id, res.body));
+      });
+  };
+}
+
 export function getCurrentUser() {
   return dispatch => {
     return request.get('/api/users/current')

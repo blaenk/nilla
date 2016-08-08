@@ -19,6 +19,7 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const multer = require('multer');
 const sqlite3 = require('sqlite3');
+const _ = require('lodash');
 
 const rtorrent = require('./rtorrent');
 const downloads = require('./models/downloads');
@@ -272,6 +273,14 @@ function attachAPI(app) {
     const { id, username, permissions } = req.user;
 
     res.status(HttpStatus.OK).json({ id, username, permissions });
+  });
+
+  api.get('/users/:id', JWT, (req, res) => {
+    users.getUserById(db, req.params.id, (error, row) => {
+      const filteredObject = _(row).pick('id', 'email', 'username', 'permissions');
+
+      res.status(HttpStatus.OK).json(filteredObject);
+    });
   });
 
   api.get('/downloads', JWT, (req, res) => {

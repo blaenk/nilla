@@ -7,18 +7,22 @@ import styles from './header.module.less';
 import { expiresAt } from 'common';
 
 function Header(props) {
+  const LONG_DATE_FORMAT = 'dddd, MMMM Do YYYY [at] h:mm:ss A';
+
   const dateAdded = moment(props.dateAdded).utc().local();
   const dateAddedShortFormat = moment(dateAdded).format('l');
-  const dateAddedLongFormat = moment(dateAdded).format('dddd, MMMM Do YYYY [at] h:mm:ss A');
+  const dateAddedLongFormat = moment(dateAdded).format(LONG_DATE_FORMAT);
 
   const expiresDate = expiresAt(dateAdded);
   const expiresShortFormat = moment(expiresDate).fromNow();
-  const expiresLongFormat = moment(expiresDate).format('dddd, MMMM Do YYYY [at] h:mm:ss A');
+  const expiresLongFormat = moment(expiresDate).format(LONG_DATE_FORMAT);
 
   let expiresOrLocks;
 
   if (props.locks.length) {
-    const lockedBy = props.locks.join(', ');
+    const lockedBy = props.locks.filter(id => id in props.users)
+          .map(id => props.users[id].username)
+          .join(', ');
 
     expiresOrLocks = <span className='locks'>and locked by {lockedBy}</span>;
   } else {

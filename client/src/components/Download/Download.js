@@ -2,7 +2,7 @@ import React from 'react';
 import CSSModules from 'react-css-modules';
 import { Row, Col } from 'react-bootstrap';
 
-import { getDownload } from 'actions';
+import { getDownload, getUser } from 'actions';
 
 import Header from './Header';
 import File from './File';
@@ -20,8 +20,18 @@ class Download extends React.Component {
     dispatch(getDownload(this.props.infoHash));
   }
 
+  componentWillReceiveProps(nextProps) {
+    // TODO
+    // prevent overlapping requests
+    for (const userID of nextProps.download.locks) {
+      if (!(userID in nextProps.users)) {
+        this.props.dispatch(getUser(userID));
+      }
+    }
+  }
+
   render() {
-    const { download, ui, files } = this.props;
+    const { download, ui, files, users } = this.props;
 
     if (!download || !ui.isAugmented) {
       return null;
@@ -42,7 +52,8 @@ class Download extends React.Component {
                     state={download.state}
                     progress={download.progress}
                     uploader={download.uploader}
-                    locks={download.locks} />
+                    locks={download.locks}
+                    users={users} />
           </Col>
         </Row>
 
