@@ -51,15 +51,13 @@ function Header(props) {
         </div>
 
         <div styleName='meta'>
-          <div styleName='date-added'>
-            added by <strong>{props.uploader}</strong> on
-            {' '}
-            <time title={dateAddedLongFormat}>
-              {dateAddedShortFormat}
-            </time>
-            {' '}
-            {expiresOrLocks}
-          </div>
+          added by <strong>{props.uploader}</strong> on
+          {' '}
+          <time title={dateAddedLongFormat}>
+            {dateAddedShortFormat}
+          </time>
+          {' '}
+          {expiresOrLocks}
         </div>
       </div>
     </div>
