@@ -1,6 +1,6 @@
 import React from 'react';
 import CSSModules from 'react-css-modules';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 
 import { getDownload, getUser } from 'actions';
 
@@ -40,6 +40,50 @@ class Download extends React.Component {
 
     const fileCount = files.downloaded.length + files.extracted.length;
 
+    let editHelp;
+
+    if (ui.isEditing) {
+      editHelp = (
+        <Row>
+          <Col lg={12}>
+            <div styleName='edit-files'>
+              <ButtonGroup justified>
+                <ButtonGroup>
+                  <Button bsStyle='danger'>Cancel</Button>
+                </ButtonGroup>
+
+                <ButtonGroup>
+                  <Button>Enable all</Button>
+                </ButtonGroup>
+
+                <ButtonGroup>
+                  <Button>Disable all</Button>
+                </ButtonGroup>
+
+                <ButtonGroup>
+                  <Button bsStyle='success'>Apply</Button>
+                </ButtonGroup>
+              </ButtonGroup>
+
+              <div styleName='edit-help'>
+                <ul>
+                  <li>Click on files to toggle whether they're enabled or not.</li>
+                  <li>Click on folder checkboxes to toggle all contained files.</li>
+                  <li>
+                    <strong>Enable all</strong> enables all <em>visible</em> files.
+                    This means you can filter the files and then use this button
+                    to enable everything that is visible given the filter.
+                    Same goes for <strong>Disable all</strong>.
+                  </li>
+                  <li>Click <strong>apply</strong> when done.</li>
+                </ul>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      );
+    }
+
     return (
       <div>
         <Row>
@@ -66,6 +110,8 @@ class Download extends React.Component {
             <SearchContainer count={fileCount} infoHash={this.props.infoHash} />
           </Col>
         </Row>
+
+        {editHelp}
 
         <Row>
           <Col lg={12}>
