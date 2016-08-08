@@ -10,18 +10,25 @@ import Reducer from './reducers';
 
 import { getCurrentUser } from 'actions';
 
-const localState = window.localStorage.getItem('redux');
 let defaultState;
 
-if (localState !== null) {
-  try {
-    defaultState = JSON.parse(localState);
-  } catch (e) {
-    // Leaving defaultState undefined is expected behavior for redux to
-    // initialize with each states' default state.
-    //
-    // The corrupted localStorage state will be overwritten by redux.
+function loadLocalStorage() {
+  const localState = window.localStorage.getItem('redux');
+
+  if (localState !== null) {
+    try {
+      return JSON.parse(localState);
+    } catch (e) {
+      // Leaving defaultState undefined is expected behavior for redux to
+      // initialize with each states' default state.
+      //
+      // The corrupted localStorage state will be overwritten by redux.
+    }
   }
+}
+
+if (__NODE_ENV__ === 'production') {
+  defaultState = loadLocalStorage();
 }
 
 let store = createStore(
@@ -33,22 +40,28 @@ let store = createStore(
   )
 );
 
-let currentState;
+function saveLocalStorage() {
+  let previousState;
 
-store.subscribe(() => {
-  const previousState = currentState;
+  return () => {
+    const currentState = store.getState();
 
-  currentState = store.getState();
+    if (previousState !== currentState) {
+      const state = _.cloneDeep(currentState);
 
-  if (previousState !== currentState) {
-    const state = _.cloneDeep(currentState);
+      _.unset(state, 'ui.upload');
+      _.unset(state, 'data.users');
 
-    _.unset(state, 'ui.upload');
-    _.unset(state, 'data.users');
+      window.localStorage.setItem('redux', JSON.stringify(state));
+    }
 
-    window.localStorage.setItem('redux', JSON.stringify(state));
-  }
-});
+    previousState = currentState;
+  };
+}
+
+if (__NODE_ENV__ === 'production') {
+  store.subscribe(saveLocalStorage());
+}
 
 store.dispatch(getCurrentUser());
 
