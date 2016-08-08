@@ -2,7 +2,7 @@
 
 const crypto = require('crypto');
 
-function getUserFromUsername(db, username, callback) {
+function getUserByUsername(db, username, callback) {
   db.get('SELECT * FROM users WHERE username = ?', username,
          (error, row) => callback(error, row));
 }
@@ -22,6 +22,6 @@ function createRefreshToken(callback) {
 }
 
 module.exports = {
-  getUserFromUsername,
+  getUserByUsername,
   createRefreshToken,
 };

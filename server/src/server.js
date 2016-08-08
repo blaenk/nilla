@@ -136,7 +136,7 @@ const upload = multer({
 });
 
 function authenticate(username, password, callback) {
-  users.getUserFromUsername(db, username, (error, user) => {
+  users.getUserByUsername(db, username, (error, user) => {
     if (error) {
       callback(error);
 
