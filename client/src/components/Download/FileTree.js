@@ -82,14 +82,14 @@ class FileTree extends React.Component {
           </Badge>
         </div>
       );
-    }
 
-    if (!this.props.isRoot && this.state.isCollapsed) {
-      return (
-        <div className={this.props.styles['file-tree']} style={maybeHide}>
-          {tab}
-        </div>
-      );
+      if (this.state.isCollapsed) {
+        return (
+          <div className={this.props.styles['file-tree']} style={maybeHide}>
+            {tab}
+          </div>
+        );
+      }
     }
 
     let { folders, files } = partitionFiles(this.props.files, this.props.depth);
