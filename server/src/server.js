@@ -277,7 +277,7 @@ function attachAPI(app) {
 
   api.get('/users/:id', JWT, (req, res) => {
     users.getUserById(db, req.params.id, (error, row) => {
-      const filteredObject = _(row).pick('id', 'email', 'username', 'permissions');
+      const filteredObject = _(row).pick('id', 'username');
 
       res.status(HttpStatus.OK).json(filteredObject);
     });
