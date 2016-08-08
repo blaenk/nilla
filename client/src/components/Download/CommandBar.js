@@ -36,31 +36,35 @@ class CommandBar extends React.Component {
       <ButtonGroup styleName='command-bar'>
         <Button bsSize='xsmall'
                 styleName='command-button'
-                title={isDownloading ? 'pause' : 'play'}
+                title={isDownloading ? 'stop' : 'start'}
                 onClick={isDownloading ? this.props.stop : this.props.start}>
           <Glyphicon glyph={isDownloading ? 'pause' : 'play'} />
         </Button>
 
         <Button bsSize='xsmall'
                 styleName='command-button'
+                title={isLocked ? 'unlock' : 'lock'}
                 onClick={isLocked ? this.props.unlock : this.props.lock}>
           <Glyphicon glyph={isLocked ? 'link' : 'lock'} />
         </Button>
 
         <Button bsSize='xsmall'
                 styleName='command-button'
+                title='enable/disable files'
                 onClick={this.props.edit}>
           <Glyphicon glyph='cog' />
         </Button>
 
         <Button bsSize='xsmall'
                 styleName='command-button'
+                title='show stats'
                 onClick={this.props.stats}>
           <Glyphicon glyph='stats' />
         </Button>
 
         <Button bsSize='xsmall'
                 styleName='command-button'
+                title='delete'
                 onClick={this._erase}>
           <Glyphicon glyph='remove' />
         </Button>
