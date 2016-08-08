@@ -94,6 +94,10 @@ class FileTree extends React.Component {
 
     let { folders, files } = partitionFiles(this.props.files, this.props.depth);
 
+    folders = folders.sort((a, b) => {
+      return a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase());
+    });
+
     folders = folders.map(folder => {
       return (
         <FileTree name={folder.name}
@@ -106,6 +110,13 @@ class FileTree extends React.Component {
                   downloadName={this.props.downloadName}
                   files={folder.files} />
       );
+    });
+
+    files = files.sort((a, b) => {
+      const aName = a.pathComponents[a.pathComponents.length - 1];
+      const bName = b.pathComponents[b.pathComponents.length - 1];
+
+      return aName.toLocaleLowerCase().localeCompare(bName.toLocaleLowerCase());
     });
 
     files = files.map(file => {
