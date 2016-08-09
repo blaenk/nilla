@@ -2,7 +2,7 @@ import React from 'react';
 import CSSModules from 'react-css-modules';
 import { Row, Col } from 'react-bootstrap';
 
-import { getDownload, getUser } from 'actions';
+import { getDownload } from 'actions';
 
 import Header from './Header';
 import File from './File';
@@ -20,18 +20,6 @@ class Download extends React.Component {
     const { dispatch } = this.props;
 
     dispatch(getDownload(this.props.infoHash));
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (!(nextProps.download.uploader in nextProps.users)) {
-      this.props.dispatch(getUser(nextProps.download.uploader));
-    }
-
-    for (const userID of nextProps.download.locks) {
-      if (!(userID in nextProps.users)) {
-        this.props.dispatch(getUser(userID));
-      }
-    }
   }
 
   render() {

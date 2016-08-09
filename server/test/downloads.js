@@ -40,7 +40,7 @@ describe('Downloads Model', function() {
       ['0'],
       ['0'],
       ['0'],
-      ['system'],
+      [-1],
       ['[]'],
       ['2016-07-24T23:54:07.000Z'],
     ];
@@ -62,7 +62,7 @@ describe('Downloads Model', function() {
       uploadRate: 0,
       downloadRate: 0,
       totalUploaded: 0,
-      uploader: 'system',
+      uploader: -1,
       locks: [],
       dateAdded: new Date('2016-07-24T23:54:07.000Z'),
       state: 'closed',

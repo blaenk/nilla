@@ -252,7 +252,7 @@ function attachAPI(app) {
       return;
     }
 
-    const commands = [downloads.onLoadSetUploader(req.user.username)];
+    const commands = [downloads.onLoadSetUploader(req.user.id)];
 
     rtorrent.load(torrent, {
       start,

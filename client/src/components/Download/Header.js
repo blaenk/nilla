@@ -37,6 +37,14 @@ function Header(props) {
 
   const wrappedName = props.name.replace(/\./g, '\u200b.');
 
+  let uploaderName;
+
+  if (props.uploader === -1) {
+    uploaderName = 'system';
+  } else {
+    uploaderName = props.users[props.uploader].username;
+  }
+
   return (
     <div>
       <div styleName='header'>
@@ -51,7 +59,7 @@ function Header(props) {
         </div>
 
         <div styleName='meta'>
-          added by <strong>{props.uploader}</strong> on
+          added by <strong>{uploaderName}</strong> on
           {' '}
           <time title={dateAddedLongFormat}>
             {dateAddedShortFormat}

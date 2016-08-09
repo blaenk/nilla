@@ -1,6 +1,57 @@
 import request from 'superagent';
 import Cookies from 'js-cookie';
 
+export const REQUEST_USER = 'REQUEST_USER';
+
+export function requestUser(id) {
+  return {
+    type: REQUEST_USER,
+    id,
+  };
+}
+
+export const RECEIVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
+
+export function receiveCurrentUser(user) {
+  return {
+    type: RECEIVE_CURRENT_USER,
+    user,
+  };
+}
+
+export const RECEIVE_USER = 'RECEIVE_USER';
+
+export function receiveUser(id, user) {
+  return {
+    type: RECEIVE_USER,
+    id,
+    user,
+  };
+}
+
+export function getUser(userID) {
+  return dispatch => {
+    dispatch(requestUser(userID));
+
+    return request.get(`/api/users/${userID}`)
+      .accept('json')
+      .then(res => {
+        dispatch(receiveUser(res.body.id, res.body));
+      });
+  };
+}
+
+export function getCurrentUser() {
+  return dispatch => {
+    return request.get('/api/users/current')
+      .accept('json')
+      .then(res => {
+        dispatch(receiveUser(res.body.id, res.body));
+        dispatch(receiveCurrentUser(res.body));
+      });
+  };
+}
+
 export const SET_DOWNLOADS_SCOPE = 'SET_DOWNLOADS_SCOPE';
 
 /**
@@ -221,7 +272,7 @@ export function getDownloads() {
 }
 
 export function getDownload(infoHash) {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch(requestDownload(infoHash));
 
     return request.get(`/api/downloads/${infoHash}`)
@@ -237,6 +288,16 @@ export function getDownload(infoHash) {
         }
 
         dispatch(receiveDownload(infoHash, download));
+
+        if (download.uploader !== -1 && !(download.uploader in getState().data.users)) {
+          dispatch(getUser(download.uploader));
+        }
+
+        for (const userId of download.locks) {
+          if (userId !== -1 && !(userId in getState().data.users)) {
+            dispatch(getUser(userId));
+          }
+        }
       });
   };
 }
@@ -319,57 +380,6 @@ export function editDownloadFiles(infoHash, filePriorities) {
     type: EDIT_DOWNLOAD_FILES,
     infoHash,
     filePriorities,
-  };
-}
-
-export const REQUEST_USER = 'REQUEST_USER';
-
-export function requestUser(id) {
-  return {
-    type: REQUEST_USER,
-    id,
-  };
-}
-
-export const RECEIVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
-
-export function receiveCurrentUser(user) {
-  return {
-    type: RECEIVE_CURRENT_USER,
-    user,
-  };
-}
-
-export const RECEIVE_USER = 'RECEIVE_USER';
-
-export function receiveUser(id, user) {
-  return {
-    type: RECEIVE_USER,
-    id,
-    user,
-  };
-}
-
-export function getUser(userID) {
-  return dispatch => {
-    dispatch(requestUser(userID));
-
-    return request.get(`/api/users/${userID}`)
-      .accept('json')
-      .then(res => {
-        dispatch(receiveUser(res.body.id, res.body));
-      });
-  };
-}
-
-export function getCurrentUser() {
-  return dispatch => {
-    return request.get('/api/users/current')
-      .accept('json')
-      .then(res => {
-        dispatch(receiveUser(res.body.id, res.body));
-        dispatch(receiveCurrentUser(res.body));
-      });
   };
 }
 

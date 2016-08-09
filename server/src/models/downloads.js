@@ -100,6 +100,7 @@ const DOWNLOADS_METHODS = [
     methodName: 'get_custom',
     params: ['nilla-uploader'],
     as: 'uploader',
+    map: parseInt,
   },
   {
     methodName: 'get_custom',

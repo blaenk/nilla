@@ -69,19 +69,19 @@ export const getScopedDownloads = createSelector(
       case 'MINE':
         return downloads.map(download => {
           return Object.assign({}, download, {
-            isHidden: download.uploader !== user.username,
+            isHidden: download.uploader !== user.id,
           });
         });
       case 'SYSTEM':
         return downloads.map(download => {
           return Object.assign({}, download, {
-            isHidden: download.uploader !== 'system',
+            isHidden: download.uploader !== -1,
           });
         });
       case 'LOCKED':
         return downloads.map(download => {
           return Object.assign({}, download, {
-            isHidden: download.locks.length === 0,
+            isHidden: !download.locks.includes(user.id),
           });
         });
       case 'EXPIRING':
