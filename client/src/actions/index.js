@@ -396,6 +396,11 @@ export function submitFile(file) {
       })
       .then(_response => {
         dispatch(removeFile(fileObject));
+
+        if (getState().ui.upload.files.length === 0) {
+          dispatch(setUploading(false));
+        }
+
         dispatch(getDownloads());
       })
       .catch(_error => dispatch(removeFile(fileObject)));
