@@ -60,6 +60,18 @@ class Download extends React.Component {
       stats = <Statistics download={download} />;
     }
 
+    let search;
+
+    if ((download.files.downloaded.length + download.files.extracted.length) > 1) {
+      search = (
+        <Row>
+          <Col lg={12}>
+            <SearchContainer count={fileCount} infoHash={this.props.infoHash} />
+          </Col>
+        </Row>
+      );
+    }
+
     return (
       <div>
         <Row>
@@ -83,11 +95,7 @@ class Download extends React.Component {
 
         {stats}
 
-        <Row>
-          <Col lg={12}>
-            <SearchContainer count={fileCount} infoHash={this.props.infoHash} />
-          </Col>
-        </Row>
+        {search}
 
         {editFiles}
 
