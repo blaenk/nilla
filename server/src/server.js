@@ -38,8 +38,15 @@ const {
 function JWTErrorHandler(err, req, res, _next) {
   if (err.name === 'UnauthorizedError') {
     const redirectPath = req.originalUrl;
+    let redirectUrl;
 
-    res.redirect(`/login?redirect=${redirectPath}`);
+    if (redirectPath === '/' || redirectPath === '') {
+      redirectUrl = '/login';
+    } else {
+      redirectUrl = `/login?redirect=${redirectPath}`;
+    }
+
+    res.redirect(redirectUrl);
   }
 }
 
@@ -57,9 +64,15 @@ function CSRFValidationError(err, req, res, next) {
   res.format({
     html: () => {
       const { _redirectTo } = req.body;
-      const failureRedirect = `/login?redirect=${_redirectTo}`;
+      let redirectUrl;
 
-      res.redirect(failureRedirect);
+      if (_redirectTo === '' || _redirectTo === '/') {
+        redirectUrl = '/login';
+      } else {
+        redirectUrl = `/login?redirect=${_redirectTo}`;
+      }
+
+      res.redirect(redirectUrl);
     },
     json: () => {
       res.status(HttpStatus.BAD_REQUEST).json({
