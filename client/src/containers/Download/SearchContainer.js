@@ -13,7 +13,15 @@ function mapStateToProps(state, props) {
       isCollapsed,
     } = state.ui.download[infoHash];
 
-    return { filter, isCollapsed };
+    const containsFolder = file => {
+      return file.pathComponents.length > 1;
+    };
+
+    const containsFolders =
+          state.data.downloads[infoHash].files.downloaded.some(containsFolder) ||
+          state.data.downloads[infoHash].files.extracted.some(containsFolder);
+
+    return { filter, isCollapsed, containsFolders };
   }
 
   return {};

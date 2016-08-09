@@ -22,13 +22,21 @@ class Search extends React.Component {
   }
 
   render() {
-    return (
-      <InputGroup styleName='search'>
+    let collapseButton;
+
+    if (this.props.containsFolders) {
+      collapseButton = (
         <InputGroup.Button>
           <Button styleName='global-collapse' onClick={this.handleCollapse}>
             <Glyphicon glyph={this.props.isCollapsed ? 'chevron-down' : 'chevron-up'} />
           </Button>
         </InputGroup.Button>
+      );
+    }
+
+    return (
+      <InputGroup styleName='search'>
+        {collapseButton}
 
         <FormControl type='text'
                      placeholder='Search'
@@ -47,6 +55,7 @@ class Search extends React.Component {
 
 Search.propTypes = {
   collapse: React.PropTypes.func.isRequired,
+  containsFolders: React.PropTypes.bool,
   count: React.PropTypes.number.isRequired,
   filter: React.PropTypes.string.isRequired,
   infoHash: React.PropTypes.string.isRequired,
