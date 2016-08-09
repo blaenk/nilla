@@ -5,6 +5,7 @@ const fs = require('fs');
 
 const Bluebird = require('bluebird');
 const recursiveReaddir = require('recursive-readdir');
+const _ = require('lodash');
 
 const rtorrent = require('../rtorrent');
 
@@ -264,9 +265,9 @@ function getCompleteDownload(infoHash) {
 }
 
 function setFilePriorities(infoHash, priorities) {
-  const priorityCalls = priorities.map(object => {
-    const target = `${infoHash}:f${object.id}`;
-    const priority = toNativePriority(object.priority);
+  const priorityCalls = _.keys(priorities).map(fileId => {
+    const target = `${infoHash}:f${fileId}`;
+    const priority = priorities[fileId] ? 1 : 0;
 
     return {
       methodName: 'f.set_priority',

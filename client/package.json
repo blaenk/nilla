@@ -80,6 +80,7 @@
   "dependencies": {
     "bluebird": "^3.4.0",
     "bootstrap": "^3.3.6",
+    "countdown": "^2.6.0",
     "eslint-plugin-react": "^6.0.0-rc.1",
     "filesize": "^3.3.0",
     "font-awesome": "^4.6.3",

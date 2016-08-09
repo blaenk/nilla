@@ -13,15 +13,32 @@ class CommandBar extends React.Component {
   constructor(props) {
     super(props);
 
-    this._erase = this._erase.bind(this);
-    this._edit = this._edit.bind(this);
+    this.handleErase = this.handleErase.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
+    this.handleStats = this.handleStats.bind(this);
   }
 
-  _edit() {
-    this.props.edit(this.props.infoHash, !this.props.ui.isEditing);
+  handleStats() {
+    this.props.stats(!this.props.ui.showStats);
   }
 
-  _erase() {
+  handleEdit() {
+    if (this.props.ui.isEditing) {
+      this.props.cancelEdit();
+
+      return;
+    }
+
+    const filePriorities = {};
+
+    for (const file of this.props.download.files.downloaded) {
+      filePriorities[file.id] = file.isEnabled;
+    }
+
+    this.props.edit(filePriorities);
+  }
+
+  handleErase() {
     if (confirm('are you sure you want to erase this?')) {
       this.props.erase(() => {
         this.props.router.push('/downloads');
@@ -42,7 +59,7 @@ class CommandBar extends React.Component {
         <Button bsSize='xsmall'
                 styleName='command-button'
                 title={isDownloading ? 'stop' : 'start'}
-                onClick={isDownloading ? this.props.stop : this.props.start}>
+                onClick={isDownloading ? this.props.onStop : this.props.onStart}>
           <Glyphicon glyph={isDownloading ? 'pause' : 'play'} />
         </Button>
 
@@ -56,26 +73,41 @@ class CommandBar extends React.Component {
         <Button bsSize='xsmall'
                 styleName='command-button'
                 title='enable/disable files'
-                onClick={this._edit}>
+                onClick={this.handleEdit}>
           <Glyphicon glyph='cog' />
         </Button>
 
         <Button bsSize='xsmall'
                 styleName='command-button'
                 title='show stats'
-                onClick={this.props.stats}>
+                onClick={this.handleStats}>
           <Glyphicon glyph='stats' />
         </Button>
 
         <Button bsSize='xsmall'
                 styleName='command-button'
                 title='delete'
-                onClick={this._erase}>
+                onClick={this.handleErase}>
           <Glyphicon glyph='remove' />
         </Button>
       </ButtonGroup>
     );
   }
 }
+
+CommandBar.propTypes = {
+  cancelEdit: React.PropTypes.func.isRequired,
+  download: React.PropTypes.object.isRequired,
+  edit: React.PropTypes.func.isRequired,
+  erase: React.PropTypes.func.isRequired,
+  lock: React.PropTypes.func.isRequired,
+  onStart: React.PropTypes.func.isRequired,
+  onStop: React.PropTypes.func.isRequired,
+  router: React.PropTypes.object.isRequired,
+  stats: React.PropTypes.func.isRequired,
+  ui: React.PropTypes.object.isRequired,
+  unlock: React.PropTypes.func.isRequired,
+  user: React.PropTypes.object.isRequired,
+};
 
 export default withRouter(CSSModules(CommandBar, styles));

@@ -265,7 +265,7 @@ function patchDownload(infoHash, action) {
         // save the round-trip
         // dispatch(setDownloadLock(infoHash, true));
 
-        return getDownload(infoHash)(dispatch);
+        return dispatch(getDownload(infoHash));
       });
   };
 }
@@ -302,13 +302,23 @@ export function eraseDownload(infoHash, callback) {
   };
 }
 
+export const SHOW_DOWNLOAD_STATS = 'SHOW_DOWNLOAD_STATS';
+
+export function showDownloadStats(infoHash, show) {
+  return {
+    type: SHOW_DOWNLOAD_STATS,
+    infoHash,
+    show,
+  };
+}
+
 export const EDIT_DOWNLOAD_FILES = 'EDIT_DOWNLOAD_FILES';
 
-export function editDownloadFiles(infoHash, isEditing) {
+export function editDownloadFiles(infoHash, filePriorities) {
   return {
     type: EDIT_DOWNLOAD_FILES,
     infoHash,
-    isEditing,
+    filePriorities,
   };
 }
 
@@ -394,5 +404,66 @@ export function submitAllFiles() {
     for (const file of getState().ui.upload.files) {
       dispatch(submitFile(file));
     }
+  };
+}
+
+export const ENABLE_DOWNLOAD_FILE = 'ENABLE_DOWNLOAD_FILE';
+
+export function enableDownloadFile(infoHash, fileId) {
+  return {
+    type: ENABLE_DOWNLOAD_FILE,
+    infoHash,
+    fileId,
+  };
+}
+
+export const CANCEL_EDIT_FILES = 'CANCEL_EDIT_FILES';
+
+export function cancelEditFiles(infoHash) {
+  return {
+    type: CANCEL_EDIT_FILES,
+    infoHash,
+  };
+}
+
+export const INVERT_DOWNLOAD_FILE = 'INVERT_DOWNLOAD_FILE';
+
+export function invertDownloadFile(infoHash, fileId) {
+  return {
+    type: INVERT_DOWNLOAD_FILE,
+    infoHash,
+    fileId,
+  };
+}
+
+export const APPLY_EDIT_FILES = 'APPLY_EDIT_FILES';
+
+export function applyEditFiles(infoHash, filePriorities) {
+  return (dispatch) => {
+    dispatch(cancelEditFiles(infoHash));
+
+    request.patch(`/api/downloads/${infoHash}`)
+      .accept('json')
+      .send({
+        action: 'setFilePriorities',
+        params: filePriorities,
+      })
+      .then(res => {
+        if (res.body.error) {
+          return;
+        }
+
+        dispatch(getDownload(infoHash));
+      });
+  };
+}
+
+export const DISABLE_DOWNLOAD_FILE = 'DISABLE_DOWNLOAD_FILE';
+
+export function disableDownloadFile(infoHash, fileId) {
+  return {
+    type: DISABLE_DOWNLOAD_FILE,
+    infoHash,
+    fileId,
   };
 }

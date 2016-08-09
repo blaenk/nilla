@@ -1,13 +1,15 @@
 import React from 'react';
 import CSSModules from 'react-css-modules';
-import { Row, Col, ButtonGroup, Button } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 
 import { getDownload, getUser } from 'actions';
 
 import Header from './Header';
 import File from './File';
 import FilesSection from './FilesSection';
+import Statistics from './Statistics';
 
+import EditFilesContainer from 'containers/Download/EditFilesContainer';
 import SearchContainer from 'containers/Download/SearchContainer';
 import CommandBarContainer from 'containers/Download/CommandBarContainer';
 
@@ -21,6 +23,10 @@ class Download extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (!(nextProps.download.uploader in nextProps.users)) {
+      this.props.dispatch(getUser(nextProps.download.uploader));
+    }
+
     for (const userID of nextProps.download.locks) {
       if (!(userID in nextProps.users)) {
         this.props.dispatch(getUser(userID));
@@ -40,48 +46,18 @@ class Download extends React.Component {
 
     const fileCount = files.downloaded.length + files.extracted.length;
 
-    let editHelp;
+    let editFiles;
 
     if (ui.isEditing) {
-      editHelp = (
-        <Row>
-          <Col lg={12}>
-            <div styleName='edit-files'>
-              <ButtonGroup justified>
-                <ButtonGroup>
-                  <Button bsStyle='danger'>Cancel</Button>
-                </ButtonGroup>
-
-                <ButtonGroup>
-                  <Button>Enable all</Button>
-                </ButtonGroup>
-
-                <ButtonGroup>
-                  <Button>Disable all</Button>
-                </ButtonGroup>
-
-                <ButtonGroup>
-                  <Button bsStyle='success'>Apply</Button>
-                </ButtonGroup>
-              </ButtonGroup>
-
-              <div styleName='edit-help'>
-                <ul>
-                  <li>Click on files to toggle whether they're enabled or not.</li>
-                  <li>Click on folder checkboxes to toggle all contained files.</li>
-                  <li>
-                    <strong>Enable all</strong> enables all <em>visible</em> files.
-                    This means you can filter the files and then use this button
-                    to enable everything that is visible given the filter.
-                    Same goes for <strong>Disable all</strong>.
-                  </li>
-                  <li>Click <strong>apply</strong> when done.</li>
-                </ul>
-              </div>
-            </div>
-          </Col>
-        </Row>
+      editFiles = (
+        <EditFilesContainer infoHash={this.props.infoHash} files={files.downloaded} />
       );
+    }
+
+    let stats;
+
+    if (ui.showStats) {
+      stats = <Statistics download={download} />;
     }
 
     return (
@@ -105,18 +81,21 @@ class Download extends React.Component {
           </Col>
         </Row>
 
+        {stats}
+
         <Row>
           <Col lg={12}>
             <SearchContainer count={fileCount} infoHash={this.props.infoHash} />
           </Col>
         </Row>
 
-        {editHelp}
+        {editFiles}
 
         <Row>
           <Col lg={12}>
             <FilesSection label='EXTRACTED'
                           depth={1}
+                          infoHash={this.props.infoHash}
                           files={files.extracted}
                           isMultiFile={download.isMultiFile}
                           initialCollapse={ui.isCollapsed}
@@ -124,6 +103,7 @@ class Download extends React.Component {
 
             <FilesSection label='DOWNLOADED'
                           showLabelIf={download.files.extracted.length > 0}
+                          infoHash={this.props.infoHash}
                           files={files.downloaded}
                           isMultiFile={download.isMultiFile}
                           initialCollapse={ui.isCollapsed}
@@ -164,6 +144,7 @@ Download.propTypes = {
   ui: React.PropTypes.shape({
     isFetching: React.PropTypes.bool.isRequired,
   }),
+  users: React.PropTypes.object.isRequired,
 };
 
 export default CSSModules(Download, styles);

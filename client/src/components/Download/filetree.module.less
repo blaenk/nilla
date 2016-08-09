@@ -102,11 +102,21 @@
   border-radius: 0;
 }
 
-.file-name-incomplete {
+.file-name-disabled {
   composes: file-name;
-
-  cursor: default;
+  cursor: pointer;
   color: #aaa;
+}
+
+.file-name-enabled {
+  composes: file-name;
+  cursor: pointer;
+  color: inherit;
+}
+
+.file-name-incomplete {
+  composes: file-name-disabled;
+  cursor: default;
 }
 
 .collapse-mark {

@@ -1,7 +1,7 @@
 import React from 'react';
 import CSSModules from 'react-css-modules';
 
-import FileTree from './FileTree';
+import FileTreeContainer from 'containers/Download/FileTreeContainer';
 
 import styles from './download.module.less';
 
@@ -23,13 +23,14 @@ function FilesSection(props) {
   return (
     <div styleName='files'>
       {sectionLabel}
-      <FileTree isRoot
-                isEditing={props.isEditing}
-                isMultiFile={props.isMultiFile}
-                depth={props.depth}
-                initialCollapse={props.initialCollapse}
-                downloadName={props.downloadName}
-                files={props.files} />
+      <FileTreeContainer isRoot
+                         infoHash={props.infoHash}
+                         isEditing={props.isEditing}
+                         isMultiFile={props.isMultiFile}
+                         depth={props.depth}
+                         initialCollapse={props.initialCollapse}
+                         downloadName={props.downloadName}
+                         files={props.files} />
     </div>
   );
 }
@@ -43,7 +44,9 @@ FilesSection.propTypes = {
   depth: React.PropTypes.number.isRequired,
   downloadName: React.PropTypes.string.isRequired,
   files: React.PropTypes.array.isRequired,
+  infoHash: React.PropTypes.string.isRequired,
   initialCollapse: React.PropTypes.bool.isRequired,
+  isEditing: React.PropTypes.bool.isRequired,
   isMultiFile: React.PropTypes.bool.isRequired,
   label: React.PropTypes.string.isRequired,
   showLabelIf: React.PropTypes.bool.isRequired,
