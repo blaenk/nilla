@@ -72,6 +72,7 @@ Header.propTypes = {
   progress: React.PropTypes.number.isRequired,
   state: React.PropTypes.string.isRequired,
   uploader: React.PropTypes.string.isRequired,
+  users: React.PropTypes.array.isRequired,
 };
 
 export default CSSModules(Header, styles);
