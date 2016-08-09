@@ -140,7 +140,7 @@ describe('Server', function() {
       .expect(HttpStatus.OK)
       .expect('Content-Type', /json/)
       .expect(({ body: user }) => {
-        expect(user).to.contain.keys('exp', 'iat');
+        expect(user).to.contain.keys('id', 'username', 'permissions');
 
         expect(user.id).to.equal(USER.id);
         expect(user.username).to.equal(USER.username);
