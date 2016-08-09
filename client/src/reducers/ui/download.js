@@ -85,7 +85,7 @@ function downloadUI(state = DEFAULT_DOWNLOAD_STATE, action) {
     case RECEIVE_DOWNLOAD:
       return Object.assign({}, state, {
         isFetching: false,
-        lastFetch: Date.now(),
+        lastFetch: new Date(),
         isAugmented: true,
       });
     default:

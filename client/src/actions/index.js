@@ -52,6 +52,15 @@ export function getCurrentUser() {
   };
 }
 
+export const SET_DOWNLOADS_LAST_SEEN = 'SET_DOWNLOADS_LAST_SEEN';
+
+export function setDownloadsLastSeen(date) {
+  return {
+    type: SET_DOWNLOADS_LAST_SEEN,
+    date,
+  };
+}
+
 export const SET_DOWNLOADS_SCOPE = 'SET_DOWNLOADS_SCOPE';
 
 /**
@@ -219,7 +228,7 @@ export function receiveDownloads(downloads) {
   return {
     type: RECEIVE_DOWNLOADS,
     downloads,
-    receivedAt: Date.now(),
+    receivedAt: new Date(),
   };
 }
 
@@ -239,7 +248,7 @@ export function receiveDownload(infoHash, download) {
     type: RECEIVE_DOWNLOAD,
     infoHash,
     download,
-    receivedAt: Date.now(),
+    receivedAt: new Date(),
   };
 }
 
@@ -247,6 +256,8 @@ function normalizeDownloads(downloads) {
   const normalized = {};
 
   for (const download of downloads) {
+    download.dateAdded = new Date(download.dateAdded);
+
     normalized[download.infoHash] = download;
   }
 
@@ -286,6 +297,8 @@ export function getDownload(infoHash) {
         if (download.error) {
           return;
         }
+
+        download.dateAdded = new Date(download.dateAdded);
 
         dispatch(receiveDownload(infoHash, download));
 

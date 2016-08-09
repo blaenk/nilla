@@ -17,7 +17,13 @@ function loadLocalStorage() {
 
   if (localState !== null) {
     try {
-      return JSON.parse(localState);
+      const parsed = JSON.parse(localState);
+
+      if (parsed.ui && parsed.ui.downloads && parsed.ui.downloads.lastSeen) {
+        parsed.ui.downloads.lastSeen = new Date(parsed.ui.downloads.lastSeen);
+      }
+
+      return parsed;
     } catch (e) {
       // Leaving defaultState undefined is expected behavior for redux to
       // initialize with each states' default state.

@@ -8,11 +8,25 @@ import DownloadList from 'components/Downloads/DownloadList';
 
 import styles from './styles.module.less';
 
-import { getDownloads } from 'actions';
+import { getDownloads, setDownloadsLastSeen } from 'actions';
 
 class Downloads extends React.Component {
   componentDidMount() {
     this.props.dispatch(getDownloads());
+
+    this.updateLastSeen = this.updateLastSeen.bind(this);
+
+    window.addEventListener('beforeunload', this.updateLastSeen);
+  }
+
+  updateLastSeen() {
+    this.props.dispatch(setDownloadsLastSeen(new Date()));
+  }
+
+  componentWillUnmount() {
+    this.updateLastSeen();
+
+    window.removeEventListener('beforeunload', this.updateLastSeen);
   }
 
   render() {

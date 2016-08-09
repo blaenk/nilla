@@ -32,6 +32,8 @@ function Download(props) {
 
   let maybeHide = props.isHidden ? { display: 'none' } : {};
 
+  let nameStyle = props.lastSeen < props.dateAdded ? 'unseen' : 'name';
+
   return (
     <li styleName='download' style={maybeHide}>
       <OverlayTrigger placement='right' overlay={progressTooltip}>
@@ -41,7 +43,7 @@ function Download(props) {
                aria-valuenow={props.progress} />
         </div>
       </OverlayTrigger>
-      <Link to={`/downloads/${props.infoHash}/${props.name}`} styleName='name'>
+      <Link to={`/downloads/${props.infoHash}/${props.name}`} styleName={nameStyle}>
         {props.name}
       </Link>
       {lockStatus()}
@@ -50,8 +52,10 @@ function Download(props) {
 }
 
 Download.propTypes = {
+  dateAdded: React.PropTypes.object.isRequired,
   infoHash: React.PropTypes.string.isRequired,
   isHidden: React.PropTypes.bool.isRequired,
+  lastSeen: React.PropTypes.object.isRequired,
   locks: React.PropTypes.array.isRequired,
   name: React.PropTypes.string.isRequired,
   progress: React.PropTypes.number.isRequired,

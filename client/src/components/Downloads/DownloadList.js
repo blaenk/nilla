@@ -13,6 +13,7 @@ function DownloadList(props) {
       <DownloadContainer key={download.infoHash}
                          isHidden={download.isHidden}
                          infoHash={download.infoHash}
+                         dateAdded={download.dateAdded}
                          state={download.state}
                          progress={download.progress}
                          name={download.name}

@@ -2,6 +2,7 @@ import {
   REQUEST_DOWNLOADS,
   RECEIVE_DOWNLOADS,
   SET_DOWNLOADS_FILTER,
+  SET_DOWNLOADS_LAST_SEEN,
   SET_DOWNLOADS_ORDER,
   SET_DOWNLOADS_SCOPE,
 } from 'actions';
@@ -11,10 +12,15 @@ const DEFAULT_DOWNLOAD_STATE = {
   scope: 'ALL',
   order: 'RECENT',
   filter: '',
+  lastSeen: null,
 };
 
 export default function downloadsUI(state = DEFAULT_DOWNLOAD_STATE, action) {
   switch (action.type) {
+    case SET_DOWNLOADS_LAST_SEEN:
+      return Object.assign({}, state, {
+        lastSeen: action.date,
+      });
     case REQUEST_DOWNLOADS:
       return Object.assign({}, state, {
         isFetching: true,
