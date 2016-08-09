@@ -3,13 +3,14 @@ import { connect } from 'react-redux';
 import { Button, Col, Row } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 
-import styles from './upload.module.less';
+import FileUploadContainer from 'containers/App/FileUploadContainer';
 
 import RejectedFilesErrorAlert from './RejectedFilesErrorAlert';
 import MagnetURI from './MagnetURI';
-import FileUpload from './FileUpload';
 
 import { submitAllFiles } from 'actions';
+
+import styles from './upload.module.less';
 
 const UploadAllButton = connect(
   null,
@@ -24,7 +25,7 @@ const UploadAllButton = connect(
 
 function Upload(props) {
   let files = props.files.map(file => (
-    <FileUpload file={file} key={file.backingFile.preview} />
+    <FileUploadContainer file={file} key={file.backingFile.preview} />
   ));
 
   return (
