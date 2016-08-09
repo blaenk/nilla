@@ -14,9 +14,9 @@ const torrents = require('./fixtures/torrents.json');
 function parseLoginForm(html) {
   const $ = cheerio.load(html);
   const csrf = $('input[name=_csrf]').val();
-  const redirectTo = $('input[name=_redirectTo]').val();
+  const ref = $('input[name=_ref]').val();
 
-  return { csrf, redirectTo };
+  return { csrf, ref };
 }
 
 const USER = {
@@ -80,13 +80,13 @@ describe('Server', function() {
           throw err;
         }
 
-        const { csrf, redirectTo } = parseLoginForm(res.text);
+        const { csrf, ref } = parseLoginForm(res.text);
 
         redirect.post('/login')
           .send('username=user')
           .send('password=pass')
           .send(`_csrf=${csrf}`)
-          .send(`_redirectTo=${redirectTo}`)
+          .send(`_ref=${ref}`)
           .expect(HttpStatus.MOVED_TEMPORARILY)
           .end((err, res) => {
             if (err) {

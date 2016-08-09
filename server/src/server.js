@@ -35,18 +35,17 @@ const {
   USE_SSL,
 } = process.env;
 
+function refererUrl(referer) {
+  if (referer === '/' || referer === '') {
+    return '/login';
+  }
+
+  return `/login?ref=${referer}`;
+}
+
 function JWTErrorHandler(err, req, res, _next) {
   if (err.name === 'UnauthorizedError') {
-    const redirectPath = req.originalUrl;
-    let redirectUrl;
-
-    if (redirectPath === '/' || redirectPath === '') {
-      redirectUrl = '/login';
-    } else {
-      redirectUrl = `/login?redirect=${redirectPath}`;
-    }
-
-    res.redirect(redirectUrl);
+    res.redirect(refererUrl(req.originalUrl));
   }
 }
 
@@ -63,16 +62,9 @@ function CSRFValidationError(err, req, res, next) {
 
   res.format({
     html: () => {
-      const { _redirectTo } = req.body;
-      let redirectUrl;
+      const { _ref } = req.body;
 
-      if (_redirectTo === '' || _redirectTo === '/') {
-        redirectUrl = '/login';
-      } else {
-        redirectUrl = `/login?redirect=${_redirectTo}`;
-      }
-
-      res.redirect(redirectUrl);
+      res.redirect(refererUrl(_ref));
     },
     json: () => {
       res.status(HttpStatus.BAD_REQUEST).json({
@@ -183,28 +175,22 @@ function attachAuthentication(app, options) {
   app.get('/login', CSRF, setCSRFTokenCookie, (req, res) => {
     res.render('login', {
       csrfToken: req.csrfToken(),
-      redirectTo: req.query.redirect || '',
+      ref: req.query.ref || '',
     });
   });
 
   app.post('/login', CSRF, (req, res) => {
-    const { username, password, _redirectTo = '' } = req.body;
-
-    let failureRedirect = '/login';
-
-    if (_redirectTo !== '') {
-      failureRedirect += `?redirect=${_redirectTo}`;
-    }
+    const { username, password, _ref = '' } = req.body;
 
     if (!username || !password) {
-      res.redirect(failureRedirect);
+      res.redirect(refererUrl(_ref));
 
       return;
     }
 
     options.authenticator(username, password, (error, user) => {
       if (error) {
-        res.redirect(failureRedirect);
+        res.redirect(refererUrl(_ref));
 
         return;
       }
@@ -220,7 +206,7 @@ function attachAuthentication(app, options) {
         expires: expiration,
       });
 
-      res.redirect(_redirectTo || '/');
+      res.redirect(_ref || '/');
     });
   });
 
