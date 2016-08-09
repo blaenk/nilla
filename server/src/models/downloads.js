@@ -137,15 +137,6 @@ function getDownloads() {
     });
 }
 
-function toNativePriority(priority) {
-  switch (priority) {
-    case 'off': return '0';
-    case 'normal': return '1';
-    case 'high': return '2';
-    default: throw new Error('unknown priority');
-  }
-}
-
 function toHumanPriority(priority) {
   switch (priority) {
     case '0': return 'off';
