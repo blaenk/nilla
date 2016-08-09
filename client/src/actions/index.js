@@ -394,7 +394,10 @@ export function submitFile(file) {
         dispatch(setFileProgress(fileObject, event.percent));
         fileObject = getFileObject();
       })
-      .then(_response => dispatch(removeFile(fileObject)))
+      .then(_response => {
+        dispatch(removeFile(fileObject));
+        dispatch(getDownloads());
+      })
       .catch(_error => dispatch(removeFile(fileObject)));
   };
 }
