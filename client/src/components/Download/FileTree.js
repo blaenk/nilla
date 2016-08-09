@@ -143,7 +143,7 @@ class FileTree extends React.Component {
     if (this.props.isEditing) {
       const allEnabled =
             this._files.map(f => f.id)
-            .every(id => this.props.ui.filePriorities[id]);
+              .every(id => this.props.ui.filePriorities[id]);
 
       checkbox = (
         <Checkbox inline defaultChecked={allEnabled} onClick={this.handleToggleContained} />

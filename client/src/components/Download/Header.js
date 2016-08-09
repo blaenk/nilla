@@ -21,8 +21,8 @@ function Header(props) {
 
   if (props.locks.length) {
     const lockedBy = props.locks.filter(id => id in props.users)
-          .map(id => props.users[id].username)
-          .join(', ');
+      .map(id => props.users[id].username)
+      .join(', ');
 
     expiresOrLocks = <span className='locks'>and locked by {lockedBy}</span>;
   } else {
