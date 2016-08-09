@@ -5,18 +5,18 @@ import { Row, Col } from 'react-bootstrap';
 import styles from './styles.module.less';
 
 import Download from './Download';
+import DownloadContainer from 'containers/Downloads/DownloadContainer';
 
 function DownloadList(props) {
   let downloads = props.downloads.map(download => {
-    // return React.createElement(Download, Object.assign({}, download));
     return (
-      <Download key={download.infoHash}
-                isHidden={download.isHidden}
-                infoHash={download.infoHash}
-                state={download.state}
-                progress={download.progress}
-                name={download.name}
-                locks={download.locks} />
+      <DownloadContainer key={download.infoHash}
+                         isHidden={download.isHidden}
+                         infoHash={download.infoHash}
+                         state={download.state}
+                         progress={download.progress}
+                         name={download.name}
+                         locks={download.locks} />
     );
   });
 

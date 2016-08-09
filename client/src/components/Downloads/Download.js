@@ -15,7 +15,11 @@ function Download(props) {
   );
 
   const lockStatus = () => {
-    if (props.locks.length) {
+    if (!props.user) {
+      return null;
+    }
+
+    if (props.locks.includes(props.user.id)) {
       return (
         <OverlayTrigger placement='left' overlay={lockedTooltip}>
           <div styleName='lock-status' />
@@ -58,6 +62,7 @@ Download.propTypes = {
     'hashing',
     'stopped',
   ]).isRequired,
+  user: React.PropTypes.object.isRequired,
 };
 
 export default CSSModules(Download, styles);
