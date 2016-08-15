@@ -19,6 +19,10 @@ const test = path.join(root, 'test');
 
 const config = {};
 
+config.node = {
+  fs: 'empty',
+};
+
 config.plugins = [];
 
 config.bail = true;

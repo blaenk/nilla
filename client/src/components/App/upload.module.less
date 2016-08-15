@@ -40,13 +40,53 @@
   padding-left: 0;
 }
 
+.torrent-files {
+  margin-top: 15px;
+}
+
+.torrent-trackers {
+  margin-top: 15px;
+}
+
 .file {
   background-color: #fefefe;
   border: 1px solid #e1e1e1;
   margin-top: 5px;
-  padding: 5px;
+  list-style: none;
+}
+
+.file-section {
   display: flex;
+  padding: 10px;
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+}
+
+.parsed-section {
+  padding: 10px;
+  background-color: #fefefe;
+}
+
+.file-info {
   flex: 1;
+}
+
+.torrent-name {
+  margin: 0;
+}
+
+.infoHash {
+  font-family: monospace;
+  color: #555;
+  cursor: default;
+}
+
+.torrent-meta {
+  margin-top: 5px;
+}
+
+.torrent-separator {
+  margin: 0 10px;
 }
 
 .name {
@@ -56,7 +96,6 @@
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  margin-left: 5px;
 }
 
 .size {
@@ -64,7 +103,10 @@
   margin-right: 10px;
   border-radius: 0;
   cursor: default;
-  padding-top: 6px;
+}
+
+.torrent-size {
+  font-weight: bold;
 }
 
 .upload-progress {

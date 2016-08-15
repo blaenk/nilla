@@ -1,4 +1,5 @@
 import request from 'superagent';
+import parseTorrent from 'parse-torrent';
 import Cookies from 'js-cookie';
 
 export const REQUEST_USER = 'REQUEST_USER';
@@ -393,6 +394,30 @@ export function editDownloadFiles(infoHash, filePriorities) {
     type: EDIT_DOWNLOAD_FILES,
     infoHash,
     filePriorities,
+  };
+}
+
+export const SET_PARSED_FILE = 'SET_PARSED_FILE';
+
+export function setParsedFile(file, parsed) {
+  return {
+    type: SET_PARSED_FILE,
+    file,
+    parsed,
+  };
+}
+
+export function parseFile(file) {
+  return (dispatch) => {
+    parseTorrent.remote(file.backingFile, (err, parsed) => {
+      if (err) {
+        dispatch(rejectFiles([file]));
+
+        return;
+      }
+
+      dispatch(setParsedFile(file, parsed));
+    });
   };
 }
 

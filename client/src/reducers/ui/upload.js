@@ -7,6 +7,7 @@ import {
   SET_UPLOADING,
   SET_FILE_START,
   SET_FILE_PROGRESS,
+  SET_PARSED_FILE,
   UPLOAD_FILE,
   UPLOAD_FILE_SUCCESS,
   UPLOAD_FILE_FAILURE,
@@ -51,6 +52,21 @@ export default function upload(state = DEFAULT_STATE, action) {
         if (f === action.file) {
           return Object.assign({}, f, {
             start: action.start,
+          });
+        }
+
+        return f;
+      });
+
+      return Object.assign({}, state, {
+        files,
+      });
+    }
+    case SET_PARSED_FILE: {
+      const files = state.files.map(f => {
+        if (f === action.file) {
+          return Object.assign({}, f, {
+            parsed: action.parsed,
           });
         }
 
