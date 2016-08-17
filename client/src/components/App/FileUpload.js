@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   Button,
+  Collapse,
   Checkbox,
   Glyphicon,
   Label,
@@ -9,6 +10,8 @@ import {
 } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 import filesize from 'filesize';
+
+import FolderItem from './FolderItem';
 
 import styles from './upload.module.less';
 
@@ -26,6 +29,20 @@ const StartCheckbox = connect(
 )(Checkbox);
 
 class FileUpload extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isCollapsed: false,
+    };
+
+    this.handleCollapse = this.handleCollapse.bind(this);
+  }
+
+  handleCollapse() {
+    this.setState({ isCollapsed: !this.state.isCollapsed });
+  }
+
   componentWillMount() {
     this.props.parseFile();
   }
@@ -50,12 +67,6 @@ class FileUpload extends React.Component {
         return f;
       }).sort((a, b) => {
         return a.path.toLocaleLowerCase().localeCompare(b.path.toLocaleLowerCase());
-      }).map(f => {
-        return (
-          <li key={f.path}>
-            {f.path} - {filesize(f.length)}
-          </li>
-        );
       });
 
       const wrappedName = this.props.file.parsed.name.replace(/\./g, '\u200b.');
@@ -63,9 +74,9 @@ class FileUpload extends React.Component {
       torrentInfo = (
         <div styleName='parsed-section'>
           <div>
-            <h3 styleName='torrent-name'>
+            <h2 styleName='torrent-name'>
               {wrappedName}
-            </h3>
+            </h2>
 
             <div styleName='torrent-meta'>
               <span styleName='infoHash'>
@@ -82,7 +93,7 @@ class FileUpload extends React.Component {
 
           <div className='torrent-info'>
             <div styleName='torrent-trackers'>
-              <strong>Trackers</strong>
+              <h3>Trackers</h3>
 
               <ol>
                 {trackers}
@@ -90,11 +101,9 @@ class FileUpload extends React.Component {
             </div>
 
             <div styleName='torrent-files'>
-              <strong>Files</strong>
+              <h3>Files ({this.props.file.parsed.files.length})</h3>
 
-              <ul>
-                {files}
-              </ul>
+              <FolderItem isRoot depth={0} files={files} />
             </div>
           </div>
         </div>
@@ -133,7 +142,10 @@ class FileUpload extends React.Component {
 
     let fileInfo = (
       <div styleName='file-section'>
-        <div styleName='file-info'>
+        <div styleName='file-info' onClick={this.handleCollapse}>
+          <Glyphicon className={this.props.styles['collapse-mark']}
+                     glyph={this.state.isCollapsed ? 'chevron-down' : 'chevron-up'} />
+
           <span styleName='name'>
             {this.props.file.backingFile.name}
           </span>
@@ -153,7 +165,11 @@ class FileUpload extends React.Component {
       <li styleName='file'>
         {fileInfo}
 
-        {torrentInfo}
+        <Collapse in={!this.state.isCollapsed}>
+          <div>
+            {torrentInfo}
+          </div>
+        </Collapse>
       </li>
     );
   }
@@ -164,6 +180,7 @@ FileUpload.propTypes = {
   onRemove: React.PropTypes.func.isRequired,
   onSubmit: React.PropTypes.func.isRequired,
   parseFile: React.PropTypes.func.isRequired,
+  styles: React.PropTypes.object,
 };
 
 export default CSSModules(FileUpload, styles);

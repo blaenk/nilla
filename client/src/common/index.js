@@ -31,3 +31,30 @@ const EXPIRATION_DURATION = moment.duration(2, 'weeks');
 export function expiresAt(date) {
   return moment(date).add(EXPIRATION_DURATION);
 }
+
+export function partitionFiles(entries, depth) {
+  const folders = [], files = [], tree = {};
+
+  for (const entry of entries) {
+    if (depth + 1 < entry.pathComponents.length) {
+      const name = entry.pathComponents[depth];
+
+      tree[name] = tree[name] || [];
+      tree[name].push(entry);
+    } else {
+      files.push(entry);
+    }
+  }
+
+  _.forOwn(tree, (value, key) => {
+    folders.push({
+      name: key,
+      files: value,
+    });
+  });
+
+  return {
+    folders,
+    files,
+  };
+}

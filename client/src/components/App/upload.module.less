@@ -4,6 +4,24 @@
   margin-bottom: 10px;
 }
 
+.root-folder {
+  padding-left: 0;
+  list-style: none;
+}
+
+.folder-tab {
+  cursor: pointer;
+}
+
+.collapse-mark {
+  color: #aaa;
+  margin-right: 5px;
+
+  &:before {
+    vertical-align: text-bottom;
+  }
+}
+
 .separator {
   padding: 0;
   text-align: center;
@@ -69,6 +87,7 @@
 
 .file-info {
   flex: 1;
+  cursor: pointer;
 }
 
 .torrent-name {
@@ -91,7 +110,7 @@
 
 .name {
   color: #555;
-  cursor: default;
+  font-weight: bold;
   flex: 1;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -102,7 +121,6 @@
   margin-left: 10px;
   margin-right: 10px;
   border-radius: 0;
-  cursor: default;
 }
 
 .torrent-size {
