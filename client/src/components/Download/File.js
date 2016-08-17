@@ -31,7 +31,9 @@ class File extends React.Component {
     const isDisabled = !this.props.isEnabled;
 
     const encodedName = this.props.downloadName;
-    const encodedPath = this.props.pathComponents.map(encodeURIComponent).join('/');
+    const encodedPath = this.props.pathComponents.map(c => {
+      return encodeURIComponent(c).replace(/%20/g, '+');
+    }).join('/');
 
     let url;
 

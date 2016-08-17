@@ -34,6 +34,8 @@ function Download(props) {
 
   let nameStyle = props.lastSeen < props.dateAdded ? 'unseen' : 'name';
 
+  const encodedName = encodeURIComponent(props.name).replace(/%20/g, '+');
+
   return (
     <li styleName='download' style={maybeHide}>
       <OverlayTrigger placement='right' overlay={progressTooltip}>
@@ -43,7 +45,7 @@ function Download(props) {
                aria-valuenow={props.progress} />
         </div>
       </OverlayTrigger>
-      <Link to={`/downloads/${props.infoHash}/${props.name}`} styleName={nameStyle}>
+      <Link to={`/downloads/${props.infoHash}/${encodedName}`} styleName={nameStyle}>
         {props.name}
       </Link>
       {lockStatus()}
