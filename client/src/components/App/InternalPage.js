@@ -25,6 +25,10 @@ class App extends React.Component {
     this.dropzoneRef.getWrappedInstance().open();
   }
 
+  shouldComponentUpdate(nextProps, _nextState) {
+    return this.props.children !== nextProps.children;
+  }
+
   render() {
     return (
       <DropzoneContainer

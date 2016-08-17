@@ -21,6 +21,12 @@ class Search extends React.Component {
     this.props.collapse(this.props.infoHash, !this.props.isCollapsed);
   }
 
+  shouldComponentUpdate(nextProps, _nextState) {
+    return this.props.isCollapsed !== nextProps.isCollapsed ||
+      this.props.count !== nextProps.count ||
+      this.props.filter !== nextProps.filter;
+  }
+
   render() {
     let collapseButton;
 

@@ -22,6 +22,13 @@ class Download extends React.Component {
     dispatch(getDownload(this.props.infoHash));
   }
 
+  shouldComponentUpdate(nextProps, _nextState) {
+    return this.props.download !== nextProps.download ||
+      this.props.files !== nextProps.files ||
+      this.props.users !== nextProps.users ||
+      this.props.ui.isCollapsed !== nextProps.ui.isCollapsed;
+  }
+
   render() {
     const { download, ui, files, users } = this.props;
 
@@ -139,6 +146,7 @@ Download.propTypes = {
   params: React.PropTypes.object.isRequired,
   ui: React.PropTypes.shape({
     isFetching: React.PropTypes.bool.isRequired,
+    isCollapsed: React.PropTypes.bool.isRequired,
   }),
   users: React.PropTypes.object.isRequired,
 };
