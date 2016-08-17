@@ -6,7 +6,7 @@ import {
   parseFile,
 } from 'actions';
 
-import FileUpload from 'components/App/FileUpload';
+import FileUpload from 'components/Upload/FileUpload';
 
 const FileUploadContainer = connect(
   null,

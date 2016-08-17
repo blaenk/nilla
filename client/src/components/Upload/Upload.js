@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Button, Col, Row } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 
-import FileUploadContainer from 'containers/App/FileUploadContainer';
+import FileUploadContainer from 'containers/Upload/FileUploadContainer';
 
 import RejectedFilesErrorAlert from './RejectedFilesErrorAlert';
 import MagnetURI from './MagnetURI';

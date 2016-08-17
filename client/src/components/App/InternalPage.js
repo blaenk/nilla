@@ -2,10 +2,10 @@ import React from 'react';
 import { Grid } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 
-import CollapseContainer from 'containers/App/CollapseContainer';
 import HeaderContainer from 'containers/App/HeaderContainer';
-import UploadContainer from 'containers/App/UploadContainer';
-import DropzoneContainer from 'containers/App/DropzoneContainer';
+import CollapseContainer from 'containers/Upload/CollapseContainer';
+import UploadContainer from 'containers/Upload/UploadContainer';
+import DropzoneContainer from 'containers/Upload/DropzoneContainer';
 
 import styles from 'styles/app.module.less';
 

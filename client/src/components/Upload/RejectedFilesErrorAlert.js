@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 import filesize from 'filesize';
 
-import ErrorAlert from './ErrorAlert';
+import ErrorAlert from 'components/App/ErrorAlert';
 
 function RejectedFilesErrorAlert(props) {
   if (props.rejectedFiles.length > 0) {

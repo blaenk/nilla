@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 import { clearRejectedFiles } from 'actions';
 
-import Upload from 'components/App/Upload';
+import Upload from 'components/Upload/Upload';
 
 function mapStateToProps(state) {
   return {
