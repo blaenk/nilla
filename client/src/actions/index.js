@@ -421,6 +421,37 @@ export function parseFile(file) {
   };
 }
 
+function downloadFromFileObjectForUser(fileObject, user) {
+  const { infoHash, name, length, announce } = fileObject.parsed;
+
+  const state = fileObject.start ? 'downloading' : 'closed';
+
+  return {
+    infoHash,
+    name,
+    isComplete: false,
+    ratio: '0.00',
+    message: '',
+    isMultifile: fileObject.parsed.files.length > 1,
+    isHashChecking: false,
+    isActive: true,
+    isOpen: fileObject.start,
+    sizeBytes: length,
+    completedBytes: 0,
+    leeches: 0,
+    seeders: 0,
+    uploadRate: 0,
+    downloadRate: 0,
+    totalUploaded: 0,
+    uploader: user.id,
+    locks: [],
+    dateAdded: new Date(),
+    state,
+    progress: 0,
+    trackers: announce,
+  };
+}
+
 export function submitFile(file) {
   return (dispatch, getState) => {
     let fileObject = getState().ui.upload.files.find(f => f === file);
@@ -443,6 +474,11 @@ export function submitFile(file) {
         fileObject = getFileObject();
       })
       .then(_response => {
+        const currentUser = getState().data.users.current;
+        const download = downloadFromFileObjectForUser(fileObject, currentUser);
+
+        dispatch(receiveDownload(download.infoHash, download));
+
         dispatch(removeFile(fileObject));
 
         if (getState().ui.upload.files.length === 0) {
