@@ -7,6 +7,11 @@ function mapDispatchToProps(dispatch) {
   return {
     onDropAccepted(files) {
       dispatch(setDragging(false));
+
+      if (files.length === 0) {
+        return;
+      }
+
       dispatch(setUploading(true));
       dispatch(addFiles(files));
     },
