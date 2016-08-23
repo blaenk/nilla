@@ -40,6 +40,7 @@ function Header(props) {
 
 Header.propTypes = {
   isDragging: React.PropTypes.bool.isRequired,
+  onLogout: React.PropTypes.func.isRequired,
   onUpload: React.PropTypes.func.isRequired,
 };
 

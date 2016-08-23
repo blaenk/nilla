@@ -8,8 +8,11 @@ function getUserByUsername(db, username, callback) {
 }
 
 function getUserById(db, id, callback) {
-  db.get('SELECT * FROM users WHERE id = ?', id,
-         (error, row) => callback(error, row));
+  db.get('SELECT * FROM users WHERE id = ?', id, callback);
+}
+
+function getUsers(db, callback) {
+  db.all('SELECT * FROM users', callback);
 }
 
 function createRefreshToken(callback) {
@@ -29,5 +32,6 @@ function createRefreshToken(callback) {
 module.exports = {
   getUserByUsername,
   getUserById,
+  getUsers,
   createRefreshToken,
 };

@@ -24,7 +24,11 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 const HeaderContainer = connect(
   mapStateToProps,
   null,
-  mergeProps
+  mergeProps,
+  // this can be fixed when react-router 3.0 is released
+  // by wrapping withRouter(Header) or withRouter(LinkContainer),
+  // or maybe react-router-bootstrap is fixed by then
+  { pure: false }
 )(Header);
 
 export default HeaderContainer;

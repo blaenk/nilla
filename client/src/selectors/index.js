@@ -57,6 +57,24 @@ const getDownloadsScope = (state) => state.ui.downloads.scope;
 const getDownloadsOrder = (state) => state.ui.downloads.order;
 const getCurrentUser = (state) => state.data.users.current;
 
+const getUsers = (state) => state.data.users;
+
+export const getUsersValues = createSelector(
+  [getUsers],
+  (users) => _.cloneDeep(_(users).omit('current').values().value())
+);
+
+export const getUsersSortedByName = createSelector(
+  [getUsersValues],
+  (users) => {
+    users.sort((a, b) => {
+      return a.username.toLocaleLowerCase().localeCompare(b.username.toLocaleLowerCase());
+    });
+
+    return users;
+  }
+);
+
 export const getDownloadsValues = createSelector(
   [getDownloads],
   (downloads) => _.cloneDeep(_.values(downloads))

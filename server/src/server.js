@@ -274,6 +274,20 @@ function attachAPI(app) {
     res.status(HttpStatus.OK).json({ id, username, permissions });
   });
 
+  api.get('/users', JWT, (req, res) => {
+    users.getUsers(db, (error, users) => {
+      const filteredUsers = users.map(row => {
+        const user = _.omit(row, ['password', 'refresh_token']);
+
+        user.permissions = user.permissions.split(',');
+
+        return user;
+      });
+
+      res.status(HttpStatus.OK).json(filteredUsers);
+    });
+  });
+
   api.get('/users/:id', JWT, (req, res) => {
     users.getUserById(db, req.params.id, (error, row) => {
       const filteredObject = _(row).pick('id', 'username');

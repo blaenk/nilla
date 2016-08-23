@@ -4,9 +4,12 @@ import CSSModules from 'react-css-modules';
 
 import { Provider } from 'react-redux';
 
+import InternalPage from 'components/App/InternalPage';
+
 import FilteredDownloads from 'containers/Downloads/FilteredDownloads';
 import DownloadContainer from 'containers/Download/DownloadContainer';
-import InternalPage from 'components/App/InternalPage';
+
+import UsersContainer from 'containers/Users/UsersContainer';
 
 import styles from 'styles/app.module.less';
 
@@ -19,6 +22,8 @@ function AppContainer(props) {
         <Route path='/' component={InternalPage}>
           <Route path='downloads' component={FilteredDownloads} />
           <Route path='downloads/:infoHash(/:name)' component={DownloadContainer} />
+
+          <Route path='users' component={UsersContainer} />
         </Route>
       </Router>
     </Provider>

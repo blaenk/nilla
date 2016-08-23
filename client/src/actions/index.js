@@ -233,6 +233,24 @@ export function receiveDownloads(downloads) {
   };
 }
 
+export const REQUEST_USERS = 'REQUEST_USERS';
+
+export function requestUsers() {
+  return {
+    type: REQUEST_USERS,
+  };
+}
+
+export const RECEIVE_USERS = 'RECEIVE_USERS';
+
+export function receiveUsers(users) {
+  return {
+    type: RECEIVE_USERS,
+    users,
+    receivedAt: new Date(),
+  };
+}
+
 export const REQUEST_DOWNLOAD = 'REQUEST_DOWNLOAD';
 
 export function requestDownload(infoHash) {
@@ -263,6 +281,22 @@ function normalizeDownloads(downloads) {
   }
 
   return normalized;
+}
+
+export function getUsers() {
+  return dispatch => {
+    dispatch(requestUsers());
+
+    return request.get('/api/users')
+      .accept('json')
+      .then(res => {
+        if (res.body.error) {
+          return;
+        }
+
+        dispatch(receiveUsers(res.body));
+      });
+  };
 }
 
 export function getDownloads() {
