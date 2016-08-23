@@ -16,22 +16,24 @@ function Header(props) {
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav>
-          <LinkContainer to={{ pathname: '/downloads' }}>
+          <LinkContainer to='/downloads'>
             <NavItem eventKey={1}>Download</NavItem>
           </LinkContainer>
 
           <NavItem eventKey={2} onClick={props.onUpload}>Upload</NavItem>
 
-          <LinkContainer to={{ pathname: '/trackers' }}>
+          <LinkContainer to='/trackers'>
             <NavItem eventKey={3}>Trackers</NavItem>
           </LinkContainer>
 
-          <LinkContainer to={{ pathname: '/users' }}>
+          <LinkContainer to='/users'>
             <NavItem eventKey={4}>Users</NavItem>
           </LinkContainer>
         </Nav>
         <Nav pullRight>
-          <NavItem eventKey={1} href='/logout'>Logout</NavItem>
+          <NavItem eventKey={5} onClick={props.onLogout}>
+            Logout
+          </NavItem>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

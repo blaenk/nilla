@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import { setUploading } from 'actions';
+import { setUploading, requestLogout } from 'actions';
 
 import Header from 'components/App/Header';
 
@@ -8,6 +8,15 @@ function mapStateToProps(state) {
   return {
     isDragging: state.ui.upload.isDragging,
     isUploading: state.ui.upload.isUploading,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+    onLogout() {
+      dispatch(requestLogout());
+    },
   };
 }
 
@@ -23,7 +32,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 const HeaderContainer = connect(
   mapStateToProps,
-  null,
+  mapDispatchToProps,
   mergeProps,
   // this can be fixed when react-router 3.0 is released
   // by wrapping withRouter(Header) or withRouter(LinkContainer),

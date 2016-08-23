@@ -2,6 +2,28 @@ import request from 'superagent';
 import parseTorrent from 'parse-torrent';
 import Cookies from 'js-cookie';
 
+export const LOGOUT = 'LOGOUT';
+
+export function logout() {
+  return {
+    type: LOGOUT,
+  };
+}
+
+export function requestLogout() {
+  return dispatch => {
+    return request.delete('/session')
+      .accept('json')
+      .then(res => {
+        if (res.statusCode !== 200) {
+          return Promise.resolve();
+        }
+
+        dispatch(logout());
+      });
+  };
+}
+
 export const REQUEST_USER = 'REQUEST_USER';
 
 export function requestUser(id) {
@@ -591,7 +613,7 @@ export function applyEditFiles(infoHash, filePriorities) {
   return (dispatch) => {
     dispatch(cancelEditFiles(infoHash));
 
-    request.patch(`/api/downloads/${infoHash}`)
+    return request.patch(`/api/downloads/${infoHash}`)
       .accept('json')
       .send({
         action: 'setFilePriorities',

@@ -37,44 +37,44 @@ if (__NODE_ENV__ === 'production') {
   defaultState = loadLocalStorage();
 }
 
-let store = createStore(
+function saveLocalStorage() {
+  const state = window.store.getState();
+
+  _.unset(state, 'ui.upload');
+  _.unset(state, 'data.users');
+
+  window.localStorage.setItem('redux', JSON.stringify(state));
+}
+
+window.addEventListener('beforeunload', saveLocalStorage);
+
+const handleLogout = _store => next => action => {
+  if (action.type === 'LOGOUT') {
+    window.removeEventListener('beforeunload', saveLocalStorage);
+    window.localStorage.clear();
+    window.location.href = '/login';
+
+    return;
+  }
+
+  return next(action);
+};
+
+window.store = createStore(
   Reducer,
   defaultState,
   compose(
-    applyMiddleware(thunkMiddleware),
+    applyMiddleware(handleLogout, thunkMiddleware),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )
 );
 
-function saveLocalStorage() {
-  let previousState;
-
-  return () => {
-    const currentState = store.getState();
-
-    if (previousState !== currentState) {
-      const state = _.cloneDeep(currentState);
-
-      _.unset(state, 'ui.upload');
-      _.unset(state, 'data.users');
-
-      window.localStorage.setItem('redux', JSON.stringify(state));
-    }
-
-    previousState = currentState;
-  };
-}
-
-if (__NODE_ENV__ === 'production') {
-  store.subscribe(saveLocalStorage());
-}
-
-store.dispatch(getCurrentUser());
+window.store.dispatch(getCurrentUser());
 
 document.addEventListener('DOMContentLoaded', () => {
   const mountNode = document.querySelector('#root');
 
   ReactDOM.render(
-    <AppContainer history={browserHistory} store={store} />,
+    <AppContainer history={browserHistory} store={window.store} />,
     mountNode);
 });

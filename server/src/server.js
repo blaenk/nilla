@@ -179,7 +179,16 @@ function attachAuthentication(app, options) {
     });
   });
 
-  app.post('/login', CSRF, (req, res) => {
+  app.delete('/session', JWT, (req, res) => {
+    console.log('logging out');
+    res.clearCookie('_csrf');
+    res.clearCookie('csrf-token');
+    res.clearCookie('token');
+    res.sendStatus(HttpStatus.OK);
+    console.log('sent status');
+  });
+
+  app.post('/session', CSRF, (req, res) => {
     const { username, password, _ref = '' } = req.body;
 
     if (!username || !password) {

@@ -32,7 +32,7 @@ function Download(props) {
 
   let maybeHide = props.isHidden ? { display: 'none' } : {};
 
-  let nameStyle = props.lastSeen < props.dateAdded ? 'unseen' : 'name';
+  let nameStyle = props.lastSeen && props.lastSeen < props.dateAdded ? 'unseen' : 'name';
 
   const encodedName = encodeURIComponent(props.name).replace(/%20/g, '+');
 

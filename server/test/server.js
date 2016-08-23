@@ -48,7 +48,7 @@ describe('Server', function() {
 
         const { csrf } = parseLoginForm(res.text);
 
-        fail.post('/login')
+        fail.post('/session')
           .send('username=baduser')
           .send('password=badpass')
           .send(`_csrf=${csrf}`)
@@ -82,7 +82,7 @@ describe('Server', function() {
 
         const { csrf, ref } = parseLoginForm(res.text);
 
-        redirect.post('/login')
+        redirect.post('/session')
           .send('username=user')
           .send('password=pass')
           .send(`_csrf=${csrf}`)
@@ -116,7 +116,7 @@ describe('Server', function() {
 
         const { csrf } = parseLoginForm(res.text);
 
-        agent.post('/login')
+        agent.post('/session')
           .send('username=user')
           .send('password=pass')
           .send(`_csrf=${csrf}`)
