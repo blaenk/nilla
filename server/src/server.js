@@ -296,6 +296,16 @@ function attachAPI(app) {
     });
   });
 
+  api.delete('/users/:id', JWT, (req, res) => {
+    console.log('deleting user', req.params.id);
+
+    res.status(HttpStatus.OK).json({ success: true });
+
+    // users.deleteUserById(db, req.params.id, (error, row) => {
+    //   res.status(HttpStatus.OK).json({ success: true });
+    // });
+  });
+
   api.get('/downloads', JWT, (req, res) => {
     downloads.getDownloads()
       .then(downloads => res.json(downloads));

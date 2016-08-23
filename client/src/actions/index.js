@@ -283,6 +283,29 @@ function normalizeDownloads(downloads) {
   return normalized;
 }
 
+export const DELETE_USER = 'DELETE_USER';
+
+export function deleteUser(userId) {
+  return {
+    type: DELETE_USER,
+    userId,
+  };
+}
+
+export function requestDeleteUser(userId) {
+  return dispatch => {
+    return request.delete(`/api/users/${userId}`)
+      .accept('json')
+      .then(res => {
+        if (res.body.error) {
+          return;
+        }
+
+        dispatch(deleteUser(userId));
+      });
+  };
+}
+
 export function getUsers() {
   return dispatch => {
     dispatch(requestUsers());

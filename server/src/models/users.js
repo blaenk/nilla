@@ -3,8 +3,7 @@
 const crypto = require('crypto');
 
 function getUserByUsername(db, username, callback) {
-  db.get('SELECT * FROM users WHERE username = ?', username,
-         (error, row) => callback(error, row));
+  db.get('SELECT * FROM users WHERE username = ?', username, callback);
 }
 
 function getUserById(db, id, callback) {
@@ -13,6 +12,10 @@ function getUserById(db, id, callback) {
 
 function getUsers(db, callback) {
   db.all('SELECT * FROM users', callback);
+}
+
+function deleteUserById(db, id, callback) {
+  db.run('DELETE users WHERE id = ?', id, callback);
 }
 
 function createRefreshToken(callback) {
@@ -32,6 +35,7 @@ function createRefreshToken(callback) {
 module.exports = {
   getUserByUsername,
   getUserById,
+  deleteUserById,
   getUsers,
   createRefreshToken,
 };
