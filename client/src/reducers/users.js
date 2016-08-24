@@ -11,7 +11,7 @@ import {
 
 export const DEFAULT_STATE = {};
 
-export default function users(state = {}, action) {
+export default function users(state = DEFAULT_STATE, action) {
   switch (action.type) {
     case DELETE_USER:
       return _.omit(state, action.userId);

@@ -15,11 +15,60 @@ export function requestLogout() {
     return request.delete('/session')
       .accept('json')
       .then(res => {
-        if (res.statusCode !== 200) {
-          return Promise.resolve();
+        dispatch(logout());
+      });
+  };
+}
+
+export const REQUEST_INVITATIONS = 'REQUEST_INVITATIONS';
+
+export function requestInvitations() {
+  return {
+    type: REQUEST_INVITATIONS,
+  };
+}
+
+export const RECEIVE_INVITATIONS = 'RECEIVE_INVITATIONS';
+
+export function receiveInvitations(invitations) {
+  return {
+    type: RECEIVE_INVITATIONS,
+    invitations,
+  };
+}
+
+export function requestCreateInvitation() {
+  return dispatch => {
+    return request.post('/api/invitations')
+      .accept('json')
+      .then(res => {
+        dispatch(receiveInvitations(res.body));
+      });
+  };
+}
+
+export function requestDeleteInvitation(token) {
+  return dispatch => {
+    return request.delete(`/api/invitations/${token}`)
+      .accept('json')
+      .then(res => {
+        dispatch(receiveInvitations(res.body));
+      });
+  };
+}
+
+export function getInvitations() {
+  return dispatch => {
+    dispatch(requestInvitations());
+
+    return request.get('/api/invitations')
+      .accept('json')
+      .then(res => {
+        if (res.body.error) {
+          return;
         }
 
-        dispatch(logout());
+        dispatch(receiveInvitations(res.body));
       });
   };
 }

@@ -180,12 +180,10 @@ function attachAuthentication(app, options) {
   });
 
   app.delete('/session', JWT, (req, res) => {
-    console.log('logging out');
     res.clearCookie('_csrf');
     res.clearCookie('csrf-token');
     res.clearCookie('token');
     res.sendStatus(HttpStatus.OK);
-    console.log('sent status');
   });
 
   app.post('/session', CSRF, (req, res) => {
@@ -219,6 +217,103 @@ function attachAuthentication(app, options) {
     });
   });
 
+  app.get('/invitations/:token', CSRF, (req, res) => {
+    res.render('register', {
+      csrfToken: req.csrfToken(),
+      invitationToken: req.params.token,
+    });
+  });
+
+  app.post('/users', CSRF, (req, res) => {
+    const { _invitationToken, username, password, email } = req.body;
+
+    const SALT_ROUNDS = 10;
+
+    // TODO
+    // promisify
+
+    const authenticateAndRedirect = (error, userId, permissions) => {
+      if (error) {
+        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return;
+      }
+
+      // TODO
+      // DRY things up. this is repeated in POST /session
+
+      const token = createJWT({
+        id: userId,
+        username,
+        permissions,
+      });
+
+      const expiration = moment().utc().add(1, 'month').toDate();
+
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: Boolean(USE_SSL),
+        expires: expiration,
+      });
+
+      res.redirect('/');
+    };
+
+    const deleteInvitationAndAuthenticate = (error, userId, permissions) => {
+      if (error) {
+        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return;
+      }
+
+      users.deleteInvitationByToken(
+        db,
+        _invitationToken,
+        (error) => {
+          authenticateAndRedirect(error, userId, permissions);
+        }
+      );
+    };
+
+    bcrypt.hash(password, SALT_ROUNDS, (error, passwordHash) => {
+      if (error) {
+        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return;
+      }
+
+      users.getInvitationByToken(db, _invitationToken, (error, _invitation) => {
+        if (error) {
+          res.sendStatus(HttpStatus.UNAUTHORIZED);
+
+          return;
+        }
+
+        const permissions = ['member'].join(',');
+
+        // TODO
+        // should use a transaction but it seems weird with node-sqlite3?
+        users.insertUser(db,
+          {
+            username,
+            password: passwordHash,
+            email,
+            invitationToken: _invitationToken,
+            permissions,
+          },
+          // eslint-disable-next-line prefer-arrow-callback
+          function(error) {
+            // eslint-disable-next-line no-invalid-this
+            const userId = this.lastID;
+
+            deleteInvitationAndAuthenticate(error, userId, permissions);
+          });
+      });
+    });
+  });
+
+  // TODO
+  // move out of here?
   app.get(/^\/file\/(.+)/, JWT, (req, res) => {
     const filePath = req.params[0];
     const name = path.basename(filePath);
@@ -305,14 +400,72 @@ function attachAPI(app) {
     });
   });
 
+  api.patch('/users/:id', JWT, (req, res) => {
+    res.send('modify user');
+  });
+
   api.delete('/users/:id', JWT, (req, res) => {
     console.log('deleting user', req.params.id);
 
-    res.status(HttpStatus.OK).json({ success: true });
+    users.deleteUserById(db, req.params.id, (error) => {
+      if (error) {
+        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 
-    // users.deleteUserById(db, req.params.id, (error, row) => {
-    //   res.status(HttpStatus.OK).json({ success: true });
-    // });
+        return;
+      }
+
+      res.sendStatus(HttpStatus.OK);
+    });
+  });
+
+  api.get('/users/:id/reset', JWT, (req, res) => {
+    res.send('user pw reset');
+  });
+
+  // TODO
+  // or PATCH /users/:id setPassword?
+  api.post('/users/:id/reset', JWT, (req, res) => {
+    res.send('user pw reset');
+  });
+
+  api.get('/invitations', JWT, (req, res) => {
+    users.getInvitations(db, (error, invitations) => {
+      res.json(invitations);
+    });
+  });
+
+  api.post('/invitations', JWT, (req, res) => {
+    users.createInvitation(db, (error) => {
+      if (error) {
+        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return;
+      }
+
+      users.getInvitations(db, (error, invitations) => {
+        if (error) {
+          res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+
+          return;
+        }
+
+        res.json(invitations);
+      });
+    });
+  });
+
+  api.delete('/invitations/:token', JWT, (req, res) => {
+    users.deleteInvitationByToken(db, req.params.token, (error) => {
+      if (error) {
+        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return;
+      }
+
+      users.getInvitations(db, (error, invitations) => {
+        res.json(invitations);
+      });
+    });
   });
 
   api.get('/downloads', JWT, (req, res) => {

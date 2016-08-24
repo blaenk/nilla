@@ -1,56 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Button, Table } from 'react-bootstrap';
+
 import {
-  Button,
-  Glyphicon,
-  Table,
-} from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
+  getUsers,
+  getInvitations,
+  requestCreateInvitation,
+} from 'actions';
 
-import { getUsers, requestDeleteUser } from 'actions';
-
-function User(props) {
-  return (
-    <tr>
-      <td>{props.username}</td>
-      <td>{props.email}</td>
-      <td>{props.permissions.join(', ')}</td>
-      <td style={{ textAlign: 'center' }}>
-        <LinkContainer to={`/users/${props.id}`}>
-          <Button bsStyle='primary' bsSize='xsmall' title='edit'>
-            <Glyphicon glyph='edit' />
-          </Button>
-        </LinkContainer>
-      </td>
-      <td style={{ textAlign: 'center' }}>
-        <Button onClick={props.onRemove} bsStyle='danger' bsSize='xsmall' title='delete'>
-          <Glyphicon glyph='remove' />
-        </Button>
-      </td>
-    </tr>
-  );
-}
-
-User.propTypes = {
-  email: React.PropTypes.string.isRequired,
-  id: React.PropTypes.number.isRequired,
-  permissions: React.PropTypes.array.isRequired,
-  username: React.PropTypes.string.isRequired,
-};
-
-function mapDispatchToProps(dispatch, ownProps) {
-  return {
-    onRemove() {
-      dispatch(requestDeleteUser(ownProps.id));
-    },
-  };
-}
-
-User = connect(null, mapDispatchToProps)(User);
+import Invitation from './Invitation';
+import User from './User';
 
 class Users extends React.Component {
   componentDidMount() {
     this.props.dispatch(getUsers());
+    this.props.dispatch(getInvitations());
   }
 
   render() {
@@ -63,6 +27,35 @@ class Users extends React.Component {
               permissions={user.permissions} />
       );
     });
+
+    const invitations = this.props.invitations.map(invitation => {
+      return (
+        <Invitation key={invitation.id}
+                    id={invitation.id}
+                    token={invitation.token}
+                    created_at={invitation.created_at} />
+      );
+    });
+
+    let invitationsTable;
+
+    if (invitations.length > 0) {
+      invitationsTable = (
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>token</th>
+              <th>created</th>
+              <th />
+            </tr>
+          </thead>
+
+          <tbody>
+            {invitations}
+          </tbody>
+        </Table>
+      );
+    }
 
     return (
       <div>
@@ -82,9 +75,11 @@ class Users extends React.Component {
           </tbody>
         </Table>
 
-        <Button>
+        <Button onClick={this.props.handleCreateInvitation}>
           create invitation
         </Button>
+
+        {invitationsTable}
       </div>
     );
   }
@@ -92,7 +87,17 @@ class Users extends React.Component {
 
 Users.propTypes = {
   dispatch: React.PropTypes.object.isRequired,
+  handleCreateInvitation: React.PropTypes.func.isRequired,
+  invitations: React.PropTypes.array.isRequired,
   users: React.PropTypes.array.isRequired,
 };
 
-export default Users;
+function mapDispatchToUsersProps(dispatch) {
+  return {
+    handleCreateInvitation() {
+      dispatch(requestCreateInvitation());
+    },
+  };
+}
+
+export default connect(null, mapDispatchToUsersProps)(Users);
