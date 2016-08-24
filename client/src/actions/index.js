@@ -14,7 +14,7 @@ export function requestLogout() {
   return dispatch => {
     return request.delete('/session')
       .accept('json')
-      .then(res => {
+      .then(() => {
         dispatch(logout());
       });
   };
