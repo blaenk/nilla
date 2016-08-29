@@ -52,22 +52,44 @@ class CommandBar extends React.Component {
     }
 
     const isDownloading = this.props.download.state === 'downloading';
-    const isLocked = this.props.download.locks.includes(this.props.user.id);
+    const isLocked = this.props.download.locks.length !== 0;
+    const isLockedByCurrentUser = this.props.download.locks.includes(this.props.user.id);
+
+    const currentUserIsUploader = this.props.user.id === this.props.download.uploader;
+    const currentUserIsAdmin = this.props.user.permissions.includes('admin');
+
+    const canControl = this.props.user && (currentUserIsUploader || currentUserIsAdmin);
+
+    const stopStartButton = canControl ? (
+      <Button bsSize='xsmall'
+              styleName='command-button'
+              title={isDownloading ? 'stop' : 'start'}
+              onClick={isDownloading ? this.props.onStop : this.props.onStart}>
+        <Glyphicon glyph={isDownloading ? 'pause' : 'play'} />
+      </Button>
+    ) : null;
+
+    const canDelete = this.props.user &&
+          ((currentUserIsUploader && !isLocked) || currentUserIsAdmin);
+
+    const deleteButton = canDelete ? (
+      <Button bsSize='xsmall'
+              styleName='command-button'
+              title='delete'
+              onClick={this.handleErase}>
+        <Glyphicon glyph='remove' />
+      </Button>
+    ) : null;
 
     return (
       <ButtonGroup styleName='command-bar'>
-        <Button bsSize='xsmall'
-                styleName='command-button'
-                title={isDownloading ? 'stop' : 'start'}
-                onClick={isDownloading ? this.props.onStop : this.props.onStart}>
-          <Glyphicon glyph={isDownloading ? 'pause' : 'play'} />
-        </Button>
+        {stopStartButton}
 
         <Button bsSize='xsmall'
                 styleName='command-button'
-                title={isLocked ? 'unlock' : 'lock'}
-                onClick={isLocked ? this.props.unlock : this.props.lock}>
-          <Glyphicon glyph={isLocked ? 'link' : 'lock'} />
+                title={isLockedByCurrentUser ? 'unlock' : 'lock'}
+                onClick={isLockedByCurrentUser ? this.props.unlock : this.props.lock}>
+          <Glyphicon glyph={isLockedByCurrentUser ? 'link' : 'lock'} />
         </Button>
 
         <Button bsSize='xsmall'
@@ -84,12 +106,7 @@ class CommandBar extends React.Component {
           <Glyphicon glyph='stats' />
         </Button>
 
-        <Button bsSize='xsmall'
-                styleName='command-button'
-                title='delete'
-                onClick={this.handleErase}>
-          <Glyphicon glyph='remove' />
-        </Button>
+        {deleteButton}
       </ButtonGroup>
     );
   }
