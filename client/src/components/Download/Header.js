@@ -42,7 +42,7 @@ function Header(props) {
   if (props.uploader === -1) {
     uploaderName = 'system';
   } else {
-    uploaderName = props.users[props.uploader].username;
+    uploaderName = props.users[props.uploader] && props.users[props.uploader].username;
   }
 
   return (
