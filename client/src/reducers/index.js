@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import downloads from './downloads';
 import users from './users';
 import invitations from './invitations';
+import trackers from './trackers';
 
 import upload from './ui/upload';
 import downloadsUI from './ui/downloads';
@@ -13,6 +14,7 @@ export default combineReducers({
     downloads,
     users,
     invitations,
+    trackers,
   }),
   ui: combineReducers({
     upload,

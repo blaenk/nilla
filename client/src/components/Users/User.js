@@ -38,7 +38,9 @@ User.propTypes = {
 function mapDispatchToUserProps(dispatch, ownProps) {
   return {
     onRemove() {
-      dispatch(requestDeleteUser(ownProps.id));
+      if (confirm('are you sure you want to delete this user?')) {
+        dispatch(requestDeleteUser(ownProps.id));
+      }
     },
   };
 }

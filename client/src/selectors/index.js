@@ -57,6 +57,19 @@ const getDownloadsScope = (state) => state.ui.downloads.scope;
 const getDownloadsOrder = (state) => state.ui.downloads.order;
 const getCurrentUser = (state) => state.data.users.current;
 
+const getTrackers = (state) => state.data.trackers;
+
+export const getTrackersSortedByName = createSelector(
+  [getTrackers],
+  (trackers) => {
+    trackers.sort((a, b) => {
+      return a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase());
+    });
+
+    return trackers;
+  }
+);
+
 const getUsers = (state) => state.data.users;
 
 export const getUsersValues = createSelector(

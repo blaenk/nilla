@@ -6,6 +6,7 @@ import Header from 'components/App/Header';
 
 function mapStateToProps(state) {
   return {
+    currentUser: state.data.users.current,
     isDragging: state.ui.upload.isDragging,
     isUploading: state.ui.upload.isUploading,
   };

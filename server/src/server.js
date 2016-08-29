@@ -24,6 +24,7 @@ const _ = require('lodash');
 const rtorrent = require('./rtorrent');
 const downloads = require('./models/downloads');
 const users = require('./models/users');
+const trackers = require('./models/trackers');
 
 const db = new sqlite3.cached.Database('./db/nilla.db');
 
@@ -426,6 +427,54 @@ function attachAPI(app) {
   // or PATCH /users/:id setPassword?
   api.post('/users/:id/reset', JWT, (req, res) => {
     res.send('user pw reset');
+  });
+
+  api.get('/trackers', JWT, (req, res) => {
+    trackers.getTrackers(db, (error, trackers) => {
+      res.json(trackers);
+    });
+  });
+
+  api.post('/trackers', JWT, (req, res) => {
+    const tracker = {
+      name: req.body.name,
+      url: req.body.url,
+      category: req.body.category,
+      username: req.body.username,
+      password: req.body.password,
+    };
+
+    trackers.insertTracker(db, tracker, (error) => {
+      if (error) {
+        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return;
+      }
+
+      trackers.getTrackers(db, (error, trackers) => {
+        if (error) {
+          res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+
+          return;
+        }
+
+        res.json(trackers);
+      });
+    });
+  });
+
+  api.delete('/trackers/:id', JWT, (req, res) => {
+    users.deleteTrackerById(db, req.params.id, (error) => {
+      if (error) {
+        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return;
+      }
+
+      trackers.getTrackers(db, (error, trackers) => {
+        res.json(trackers);
+      });
+    });
   });
 
   api.get('/invitations', JWT, (req, res) => {

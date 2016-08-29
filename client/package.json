@@ -90,6 +90,7 @@
     "parse-torrent": "^5.8.1",
     "react": "^15.1.0",
     "react-bootstrap": "^0.30.0-rc.2",
+    "react-copy-to-clipboard": "^4.2.3",
     "react-css-modules": "^3.7.6",
     "react-dom": "^15.1.0",
     "react-dropzone": "^3.5.3",

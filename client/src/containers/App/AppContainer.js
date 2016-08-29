@@ -11,6 +11,8 @@ import DownloadContainer from 'containers/Download/DownloadContainer';
 
 import UsersContainer from 'containers/Users/UsersContainer';
 
+import TrackersContainer from 'containers/Trackers/TrackersContainer';
+
 import styles from 'styles/app.module.less';
 
 function AppContainer(props) {
@@ -24,6 +26,8 @@ function AppContainer(props) {
           <Route path='downloads/:infoHash(/:name)' component={DownloadContainer} />
 
           <Route path='users' component={UsersContainer} />
+
+          <Route path='trackers' component={TrackersContainer} />
         </Route>
       </Router>
     </Provider>

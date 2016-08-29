@@ -6,6 +6,14 @@ import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import styles from './header.module.less';
 
 function Header(props) {
+  const notAdmin = !props.currentUser || !props.currentUser.permissions.includes('admin');
+
+  const usersButton = notAdmin ? null : (
+    <LinkContainer to='/users'>
+      <NavItem eventKey={4}>Users</NavItem>
+    </LinkContainer>
+  );
+
   return (
     <Navbar styleName={props.isDragging ? 'dragging' : 'navbar'}>
       <Navbar.Header>
@@ -26,9 +34,7 @@ function Header(props) {
             <NavItem eventKey={3}>Trackers</NavItem>
           </LinkContainer>
 
-          <LinkContainer to='/users'>
-            <NavItem eventKey={4}>Users</NavItem>
-          </LinkContainer>
+          {usersButton}
         </Nav>
         <Nav pullRight>
           <NavItem eventKey={5} onClick={props.onLogout}>
@@ -41,6 +47,7 @@ function Header(props) {
 }
 
 Header.propTypes = {
+  currentUser: React.PropTypes.object.isRequired,
   isDragging: React.PropTypes.bool.isRequired,
   onLogout: React.PropTypes.func.isRequired,
   onUpload: React.PropTypes.func.isRequired,

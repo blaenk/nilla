@@ -28,7 +28,9 @@ Invitation.propTypes = {
 function mapDispatchToInvitationProps(dispatch, ownProps) {
   return {
     onRemove() {
-      dispatch(requestDeleteInvitation(ownProps.token));
+      if (confirm('are you sure you want to delete this invitation?')) {
+        dispatch(requestDeleteInvitation(ownProps.token));
+      }
     },
   };
 }

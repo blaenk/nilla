@@ -73,6 +73,59 @@ export function getInvitations() {
   };
 }
 
+export const REQUEST_TRACKERS = 'REQUEST_TRACKERS';
+
+export function requestTrackers() {
+  return {
+    type: REQUEST_TRACKERS,
+  };
+}
+
+export const RECEIVE_TRACKERS = 'RECEIVE_TRACKERS';
+
+export function receiveTrackers(trackers) {
+  return {
+    type: RECEIVE_TRACKERS,
+    trackers,
+  };
+}
+
+export function requestCreateTracker() {
+  return dispatch => {
+    return request.post('/api/trackers')
+      .accept('json')
+      .then(res => {
+        dispatch(receiveTrackers(res.body));
+      });
+  };
+}
+
+export function requestDeleteTracker(id) {
+  return dispatch => {
+    return request.delete(`/api/trackers/${id}`)
+      .accept('json')
+      .then(res => {
+        dispatch(receiveTrackers(res.body));
+      });
+  };
+}
+
+export function getTrackers() {
+  return dispatch => {
+    dispatch(requestTrackers());
+
+    return request.get('/api/trackers')
+      .accept('json')
+      .then(res => {
+        if (res.body.error) {
+          return;
+        }
+
+        dispatch(receiveTrackers(res.body));
+      });
+  };
+}
+
 export const REQUEST_USER = 'REQUEST_USER';
 
 export function requestUser(id) {

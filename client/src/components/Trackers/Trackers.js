@@ -1,0 +1,75 @@
+import React from 'react';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Button, Table } from 'react-bootstrap';
+
+import { getTrackers } from 'actions';
+
+import Tracker from './Tracker';
+
+class Trackers extends React.Component {
+  componentDidMount() {
+    this.props.dispatch(getTrackers());
+  }
+
+  render() {
+    if (!this.props.currentUser) {
+      return null;
+    }
+
+    const trackers = this.props.trackers.map(tracker => {
+      return (
+        <Tracker key={tracker.id}
+                 id={tracker.id}
+                 name={tracker.name}
+                 url={tracker.url}
+                 category={tracker.category}
+                 username={tracker.username}
+                 password={tracker.password}
+                 currentUser={this.props.currentUser} />
+      );
+    });
+
+    const isAdmin = this.props.currentUser.permissions.includes('admin');
+
+    const newTrackerButton = isAdmin ? (
+      <LinkContainer to='/trackers/new'>
+        <Button>
+          new tracker
+        </Button>
+      </LinkContainer>
+    ) : null;
+
+    return (
+      <div>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>name</th>
+              <th>category</th>
+              <th>user</th>
+              <th>pass</th>
+
+              {isAdmin && (<th />)}
+              {isAdmin && (<th />)}
+            </tr>
+          </thead>
+
+          <tbody>
+            {trackers}
+          </tbody>
+        </Table>
+
+        {newTrackerButton}
+      </div>
+    );
+  }
+}
+
+Trackers.propTypes = {
+  currentUser: React.PropTypes.object.isRequired,
+  dispatch: React.PropTypes.object.isRequired,
+  handleCreateTracker: React.PropTypes.func.isRequired,
+  trackers: React.PropTypes.array.isRequired,
+};
+
+export default Trackers;
