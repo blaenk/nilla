@@ -22,9 +22,10 @@ class Search extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, _nextState) {
-    return this.props.isCollapsed !== nextProps.isCollapsed ||
-      this.props.count !== nextProps.count ||
-      this.props.filter !== nextProps.filter;
+    return true;
+    // return this.props.isCollapsed !== nextProps.isCollapsed ||
+    //   this.props.count !== nextProps.count ||
+    //   this.props.filter !== nextProps.filter;
   }
 
   render() {

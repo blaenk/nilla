@@ -23,10 +23,11 @@ class Download extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, _nextState) {
-    return this.props.download !== nextProps.download ||
-      this.props.files !== nextProps.files ||
-      this.props.users !== nextProps.users ||
-      this.props.ui.isCollapsed !== nextProps.ui.isCollapsed;
+    return true;
+    // return this.props.download !== nextProps.download ||
+    //   this.props.files !== nextProps.files ||
+    //   this.props.users !== nextProps.users ||
+    //   this.props.ui.isCollapsed !== nextProps.ui.isCollapsed;
   }
 
   render() {
