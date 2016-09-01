@@ -463,8 +463,24 @@ function attachAPI(app) {
     });
   });
 
+  api.put('/trackers/:id', JWT, (req, res) => {
+    const tracker = req.body;
+
+    trackers.putTracker(db, req.params.id, tracker, (error) => {
+      if (error) {
+        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return;
+      }
+
+      trackers.getTrackers(db, (error, trackers) => {
+        res.json(trackers);
+      });
+    });
+  });
+
   api.delete('/trackers/:id', JWT, (req, res) => {
-    users.deleteTrackerById(db, req.params.id, (error) => {
+    trackers.deleteTrackerById(db, req.params.id, (error) => {
       if (error) {
         res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 

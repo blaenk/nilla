@@ -68,7 +68,7 @@ Tracker.propTypes = {
 function mapDispatchToTrackerProps(dispatch, ownProps) {
   return {
     onRemove() {
-      if (confirm('are you sure you want to delete this tracker?')) {
+      if (confirm(`are you sure you want to delete tracker '${ownProps.name}'?`)) {
         dispatch(requestDeleteTracker(ownProps.id));
       }
     },

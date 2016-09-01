@@ -126,6 +126,25 @@ export function getTrackers() {
   };
 }
 
+// TODO
+// * on error, revert/keep the old tracker?
+// * on success don't receive all new trackers, just modified
+export function putTracker(tracker, callback) {
+  return dispatch => {
+    return request.put(`/api/trackers/${tracker.id}`)
+      .send(tracker)
+      .accept('json')
+      .then(res => {
+        if (res.body.error) {
+          return;
+        }
+
+        dispatch(receiveTrackers(res.body));
+        callback();
+      });
+  };
+}
+
 export const REQUEST_USER = 'REQUEST_USER';
 
 export function requestUser(id) {

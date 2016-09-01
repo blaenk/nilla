@@ -1,4 +1,6 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import { withRouter } from 'react-router';
 import {
   Button,
   Col,
@@ -15,6 +17,18 @@ import { getTrackers } from 'actions';
 import styles from 'styles/app.module.less';
 
 class Tracker extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+
+    this.setNameRef = this.setNameRef.bind(this);
+    this.setUrlRef = this.setUrlRef.bind(this);
+    this.setDescriptionRef = this.setDescriptionRef.bind(this);
+    this.setUsernameRef = this.setUsernameRef.bind(this);
+    this.setPasswordRef = this.setPasswordRef.bind(this);
+  }
+
   componentWillMount() {
     const { dispatch } = this.props;
 
@@ -25,6 +39,42 @@ class Tracker extends React.Component {
     return true;
   }
 
+  handleSubmit(event) {
+    event.preventDefault();
+
+    const tracker = {
+      id: this.props.tracker.id,
+      name: this.nameRef.value,
+      url: this.urlRef.value,
+      description: this.descriptionRef.value,
+      username: this.usernameRef.value,
+      password: this.passwordRef.value,
+    };
+
+    this.props.onSubmit(tracker, () => {
+      this.props.router.push('/trackers');
+    });
+  }
+
+  setNameRef(ref) {
+    this.nameRef = ReactDOM.findDOMNode(ref);
+  }
+
+  setUrlRef(ref) {
+    this.urlRef = ReactDOM.findDOMNode(ref);
+  }
+
+  setDescriptionRef(ref) {
+    this.descriptionRef = ReactDOM.findDOMNode(ref);
+  }
+
+  setUsernameRef(ref) {
+    this.usernameRef = ReactDOM.findDOMNode(ref);
+  }
+
+  setPasswordRef(ref) {
+    this.passwordRef = ReactDOM.findDOMNode(ref);
+  }
 
   render() {
     if (!this.props.tracker) {
@@ -39,7 +89,7 @@ class Tracker extends React.Component {
           </Col>
 
           <Col sm={10}>
-            <FormControl type='text' placeholder='Name'
+            <FormControl type='text' placeholder='Name' ref={this.setNameRef}
                          defaultValue={this.props.tracker.name} />
           </Col>
         </FormGroup>
@@ -50,7 +100,7 @@ class Tracker extends React.Component {
           </Col>
 
           <Col sm={10}>
-            <FormControl type='text' placeholder='URL'
+            <FormControl type='text' placeholder='URL' ref={this.setUrlRef}
                          defaultValue={this.props.tracker.url} />
           </Col>
         </FormGroup>
@@ -61,7 +111,7 @@ class Tracker extends React.Component {
           </Col>
 
           <Col sm={10}>
-            <FormControl type='text' placeholder='Description'
+            <FormControl type='text' placeholder='Description' ref={this.setDescriptionRef}
                          defaultValue={this.props.tracker.category} />
           </Col>
         </FormGroup>
@@ -72,7 +122,7 @@ class Tracker extends React.Component {
           </Col>
 
           <Col sm={10}>
-            <FormControl type='text' placeholder='Username'
+            <FormControl type='text' placeholder='Username' ref={this.setUsernameRef}
                          defaultValue={this.props.tracker.username} />
           </Col>
         </FormGroup>
@@ -83,7 +133,7 @@ class Tracker extends React.Component {
           </Col>
 
           <Col sm={10}>
-            <FormControl type='text' placeholder='Password'
+            <FormControl type='text' placeholder='Password' ref={this.setPasswordRef}
                          defaultValue={this.props.tracker.password} />
           </Col>
         </FormGroup>
@@ -98,7 +148,8 @@ class Tracker extends React.Component {
           </Col>
 
           <Col sm={2} className='pull-right'>
-            <Button type='submit' className='pull-right' bsStyle='primary'>
+            <Button type='submit' className='pull-right' bsStyle='primary'
+                    onClick={this.handleSubmit}>
               submit
             </Button>
           </Col>
@@ -110,7 +161,9 @@ class Tracker extends React.Component {
 
 Tracker.propTypes = {
   dispatch: React.PropTypes.func.isRequired,
+  onSubmit: React.PropTypes.func.isRequired,
+  router: React.PropTypes.object.isRequired,
   tracker: React.PropTypes.object.isRequired,
 };
 
-export default CSSModules(Tracker, styles);
+export default withRouter(CSSModules(Tracker, styles));
