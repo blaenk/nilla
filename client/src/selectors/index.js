@@ -59,8 +59,13 @@ const getCurrentUser = (state) => state.data.users.current;
 
 const getTrackers = (state) => state.data.trackers;
 
-export const getTrackersSortedByName = createSelector(
+export const getTrackersValues = createSelector(
   [getTrackers],
+  (trackers) => _.cloneDeep(_(trackers).values().value())
+);
+
+export const getTrackersSortedByName = createSelector(
+  [getTrackersValues],
   (trackers) => {
     trackers.sort((a, b) => {
       return a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase());
