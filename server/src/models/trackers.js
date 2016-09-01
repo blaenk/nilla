@@ -19,8 +19,6 @@ function insertTracker(db, tracker, callback) {
 }
 
 function putTracker(db, id, tracker, callback) {
-  // TODO
-  // rename category column to description
   db.run(
     'UPDATE trackers \
      SET \
@@ -35,7 +33,7 @@ function putTracker(db, id, tracker, callback) {
        $url: tracker.url,
        $username: tracker.username,
        $password: tracker.password,
-       $category: tracker.description,
+       $category: tracker.category,
      },
     callback
   );

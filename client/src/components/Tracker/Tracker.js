@@ -24,7 +24,7 @@ class Tracker extends React.Component {
 
     this.setNameRef = this.setNameRef.bind(this);
     this.setUrlRef = this.setUrlRef.bind(this);
-    this.setDescriptionRef = this.setDescriptionRef.bind(this);
+    this.setCategoryRef = this.setCategoryRef.bind(this);
     this.setUsernameRef = this.setUsernameRef.bind(this);
     this.setPasswordRef = this.setPasswordRef.bind(this);
   }
@@ -43,10 +43,10 @@ class Tracker extends React.Component {
     event.preventDefault();
 
     const tracker = {
-      id: this.props.tracker.id,
+      id: this.props.id,
       name: this.nameRef.value,
       url: this.urlRef.value,
-      description: this.descriptionRef.value,
+      category: this.categoryRef.value,
       username: this.usernameRef.value,
       password: this.passwordRef.value,
     };
@@ -64,8 +64,8 @@ class Tracker extends React.Component {
     this.urlRef = ReactDOM.findDOMNode(ref);
   }
 
-  setDescriptionRef(ref) {
-    this.descriptionRef = ReactDOM.findDOMNode(ref);
+  setCategoryRef(ref) {
+    this.categoryRef = ReactDOM.findDOMNode(ref);
   }
 
   setUsernameRef(ref) {
@@ -77,10 +77,6 @@ class Tracker extends React.Component {
   }
 
   render() {
-    if (!this.props.tracker) {
-      return null;
-    }
-
     return (
       <Form horizontal>
         <FormGroup>
@@ -90,7 +86,7 @@ class Tracker extends React.Component {
 
           <Col sm={10}>
             <FormControl type='text' placeholder='Name' ref={this.setNameRef}
-                         defaultValue={this.props.tracker.name} />
+                         defaultValue={this.props.name} />
           </Col>
         </FormGroup>
 
@@ -101,18 +97,18 @@ class Tracker extends React.Component {
 
           <Col sm={10}>
             <FormControl type='text' placeholder='URL' ref={this.setUrlRef}
-                         defaultValue={this.props.tracker.url} />
+                         defaultValue={this.props.url} />
           </Col>
         </FormGroup>
 
         <FormGroup>
           <Col componentClass={ControlLabel} sm={2}>
-            Description
+            Category
           </Col>
 
           <Col sm={10}>
-            <FormControl type='text' placeholder='Description' ref={this.setDescriptionRef}
-                         defaultValue={this.props.tracker.category} />
+            <FormControl type='text' placeholder='Category' ref={this.setCategoryRef}
+                         defaultValue={this.props.category} />
           </Col>
         </FormGroup>
 
@@ -123,7 +119,7 @@ class Tracker extends React.Component {
 
           <Col sm={10}>
             <FormControl type='text' placeholder='Username' ref={this.setUsernameRef}
-                         defaultValue={this.props.tracker.username} />
+                         defaultValue={this.props.username} />
           </Col>
         </FormGroup>
 
@@ -134,7 +130,7 @@ class Tracker extends React.Component {
 
           <Col sm={10}>
             <FormControl type='text' placeholder='Password' ref={this.setPasswordRef}
-                         defaultValue={this.props.tracker.password} />
+                         defaultValue={this.props.password} />
           </Col>
         </FormGroup>
 
@@ -160,10 +156,15 @@ class Tracker extends React.Component {
 }
 
 Tracker.propTypes = {
+  category: React.PropTypes.string.isRequired,
   dispatch: React.PropTypes.func.isRequired,
+  id: React.PropTypes.number.isRequired,
+  name: React.PropTypes.string.isRequired,
   onSubmit: React.PropTypes.func.isRequired,
+  password: React.PropTypes.string.isRequired,
   router: React.PropTypes.object.isRequired,
-  tracker: React.PropTypes.object.isRequired,
+  url: React.PropTypes.string.isRequired,
+  username: React.PropTypes.string.isRequired,
 };
 
 export default withRouter(CSSModules(Tracker, styles));

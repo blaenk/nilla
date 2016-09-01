@@ -5,10 +5,25 @@ import { putTracker } from 'actions';
 import Tracker from 'components/Tracker/Tracker';
 
 function mapStateToProps(state, props) {
-  const tracker = state.data.trackers[props.params.id];
+  const {
+    id,
+    name,
+    url,
+    category,
+    username,
+    password,
+  } = state.data.trackers[props.params.id];
   const currentUser = state.data.users.current;
 
-  return { tracker, currentUser };
+  return {
+    currentUser,
+    id,
+    name,
+    url,
+    category,
+    username,
+    password,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
