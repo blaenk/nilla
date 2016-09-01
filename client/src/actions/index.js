@@ -90,16 +90,6 @@ export function receiveTrackers(trackers) {
   };
 }
 
-export function requestCreateTracker() {
-  return dispatch => {
-    return request.post('/api/trackers')
-      .accept('json')
-      .then(res => {
-        dispatch(receiveTrackers(res.body));
-      });
-  };
-}
-
 export function requestDeleteTracker(id) {
   return dispatch => {
     return request.delete(`/api/trackers/${id}`)
@@ -132,6 +122,22 @@ export function getTrackers() {
 export function putTracker(tracker, callback) {
   return dispatch => {
     return request.put(`/api/trackers/${tracker.id}`)
+      .send(tracker)
+      .accept('json')
+      .then(res => {
+        if (res.body.error) {
+          return;
+        }
+
+        dispatch(receiveTrackers(res.body));
+        callback();
+      });
+  };
+}
+
+export function requestCreateTracker(tracker, callback) {
+  return dispatch => {
+    return request.post('/api/trackers')
       .send(tracker)
       .accept('json')
       .then(res => {

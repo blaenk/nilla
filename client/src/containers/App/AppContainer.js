@@ -12,7 +12,8 @@ import DownloadContainer from 'containers/Download/DownloadContainer';
 import UsersContainer from 'containers/Users/UsersContainer';
 
 import TrackersContainer from 'containers/Trackers/TrackersContainer';
-import TrackerContainer from 'containers/Tracker/TrackerContainer';
+import EditTrackerContainer from 'containers/Tracker/EditTrackerContainer';
+import NewTrackerContainer from 'containers/Tracker/NewTrackerContainer';
 
 import styles from 'styles/app.module.less';
 
@@ -29,7 +30,8 @@ function AppContainer(props) {
           <Route path='users' component={UsersContainer} />
 
           <Route path='trackers' component={TrackersContainer} />
-          <Route path='trackers/:id' component={TrackerContainer} />
+          <Route path='trackers/new' component={NewTrackerContainer} />
+          <Route path='trackers/:id' component={EditTrackerContainer} />
         </Route>
       </Router>
     </Provider>

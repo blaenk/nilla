@@ -436,13 +436,7 @@ function attachAPI(app) {
   });
 
   api.post('/trackers', JWT, (req, res) => {
-    const tracker = {
-      name: req.body.name,
-      url: req.body.url,
-      category: req.body.category,
-      username: req.body.username,
-      password: req.body.password,
-    };
+    const tracker = req.body;
 
     trackers.insertTracker(db, tracker, (error) => {
       if (error) {

@@ -26,18 +26,20 @@ function mapStateToProps(state, props) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
   return {
     dispatch,
     onSubmit(tracker, callback) {
+      tracker.id = ownProps.params.id;
+
       dispatch(putTracker(tracker, callback));
     },
   };
 }
 
-const TrackerContainer = connect(
+const EditTrackerContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(Tracker);
 
-export default TrackerContainer;
+export default EditTrackerContainer;

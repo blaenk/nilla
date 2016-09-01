@@ -43,7 +43,6 @@ class Tracker extends React.Component {
     event.preventDefault();
 
     const tracker = {
-      id: this.props.id,
       name: this.nameRef.value,
       url: this.urlRef.value,
       category: this.categoryRef.value,
