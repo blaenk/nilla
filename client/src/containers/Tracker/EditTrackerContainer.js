@@ -5,6 +5,12 @@ import { putTracker } from 'actions';
 import Tracker from 'components/Tracker/Tracker';
 
 function mapStateToProps(state, props) {
+  const currentUser = state.data.users.current;
+
+  if (!(props.params.id in state.data.trackers)) {
+    return { currentUser };
+  }
+
   const {
     id,
     name,
@@ -13,7 +19,6 @@ function mapStateToProps(state, props) {
     username,
     password,
   } = state.data.trackers[props.params.id];
-  const currentUser = state.data.users.current;
 
   return {
     currentUser,

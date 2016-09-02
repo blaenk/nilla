@@ -7,6 +7,10 @@ import User from 'components/User/User';
 function mapStateToProps(state, props) {
   const currentUser = state.data.users.current;
 
+  if (!(props.params.id in state.data.users)) {
+    return { currentUser };
+  }
+
   const {
     id,
     username,

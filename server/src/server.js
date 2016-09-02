@@ -6,11 +6,12 @@ require('dotenv').config({
 
 const path = require('path');
 
+const Bluebird = require('bluebird');
 const csurf = require('csurf');
 const express = require('express');
 const expressHandlebars = require('express-handlebars');
 const HttpStatus = require('http-status-codes');
-const bcrypt = require('bcrypt');
+const bcrypt = Bluebird.promisifyAll(require('bcrypt'));
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const expressJWT = require('express-jwt');
@@ -38,6 +39,10 @@ const {
 } = process.env;
 
 const PASSWORD_SALT_ROUNDS = 10;
+
+Bluebird.config({
+  cancellation: true,
+});
 
 function refererUrl(referer) {
   if (referer === '/' || referer === '') {
@@ -145,34 +150,22 @@ const upload = multer({
   },
 });
 
-function authenticate(username, password, callback) {
-  users.getUserByUsername(db, username, (error, user) => {
-    if (error) {
-      callback(error);
-
-      return;
-    }
-
-    if (!user) {
-      callback(new Error('User not found.'));
-
-      return;
-    }
-
-    bcrypt.compare(password, user.password, (error, authenticated) => {
-      if (error) {
-        callback(error);
-
-        return;
-      } else if (!authenticated) {
-        callback(new Error('Incorrect credentials.'));
-
-        return;
+function authenticate(username, password) {
+  return users.getUserByUsername(db, username)
+    .then(user => {
+      if (!user) {
+        throw new Error('User not found.');
       }
 
-      callback(null, user);
+      return bcrypt.compareAsync(password, user.password)
+        .then(authenticated => {
+          if (!authenticated) {
+            throw new Error('Incorrect credentials.');
+          }
+
+          return user;
+        });
     });
-  });
 }
 
 function attachAuthentication(app, options) {
@@ -199,26 +192,22 @@ function attachAuthentication(app, options) {
       return;
     }
 
-    options.authenticator(username, password, (error, user) => {
-      if (error) {
-        res.redirect(refererUrl(_ref));
+    options.authenticator(username, password)
+      .then(user => {
+        const token = createJWT(user);
+        const expiration = moment().utc().add(1, 'month').toDate();
 
-        return;
-      }
+        // Save the JWT as a cookie as well. It's only ever used to authenticate file
+        // downloads since it's much more convenient that way.
+        res.cookie('token', token, {
+          httpOnly: true,
+          secure: Boolean(USE_SSL),
+          expires: expiration,
+        });
 
-      const token = createJWT(user);
-      const expiration = moment().utc().add(1, 'month').toDate();
-
-      // Save the JWT as a cookie as well. It's only ever used to authenticate file
-      // downloads since it's much more convenient that way.
-      res.cookie('token', token, {
-        httpOnly: true,
-        secure: Boolean(USE_SSL),
-        expires: expiration,
-      });
-
-      res.redirect(_ref || '/');
-    });
+        res.redirect(_ref || '/');
+      })
+      .catch(() => res.redirect(refererUrl(_ref)));
   });
 
   app.get('/invitations/:token', CSRF, (req, res) => {
@@ -231,108 +220,69 @@ function attachAuthentication(app, options) {
   app.get('/users/:id/reset/:token', CSRF, (req, res) => {
     const { id, token } = req.params;
 
-    users.getUserById(db, req.params.id, (error, row) => {
-      if (error || token !== row.refresh_token) {
-        res.sendStatus(HttpStatus.NOT_FOUND);
+    users.getUserById(db, req.params.id)
+      .then(row => {
+        if (token !== row.refresh_token) {
+          res.sendStatus(HttpStatus.NOT_FOUND);
 
-        return;
-      }
+          return;
+        }
 
-      const { username } = row;
+        const { username } = row;
 
-      res.render('reset', {
-        csrfToken: req.csrfToken(),
-        username,
-        id,
-        token,
-      });
-    });
+        res.render('reset', {
+          csrfToken: req.csrfToken(),
+          username,
+          id,
+          token,
+        });
+      })
+      .catch(() => res.sendStatus(HttpStatus.NOT_FOUND));
   });
 
   app.post('/users', CSRF, (req, res) => {
     const { _invitationToken, username, password, email } = req.body;
 
-    // TODO
-    // promisify
+    const permissions = ['member'].join(',');
 
-    const authenticateAndRedirect = (error, userId, permissions) => {
-      if (error) {
-        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return;
-      }
-
-      // TODO
-      // DRY things up. this is repeated in POST /session
-
-      const token = createJWT({
-        id: userId,
-        username,
-        permissions,
-      });
-
-      const expiration = moment().utc().add(1, 'month').toDate();
-
-      res.cookie('token', token, {
-        httpOnly: true,
-        secure: Boolean(USE_SSL),
-        expires: expiration,
-      });
-
-      res.redirect('/');
-    };
-
-    const deleteInvitationAndAuthenticate = (error, userId, permissions) => {
-      if (error) {
-        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return;
-      }
-
-      users.deleteInvitationByToken(
-        db,
-        _invitationToken,
-        (error) => {
-          authenticateAndRedirect(error, userId, permissions);
-        }
-      );
-    };
-
-    bcrypt.hash(password, PASSWORD_SALT_ROUNDS, (error, passwordHash) => {
-      if (error) {
-        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return;
-      }
-
-      users.getInvitationByToken(db, _invitationToken, (error, _invitation) => {
-        if (error) {
-          res.sendStatus(HttpStatus.UNAUTHORIZED);
-
-          return;
-        }
-
-        const permissions = ['member'].join(',');
-
+    const p = users.getInvitationByToken(db, _invitationToken)
+      .catch(() => {
+        res.sendStatus(HttpStatus.UNAUTHORIZED);
+        p.cancel();
+      })
+      .then(() => bcrypt.hashAsync(password, PASSWORD_SALT_ROUNDS))
+      .then(passwordHash => {
+        return users.insertUser(db, {
+          username,
+          password: passwordHash,
+          email,
+          invitationToken: _invitationToken,
+          permissions,
+        });
+      })
+      .then(({ lastID }) => {
+        return users.deleteInvitationByToken(db, _invitationToken).then(() => lastID);
+      })
+      .then(userId => {
         // TODO
-        // should use a transaction but it seems weird with node-sqlite3?
-        users.insertUser(db,
-          {
-            username,
-            password: passwordHash,
-            email,
-            invitationToken: _invitationToken,
-            permissions,
-          },
-          // eslint-disable-next-line prefer-arrow-callback
-          function(error) {
-            // eslint-disable-next-line no-invalid-this
-            const userId = this.lastID;
+        // DRY things up. this is repeated in POST /session
+        const token = createJWT({
+          id: userId,
+          username,
+          permissions,
+        });
 
-            deleteInvitationAndAuthenticate(error, userId, permissions);
-          });
-      });
-    });
+        const expiration = moment().utc().add(1, 'month').toDate();
+
+        res.cookie('token', token, {
+          httpOnly: true,
+          secure: Boolean(USE_SSL),
+          expires: expiration,
+        });
+
+        res.redirect('/');
+      })
+      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
   // TODO
@@ -398,7 +348,7 @@ function attachAPI(app) {
   api.get('/users/current', JWT, (req, res) => {
     const { id, username, permissions } = req.user;
 
-    res.status(HttpStatus.OK).json({ id, username, permissions });
+    res.json({ id, username, permissions });
   });
 
   const splitPermissions = row => {
@@ -416,9 +366,7 @@ function attachAPI(app) {
 
         res.status(HttpStatus.OK).json(filteredUsers);
       })
-      .catch(() => {
-        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-      });
+      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
   api.post('/users/:id/reset/:token', JWT, (req, res) => {
@@ -429,31 +377,20 @@ function attachAPI(app) {
       res.redirect(req.originalUrl);
     }
 
-    users.getUserToken(db, id, (error, row) => {
-      if (error || token !== row.refresh_token) {
-        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return;
-      }
-
-      bcrypt.hash(newPassword, PASSWORD_SALT_ROUNDS, (error, passwordHash) => {
-        if (error) {
-          res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+    const p = users.getUserToken(db, id)
+      .then(row => {
+        if (token !== row.refresh_token) {
+          res.sendStatus(HttpStatus.NOT_FOUND);
+          p.cancel();
 
           return;
         }
 
-        users.setUserPassword(db, id, passwordHash, (error) => {
-          if (error) {
-            res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-            return;
-          }
-
-          res.redirect('/login');
-        });
-      });
-    });
+        return bcrypt.hashAsync(newPassword, PASSWORD_SALT_ROUNDS);
+      })
+      .then(passwordHash => users.setUserPassword(db, id, passwordHash))
+      .then(() => res.redirect('/login'))
+      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
   api.put('/users/:id', JWT, (req, res) => {
@@ -461,143 +398,79 @@ function attachAPI(app) {
 
     user.permissions = user.permissions.join(',');
 
-    users.putUser(db, req.params.id, user, (error) => {
-      if (error) {
-        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return;
-      }
-
-      users.getUsers(db, (error, users) => {
-        if (error) {
-          res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-          return;
-        }
-
+    users.putUser(db, req.params.id, user)
+      .then(() => users.getUsers(db))
+      .then(users => {
         const filteredUsers = users.map(splitPermissions);
 
         res.json(filteredUsers);
-      });
-    });
+      })
+      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
   api.get('/users/:id', JWT, (req, res) => {
-    users.getUserById(db, req.params.id, (error, row) => {
-      const filteredObject = _(row).pick('id', 'username');
+    users.getUserById(db, req.params.id)
+      .then(row => {
+        const filteredObject = _(row).pick('id', 'username');
 
-      res.status(HttpStatus.OK).json(filteredObject);
-    });
+        res.status(HttpStatus.OK).json(filteredObject);
+      });
   });
 
   api.delete('/users/:id', JWT, (req, res) => {
-    users.deleteUserById(db, req.params.id, (error) => {
-      if (error) {
-        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return;
-      }
-
-      res.sendStatus(HttpStatus.OK);
-    });
+    users.deleteUserById(db, req.params.id)
+      .then(() => res.sendStatus(HttpStatus.OK))
+      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
   api.get('/trackers', JWT, (req, res) => {
-    trackers.getTrackers(db, (error, trackers) => {
-      res.json(trackers);
-    });
+    trackers.getTrackers(db)
+      .then(trackers => res.json(trackers))
+      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
   api.post('/trackers', JWT, (req, res) => {
     const tracker = req.body;
 
-    trackers.insertTracker(db, tracker, (error) => {
-      if (error) {
-        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return;
-      }
-
-      trackers.getTrackers(db, (error, trackers) => {
-        if (error) {
-          res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-          return;
-        }
-
-        res.json(trackers);
-      });
-    });
+    trackers.insertTracker(db, tracker)
+      .then(() => trackers.getTrackers(db))
+      .then(trackers => res.json(trackers))
+      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
   api.put('/trackers/:id', JWT, (req, res) => {
     const tracker = req.body;
 
-    trackers.putTracker(db, req.params.id, tracker, (error) => {
-      if (error) {
-        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return;
-      }
-
-      trackers.getTrackers(db, (error, trackers) => {
-        res.json(trackers);
-      });
-    });
+    trackers.putTracker(db, req.params.id, tracker)
+      .then(() => trackers.getTrackers(db))
+      .then(trackers => res.json(trackers))
+      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
   api.delete('/trackers/:id', JWT, (req, res) => {
-    trackers.deleteTrackerById(db, req.params.id, (error) => {
-      if (error) {
-        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return;
-      }
-
-      trackers.getTrackers(db, (error, trackers) => {
-        res.json(trackers);
-      });
-    });
+    trackers.deleteTrackerById(db, req.params.id)
+      .then(() => trackers.getTrackers(db))
+      .then(trackers => res.json(trackers))
+      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
   api.get('/invitations', JWT, (req, res) => {
-    users.getInvitations(db, (error, invitations) => {
-      res.json(invitations);
-    });
+    users.getInvitations(db)
+      .then(invitations => res.json(invitations));
   });
 
   api.post('/invitations', JWT, (req, res) => {
-    users.createInvitation(db, (error) => {
-      if (error) {
-        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return;
-      }
-
-      users.getInvitations(db, (error, invitations) => {
-        if (error) {
-          res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-          return;
-        }
-
-        res.json(invitations);
-      });
-    });
+    users.createInvitation(db)
+      .then(() => users.getInvitations(db))
+      .then(invitations => res.json(invitations))
+      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
   api.delete('/invitations/:token', JWT, (req, res) => {
-    users.deleteInvitationByToken(db, req.params.token, (error) => {
-      if (error) {
-        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return;
-      }
-
-      users.getInvitations(db, (error, invitations) => {
-        res.json(invitations);
-      });
-    });
+    users.deleteInvitationByToken(db, req.params.token)
+      .then(() => users.getInvitations(db))
+      .then(invitations => res.json(invitations))
+      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
   api.get('/downloads', JWT, (req, res) => {
@@ -627,8 +500,6 @@ function attachAPI(app) {
           .then(() => res.json({ success: true }));
         break;
       }
-      // TODO
-      // rename acquireLock and releaseLock
       case 'acquireLock': {
         downloads.addLock(infoHash, req.user.id)
           .then(() => res.json({ success: true }))

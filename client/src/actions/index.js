@@ -51,9 +51,7 @@ export function requestDeleteInvitation(token) {
   return dispatch => {
     return request.delete(`/api/invitations/${token}`)
       .accept('json')
-      .then(res => {
-        dispatch(receiveInvitations(res.body));
-      });
+      .then(res => dispatch(receiveInvitations(res.body)));
   };
 }
 
@@ -94,9 +92,7 @@ export function requestDeleteTracker(id) {
   return dispatch => {
     return request.delete(`/api/trackers/${id}`)
       .accept('json')
-      .then(res => {
-        dispatch(receiveTrackers(res.body));
-      });
+      .then(res => dispatch(receiveTrackers(res.body)));
   };
 }
 
@@ -460,14 +456,7 @@ export function deleteUser(userId) {
 export function requestDeleteUser(userId) {
   return dispatch => {
     return request.delete(`/api/users/${userId}`)
-      .accept('json')
-      .then(res => {
-        if (res.body.error) {
-          return;
-        }
-
-        dispatch(deleteUser(userId));
-      });
+      .then(() => dispatch(deleteUser(userId)));
   };
 }
 
