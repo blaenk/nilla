@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="col-xs-12 col-sm-offset-3 col-sm-6 col-md-6 col-md-offset-3">
+    <div class="navbar navbar-default navbar-static-top" role="navigation">
+      <div class="navbar-header">
+        <div class="navbar-brand">
+          Reset password for <strong>{{username}}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-offset-3 col-sm-6 col-md-6 col-md-offset-3">
+    <form action="/api/users/{{id}}/reset/{{token}}" role="form" method="post">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+
+      <div class="form-group">
+        <label for="newPassword">new password</label>
+
+        <input class="form-control"
+               name="newPassword"
+               type="password"
+               autocomplete="off"
+               placeholder="new password"/>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmNewPassword">confirm new password</label>
+
+        <input class="form-control"
+               name="confirmNewPassword"
+               type="password"
+               autocomplete="off"
+               placeholder="confirm new password"/>
+      </div>
+
+      <input class="btn btn-primary pull-right" type="submit" value="reset"/>
+    </form>
+  </div>
+</div>

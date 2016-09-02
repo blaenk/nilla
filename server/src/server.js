@@ -37,6 +37,8 @@ const {
   USE_SSL,
 } = process.env;
 
+const PASSWORD_SALT_ROUNDS = 10;
+
 function refererUrl(referer) {
   if (referer === '/' || referer === '') {
     return '/login';
@@ -226,10 +228,29 @@ function attachAuthentication(app, options) {
     });
   });
 
+  app.get('/users/:id/reset/:token', CSRF, (req, res) => {
+    const { id, token } = req.params;
+
+    users.getUserById(db, req.params.id, (error, row) => {
+      if (error || token !== row.refresh_token) {
+        res.sendStatus(HttpStatus.NOT_FOUND);
+
+        return;
+      }
+
+      const { username } = row;
+
+      res.render('reset', {
+        csrfToken: req.csrfToken(),
+        username,
+        id,
+        token,
+      });
+    });
+  });
+
   app.post('/users', CSRF, (req, res) => {
     const { _invitationToken, username, password, email } = req.body;
-
-    const SALT_ROUNDS = 10;
 
     // TODO
     // promisify
@@ -277,7 +298,7 @@ function attachAuthentication(app, options) {
       );
     };
 
-    bcrypt.hash(password, SALT_ROUNDS, (error, passwordHash) => {
+    bcrypt.hash(password, PASSWORD_SALT_ROUNDS, (error, passwordHash) => {
       if (error) {
         res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -389,16 +410,49 @@ function attachAPI(app) {
   // TODO
   // authorization: only allow for admins
   api.get('/users', JWT, (req, res) => {
-    users.getUsers(db, (error, users) => {
-      if (error) {
+    users.getUsers(db)
+      .then(users => {
+        const filteredUsers = users.map(splitPermissions);
+
+        res.status(HttpStatus.OK).json(filteredUsers);
+      })
+      .catch(() => {
+        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+      });
+  });
+
+  api.post('/users/:id/reset/:token', JWT, (req, res) => {
+    const { id, token } = req.params;
+    const { newPassword, confirmNewPassword } = req.body;
+
+    if (newPassword !== confirmNewPassword) {
+      res.redirect(req.originalUrl);
+    }
+
+    users.getUserToken(db, id, (error, row) => {
+      if (error || token !== row.refresh_token) {
         res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 
         return;
       }
 
-      const filteredUsers = users.map(splitPermissions);
+      bcrypt.hash(newPassword, PASSWORD_SALT_ROUNDS, (error, passwordHash) => {
+        if (error) {
+          res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 
-      res.status(HttpStatus.OK).json(filteredUsers);
+          return;
+        }
+
+        users.setUserPassword(db, id, passwordHash, (error) => {
+          if (error) {
+            res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+
+            return;
+          }
+
+          res.redirect('/login');
+        });
+      });
     });
   });
 
@@ -437,8 +491,6 @@ function attachAPI(app) {
   });
 
   api.delete('/users/:id', JWT, (req, res) => {
-    console.log('deleting user', req.params.id);
-
     users.deleteUserById(db, req.params.id, (error) => {
       if (error) {
         res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -448,16 +500,6 @@ function attachAPI(app) {
 
       res.sendStatus(HttpStatus.OK);
     });
-  });
-
-  api.get('/users/:id/reset', JWT, (req, res) => {
-    res.send('user pw reset');
-  });
-
-  // TODO
-  // or PATCH /users/:id setPassword?
-  api.post('/users/:id/reset', JWT, (req, res) => {
-    res.send('user pw reset');
   });
 
   api.get('/trackers', JWT, (req, res) => {

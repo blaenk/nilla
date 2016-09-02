@@ -2,6 +2,22 @@
 
 const crypto = require('crypto');
 
+const Bluebird = require('bluebird');
+
+function createRandomSha1(callback) {
+  const BYTE_COUNT = 64;
+
+  crypto.randomBytes(BYTE_COUNT, (err, buffer) => {
+    if (err) {
+      callback(err);
+
+      return;
+    }
+
+    callback(null, crypto.createHash('sha1').update(buffer).digest('hex'));
+  });
+}
+
 function getUserByUsername(db, username, callback) {
   db.get('SELECT * FROM users WHERE username = ?', username, callback);
 }
@@ -10,8 +26,14 @@ function getUserById(db, id, callback) {
   db.get('SELECT * FROM users WHERE id = ?', id, callback);
 }
 
-function getUsers(db, callback) {
-  db.all('SELECT id, username, email, permissions, refresh_token FROM users', callback);
+function getUserToken(db, id, callback) {
+  db.get('SELECT refresh_token FROM users WHERE id = ?', id, callback);
+}
+
+function getUsers(db) {
+  return Bluebird.fromCallback(cb => {
+    db.all('SELECT id, username, email, permissions, refresh_token FROM users', cb);
+  });
 }
 
 function insertUser(db, user, callback) {
@@ -49,6 +71,21 @@ function putUser(db, id, user, callback) {
   );
 }
 
+function setUserPassword(db, id, password, callback) {
+  createRandomSha1((error, sha1) => {
+    db.run(
+      'UPDATE users \
+       SET password = $password, refresh_token = $token \
+       WHERE id = $id', {
+         $id: id,
+         $password: password,
+         $token: sha1,
+       },
+      callback
+    );
+  });
+}
+
 function deleteUserById(db, id, callback) {
   db.run('DELETE FROM users WHERE id = ?', id, callback);
 }
@@ -63,20 +100,6 @@ function getInvitationByToken(db, token, callback) {
 
 function deleteInvitationByToken(db, token, callback) {
   db.run('DELETE FROM invitations WHERE token = ?', token, callback);
-}
-
-function createRandomSha1(callback) {
-  const BYTE_COUNT = 64;
-
-  crypto.randomBytes(BYTE_COUNT, (err, buffer) => {
-    if (err) {
-      callback(err);
-
-      return;
-    }
-
-    callback(null, crypto.createHash('sha1').update(buffer).digest('hex'));
-  });
 }
 
 function createInvitation(db, callback) {
@@ -106,4 +129,6 @@ module.exports = {
   getInvitations,
   getInvitationByToken,
   deleteInvitationByToken,
+  getUserToken,
+  setUserPassword,
 };
