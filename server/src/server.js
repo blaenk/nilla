@@ -15,6 +15,7 @@ const bcrypt = Bluebird.promisifyAll(require('bcrypt'));
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const expressJWT = require('express-jwt');
+const guard = require('express-jwt-permissions')();
 const helmet = require('helmet');
 const morgan = require('morgan');
 const jwt = require('jsonwebtoken');
@@ -312,7 +313,7 @@ function attachAPI(app) {
 
   api.use(rejectPlainTextRequest);
 
-  api.post('/downloads', JWT, upload.single('torrent'), CSRF, (req, res) => {
+  api.post('/downloads', JWT, guard.check('member'), upload.single('torrent'), CSRF, (req, res) => {
     let torrent, start;
 
     if (req.is('multipart/form-data')) {
@@ -393,7 +394,7 @@ function attachAPI(app) {
       .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
-  api.put('/users/:id', JWT, (req, res) => {
+  api.put('/users/:id', JWT, guard.check('admin'), (req, res) => {
     const user = req.body;
 
     user.permissions = user.permissions.join(',');
