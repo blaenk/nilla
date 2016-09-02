@@ -15,6 +15,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const expressJWT = require('express-jwt');
 const helmet = require('helmet');
+const morgan = require('morgan');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const multer = require('multer');
@@ -379,17 +380,51 @@ function attachAPI(app) {
     res.status(HttpStatus.OK).json({ id, username, permissions });
   });
 
+  const splitPermissions = row => {
+    row.permissions = row.permissions.split(',');
+
+    return row;
+  };
+
+  // TODO
+  // authorization: only allow for admins
   api.get('/users', JWT, (req, res) => {
     users.getUsers(db, (error, users) => {
-      const filteredUsers = users.map(row => {
-        const user = _.omit(row, ['password', 'refresh_token']);
+      if (error) {
+        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 
-        user.permissions = user.permissions.split(',');
+        return;
+      }
 
-        return user;
-      });
+      const filteredUsers = users.map(splitPermissions);
 
       res.status(HttpStatus.OK).json(filteredUsers);
+    });
+  });
+
+  api.put('/users/:id', JWT, (req, res) => {
+    const user = req.body;
+
+    user.permissions = user.permissions.join(',');
+
+    users.putUser(db, req.params.id, user, (error) => {
+      if (error) {
+        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return;
+      }
+
+      users.getUsers(db, (error, users) => {
+        if (error) {
+          res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+
+          return;
+        }
+
+        const filteredUsers = users.map(splitPermissions);
+
+        res.json(filteredUsers);
+      });
     });
   });
 
@@ -399,10 +434,6 @@ function attachAPI(app) {
 
       res.status(HttpStatus.OK).json(filteredObject);
     });
-  });
-
-  api.patch('/users/:id', JWT, (req, res) => {
-    res.send('modify user');
   });
 
   api.delete('/users/:id', JWT, (req, res) => {
@@ -623,6 +654,7 @@ function createServer(options) {
 
   const app = express();
 
+  app.use(morgan('combined'));
   app.use(helmet());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));

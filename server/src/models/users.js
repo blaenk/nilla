@@ -11,7 +11,7 @@ function getUserById(db, id, callback) {
 }
 
 function getUsers(db, callback) {
-  db.all('SELECT * FROM users', callback);
+  db.all('SELECT id, username, email, permissions, refresh_token FROM users', callback);
 }
 
 function insertUser(db, user, callback) {
@@ -23,6 +23,27 @@ function insertUser(db, user, callback) {
        $email: user.email,
        $refresh_token: user.invitationToken,
        $permissions: user.permissions,
+     },
+    callback
+  );
+}
+
+function putUser(db, id, user, callback) {
+  db.run(
+    'UPDATE users \
+     SET \
+       email = $email, \
+       username = $username, \
+       password = $password, \
+       permissions = $permissions, \
+       refresh_token = $refresh_token \
+     WHERE id = $id', {
+       $id: user.id,
+       $email: user.email,
+       $username: user.username,
+       $password: user.password,
+       $permissions: user.permissions,
+       $refresh_token: user.refresh_token,
      },
     callback
   );
@@ -77,6 +98,7 @@ module.exports = {
   getUserByUsername,
   getUserById,
   insertUser,
+  putUser,
   deleteUserById,
   getUsers,
   createRandomSha1,

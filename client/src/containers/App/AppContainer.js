@@ -10,6 +10,7 @@ import FilteredDownloads from 'containers/Downloads/FilteredDownloads';
 import DownloadContainer from 'containers/Download/DownloadContainer';
 
 import UsersContainer from 'containers/Users/UsersContainer';
+import EditUser from 'containers/User/EditUser';
 
 import TrackersContainer from 'containers/Trackers/TrackersContainer';
 import EditTrackerContainer from 'containers/Tracker/EditTrackerContainer';
@@ -28,6 +29,7 @@ function AppContainer(props) {
           <Route path='downloads/:infoHash(/:name)' component={DownloadContainer} />
 
           <Route path='users' component={UsersContainer} />
+          <Route path='users/:id' component={EditUser} />
 
           <Route path='trackers' component={TrackersContainer} />
           <Route path='trackers/new' component={NewTrackerContainer} />

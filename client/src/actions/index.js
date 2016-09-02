@@ -179,6 +179,40 @@ export function receiveUser(id, user) {
   };
 }
 
+export const REQUEST_USERS = 'REQUEST_USERS';
+
+export function requestUsers() {
+  return {
+    type: REQUEST_USERS,
+  };
+}
+
+export const RECEIVE_USERS = 'RECEIVE_USERS';
+
+export function receiveUsers(users) {
+  return {
+    type: RECEIVE_USERS,
+    users,
+    receivedAt: new Date(),
+  };
+}
+
+export function putUser(user, callback) {
+  return dispatch => {
+    return request.put(`/api/users/${user.id}`)
+      .send(user)
+      .accept('json')
+      .then(res => {
+        if (res.body.error) {
+          return;
+        }
+
+        dispatch(receiveUsers(res.body));
+        callback();
+      });
+  };
+}
+
 export function getUser(userID) {
   return dispatch => {
     dispatch(requestUser(userID));
@@ -378,24 +412,6 @@ export function receiveDownloads(downloads) {
   return {
     type: RECEIVE_DOWNLOADS,
     downloads,
-    receivedAt: new Date(),
-  };
-}
-
-export const REQUEST_USERS = 'REQUEST_USERS';
-
-export function requestUsers() {
-  return {
-    type: REQUEST_USERS,
-  };
-}
-
-export const RECEIVE_USERS = 'RECEIVE_USERS';
-
-export function receiveUsers(users) {
-  return {
-    type: RECEIVE_USERS,
-    users,
     receivedAt: new Date(),
   };
 }
