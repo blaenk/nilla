@@ -25,15 +25,11 @@ const USER = {
   permissions: 'admin',
 };
 
-const passAuthentication = sinon.stub();
-
-passAuthentication.yields(null, USER);
+const passAuthentication = sinon.stub().resolves(USER);
 
 describe('Server', function() {
   it('should remain on /login on login failure', function(done) {
-    const failAuthentication = sinon.stub();
-
-    failAuthentication.yields(new Error('failed auth'));
+    const failAuthentication = sinon.stub().rejects(new Error('failed auth'));
 
     const fail = request.agent(server.createServer({
       authenticator: failAuthentication,
