@@ -3,6 +3,7 @@ import CSSModules from 'react-css-modules';
 import { Row, Col } from 'react-bootstrap';
 
 import { getDownload } from 'actions';
+import { userCan } from 'common';
 
 import Header from './Header';
 import File from './File';
@@ -31,7 +32,7 @@ class Download extends React.Component {
   }
 
   render() {
-    const { download, ui, files, users } = this.props;
+    const { download, ui, files, users, currentUser } = this.props;
 
     if (!download || !ui.isAugmented) {
       return null;
@@ -39,6 +40,12 @@ class Download extends React.Component {
 
     // TODO
     // use a spinner via ui.isFetching
+
+    const canDownload = currentUser && userCan(currentUser, 'download');
+
+    let commandBar = canDownload ? (
+      <CommandBarContainer infoHash={this.props.infoHash} />
+    ) : null;
 
     const fileCount = files.downloaded.length + files.extracted.length;
 
@@ -85,7 +92,7 @@ class Download extends React.Component {
 
         <Row>
           <Col lg={12}>
-            <CommandBarContainer infoHash={this.props.infoHash} />
+            {commandBar}
           </Col>
         </Row>
 
@@ -123,6 +130,7 @@ class Download extends React.Component {
 const filesProps = File.propTypes;
 
 Download.propTypes = {
+  currentUser: React.PropTypes.object.isRequired,
   dispatch: React.PropTypes.func.isRequired,
   download: React.PropTypes.shape({
     dateAdded: React.PropTypes.string.isRequired,

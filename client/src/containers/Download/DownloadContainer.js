@@ -18,10 +18,11 @@ function makeMapStateToProps() {
 
     const download = state.data.downloads[infoHash];
     const users = state.data.users;
+    const currentUser = state.data.users.current;
     const ui = state.ui.download[infoHash];
     const files = getFilteredFiles(state, props);
 
-    return { infoHash, download, ui, files, users };
+    return { infoHash, download, ui, files, users, currentUser };
   };
 }
 

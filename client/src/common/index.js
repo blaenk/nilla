@@ -32,6 +32,14 @@ export function expiresAt(date) {
   return moment(date).add(EXPIRATION_DURATION);
 }
 
+export function userCan(user, permissions) {
+  if (!Array.isArray(permissions)) {
+    permissions = [permissions];
+  }
+
+  return permissions.every(p => user.permissions.includes(p));
+}
+
 export function partitionFiles(entries, depth) {
   const folders = [], files = [], tree = {};
 
