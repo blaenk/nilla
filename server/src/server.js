@@ -320,7 +320,7 @@ function attachAuthentication(app, options) {
 
   // TODO
   // move out of here?
-  app.get(/^\/file\/(.+)/, JWT, (req, res) => {
+  app.get(/^\/file\/(.+)/, JWT, guard.check('download'), (req, res) => {
     const filePath = req.params[0];
     const name = path.basename(filePath);
 

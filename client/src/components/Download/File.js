@@ -49,11 +49,15 @@ class File extends React.Component {
 
     let nameTag, badge;
 
-    if (isFinished) {
+    if (isFinished && this.props.canDownload) {
       nameTag = <a href={url} styleName='file-name'>{basename}</a>;
-      badge = <Badge styleName={disabledOr('file-size')}>{size}</Badge>;
     } else {
       nameTag = <span styleName='file-name-incomplete'>{basename}</span>;
+    }
+
+    if (isFinished) {
+      badge = <Badge styleName={disabledOr('file-size')}>{size}</Badge>;
+    } else {
       badge = <Badge styleName={disabledOr('file-progress')}>{this.props.progress}</Badge>;
     }
 
@@ -78,6 +82,7 @@ class File extends React.Component {
 }
 
 File.propTypes = {
+  canDownload: React.PropTypes.bool.isRequired,
   disable: React.PropTypes.func.isRequired,
   downloadName: React.PropTypes.string.isRequired,
   enable: React.PropTypes.func.isRequired,

@@ -5,6 +5,8 @@ import {
   disableDownloadFile,
 } from 'actions';
 
+import { userCan } from 'common';
+
 import File from 'components/Download/File';
 
 function mapStateToProps(state, props) {
@@ -12,11 +14,14 @@ function mapStateToProps(state, props) {
 
   const ui = state.ui.download[infoHash];
 
+  const currentUser = state.data.users.current;
+  const canDownload = currentUser && userCan(currentUser, 'download');
+
   if (!ui) {
     return {};
   }
 
-  return { ui };
+  return { ui, canDownload };
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
