@@ -241,6 +241,30 @@ function attachAuthentication(app, options) {
       .catch(() => res.sendStatus(HttpStatus.NOT_FOUND));
   });
 
+  app.post('/users/:id/reset/:token', CSRF, (req, res) => {
+    const { id, token } = req.params;
+    const { newPassword, confirmNewPassword } = req.body;
+
+    if (newPassword !== confirmNewPassword) {
+      res.redirect(req.originalUrl);
+    }
+
+    const p = users.getUserToken(db, id)
+      .then(row => {
+        if (token !== row.refresh_token) {
+          res.sendStatus(HttpStatus.NOT_FOUND);
+          p.cancel();
+
+          return;
+        }
+
+        return bcrypt.hashAsync(newPassword, PASSWORD_SALT_ROUNDS);
+      })
+      .then(passwordHash => users.setUserPassword(db, id, passwordHash))
+      .then(() => res.redirect('/login'))
+      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+  });
+
   app.post('/users', CSRF, (req, res) => {
     const { _invitationToken, username, password, email } = req.body;
 
@@ -367,30 +391,6 @@ function attachAPI(app) {
 
         res.status(HttpStatus.OK).json(filteredUsers);
       })
-      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
-  });
-
-  api.post('/users/:id/reset/:token', JWT, (req, res) => {
-    const { id, token } = req.params;
-    const { newPassword, confirmNewPassword } = req.body;
-
-    if (newPassword !== confirmNewPassword) {
-      res.redirect(req.originalUrl);
-    }
-
-    const p = users.getUserToken(db, id)
-      .then(row => {
-        if (token !== row.refresh_token) {
-          res.sendStatus(HttpStatus.NOT_FOUND);
-          p.cancel();
-
-          return;
-        }
-
-        return bcrypt.hashAsync(newPassword, PASSWORD_SALT_ROUNDS);
-      })
-      .then(passwordHash => users.setUserPassword(db, id, passwordHash))
-      .then(() => res.redirect('/login'))
       .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
