@@ -6,11 +6,21 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { requestDeleteUser } from 'actions';
 
 function User(props) {
+  const permissions = props.permissions.map(p => {
+    return (
+      <li key={p}>{p}</li>
+    );
+  });
+
   return (
     <tr>
       <td>{props.username}</td>
       <td>{props.email}</td>
-      <td>{props.permissions.join(', ')}</td>
+      <td>
+        <ul>
+          {permissions}
+        </ul>
+      </td>
       <td style={{ textAlign: 'center' }}>
         <LinkContainer to={`/users/${props.id}`}>
           <Button bsStyle='primary' bsSize='xsmall' title='edit'>
