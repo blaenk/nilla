@@ -72,14 +72,12 @@ function putUser(db, id, user) {
        SET \
          email = $email, \
          username = $username, \
-         password = $password, \
          permissions = $permissions, \
          refresh_token = $refresh_token \
        WHERE id = $id', {
          $id: user.id,
          $email: user.email,
          $username: user.username,
-         $password: user.password,
          $permissions: user.permissions,
          $refresh_token: user.refresh_token,
        },
