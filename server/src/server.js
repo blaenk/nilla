@@ -53,10 +53,18 @@ function refererUrl(referer) {
   return `/login?ref=${referer}`;
 }
 
-function JWTErrorHandler(err, req, res, _next) {
-  if (err.name === 'UnauthorizedError') {
+function JWTErrorHandler(err, req, res, next) {
+  if (err.code === 'permission_denied') {
+    res.sendStatus(HttpStatus.UNAUTHORIZED);
+
+    return;
+  } else if (err.name === 'UnauthorizedError') {
     res.redirect(refererUrl(req.originalUrl));
+
+    return;
   }
+
+  next();
 }
 
 function CSRFValidationError(err, req, res, next) {
