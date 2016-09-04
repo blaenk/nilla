@@ -345,7 +345,7 @@ function attachAPI(app) {
 
   api.use(rejectPlainTextRequest);
 
-  api.post('/downloads', JWT, guard.check('member'), upload.single('torrent'), CSRF, (req, res) => {
+  api.post('/downloads', CSRF, JWT, guard.check('upload'), upload.single('torrent'), (req, res) => {
     let torrent, start;
 
     if (req.is('multipart/form-data')) {

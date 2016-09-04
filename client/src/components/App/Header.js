@@ -8,6 +8,14 @@ import { userCan } from 'common';
 import styles from './header.module.less';
 
 function Header(props) {
+  let uploadButton;
+
+  if (props.currentUser && userCan(props.currentUser, 'upload')) {
+    uploadButton = (
+      <NavItem eventKey={2} onClick={props.onUpload}>Upload</NavItem>
+    );
+  }
+
   let trackersButton;
 
   if (props.currentUser && userCan(props.currentUser, 'trackers:read')) {
@@ -42,8 +50,7 @@ function Header(props) {
             <NavItem eventKey={1}>Download</NavItem>
           </LinkContainer>
 
-          <NavItem eventKey={2} onClick={props.onUpload}>Upload</NavItem>
-
+          {uploadButton}
           {trackersButton}
           {usersButton}
         </Nav>
