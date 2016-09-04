@@ -65,7 +65,7 @@ function JWTErrorHandler(err, req, res, next) {
     return;
   }
 
-  next();
+  next(err);
 }
 
 function CSRFValidationError(err, req, res, next) {
