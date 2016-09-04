@@ -290,7 +290,7 @@ function attachAuthentication(app, options) {
   app.post('/users', CSRF, (req, res, next) => {
     const { _invitationToken, username, password, email } = req.body;
 
-    const permissions = ['member'].join(',');
+    const permissions = ['download'].join(',');
 
     const p = users.getInvitationByToken(db, _invitationToken)
       .catch(() => {
