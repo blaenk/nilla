@@ -3,6 +3,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { Button, Table } from 'react-bootstrap';
 
 import { getTrackers } from 'actions';
+import { userCan } from 'common';
 
 import Tracker from './Tracker';
 
@@ -29,9 +30,9 @@ class Trackers extends React.Component {
       );
     });
 
-    const isAdmin = this.props.currentUser.permissions.includes('admin');
+    const canEdit = userCan(this.props.currentUser, 'trackers:write');
 
-    const newTrackerButton = isAdmin ? (
+    const newTrackerButton = canEdit ? (
       <LinkContainer to='/trackers/new'>
         <Button>
           new tracker
@@ -49,8 +50,8 @@ class Trackers extends React.Component {
               <th>user</th>
               <th>pass</th>
 
-              {isAdmin && (<th />)}
-              {isAdmin && (<th />)}
+              {canEdit && (<th />)}
+              {canEdit && (<th />)}
             </tr>
           </thead>
 

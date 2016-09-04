@@ -5,11 +5,12 @@ import { LinkContainer } from 'react-router-bootstrap';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import { requestDeleteTracker } from 'actions';
+import { userCan } from 'common';
 
 function Tracker(props) {
-  const isAdmin = props.currentUser.permissions.includes('admin');
+  const canEdit = userCan(props.currentUser, 'trackers:write');
 
-  const editColumn = isAdmin ? (
+  const editColumn = canEdit ? (
     <td style={{ textAlign: 'center' }}>
       <LinkContainer to={`/trackers/${props.id}`}>
         <Button bsStyle='primary' bsSize='xsmall' title='edit'>
@@ -19,7 +20,7 @@ function Tracker(props) {
     </td>
   ) : null;
 
-  const removeColumn = isAdmin ? (
+  const removeColumn = canEdit ? (
     <td style={{ textAlign: 'center' }}>
       <Button onClick={props.onRemove} bsStyle='danger' bsSize='xsmall' title='delete'>
         <Glyphicon glyph='remove' />

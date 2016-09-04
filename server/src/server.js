@@ -438,7 +438,7 @@ function attachAPI(app) {
       .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
-  api.post('/trackers', JWT, (req, res) => {
+  api.post('/trackers', JWT, guard.check('trackers:write'), (req, res) => {
     const tracker = req.body;
 
     trackers.insertTracker(db, tracker)
@@ -447,7 +447,7 @@ function attachAPI(app) {
       .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
-  api.put('/trackers/:id', JWT, (req, res) => {
+  api.put('/trackers/:id', JWT, guard.check('trackers:write'), (req, res) => {
     const tracker = req.body;
 
     trackers.putTracker(db, req.params.id, tracker)
@@ -456,7 +456,7 @@ function attachAPI(app) {
       .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
-  api.delete('/trackers/:id', JWT, (req, res) => {
+  api.delete('/trackers/:id', JWT, guard.check('trackers:write'), (req, res) => {
     trackers.deleteTrackerById(db, req.params.id)
       .then(() => trackers.getTrackers(db))
       .then(trackers => res.json(trackers))
