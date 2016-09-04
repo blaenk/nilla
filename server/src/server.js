@@ -463,19 +463,19 @@ function attachAPI(app) {
       .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
-  api.get('/invitations', JWT, (req, res) => {
+  api.get('/invitations', JWT, guard.check('invitations:read'), (req, res) => {
     users.getInvitations(db)
       .then(invitations => res.json(invitations));
   });
 
-  api.post('/invitations', JWT, (req, res) => {
+  api.post('/invitations', JWT, guard.check('invitations:write'), (req, res) => {
     users.createInvitation(db)
       .then(() => users.getInvitations(db))
       .then(invitations => res.json(invitations))
       .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
-  api.delete('/invitations/:token', JWT, (req, res) => {
+  api.delete('/invitations/:token', JWT, guard.check('invitations:write'), (req, res) => {
     users.deleteInvitationByToken(db, req.params.token)
       .then(() => users.getInvitations(db))
       .then(invitations => res.json(invitations))
