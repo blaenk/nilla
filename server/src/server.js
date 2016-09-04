@@ -33,6 +33,7 @@ const db = new sqlite3.cached.Database('./db/nilla.db');
 
 const {
   JWT_SECRET,
+  NODE_ENV,
   RTORRENT_DOWNLOADS_DIRECTORY,
   SERVE_ASSETS,
   SERVE_DOWNLOADS,
@@ -596,7 +597,10 @@ function createServer(options) {
 
   const app = express();
 
-  app.use(morgan('combined'));
+  if (NODE_ENV === 'development') {
+    app.use(morgan('combined'));
+  }
+
   app.use(helmet());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
