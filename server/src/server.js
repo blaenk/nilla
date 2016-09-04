@@ -417,7 +417,7 @@ function attachAPI(app) {
       .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
-  api.get('/users/:id', JWT, (req, res) => {
+  api.get('/users/:id', JWT, guard.check('users:resolve'), (req, res) => {
     users.getUserById(db, req.params.id)
       .then(row => {
         const filteredObject = _(row).pick('id', 'username');
