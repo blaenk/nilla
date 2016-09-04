@@ -432,7 +432,7 @@ function attachAPI(app) {
       .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
-  api.get('/trackers', JWT, (req, res) => {
+  api.get('/trackers', JWT, guard.check('trackers:read'), (req, res) => {
     trackers.getTrackers(db)
       .then(trackers => res.json(trackers))
       .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
