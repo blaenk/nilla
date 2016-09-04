@@ -59,6 +59,7 @@ class CommandBar extends React.Component {
     const currentUserIsAdmin = this.props.user.permissions.includes('admin');
 
     const canControl = this.props.user && (currentUserIsUploader || currentUserIsAdmin);
+    const userCanControl = userCan(this.props.user, 'download:control');
 
     const stopStartButton = canControl ? (
       <Button bsSize='xsmall'
@@ -69,8 +70,7 @@ class CommandBar extends React.Component {
       </Button>
     ) : null;
 
-    const canDelete = this.props.user &&
-          ((currentUserIsUploader && !isLocked) || currentUserIsAdmin);
+    const canDelete = this.props.user && (userCanControl || (currentUserIsUploader && !isLocked));
 
     const deleteButton = canDelete ? (
       <Button bsSize='xsmall'

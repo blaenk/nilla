@@ -534,14 +534,24 @@ function attachAPI(app) {
     }
   });
 
-  // TODO
-  // validation
-  api.delete('/downloads/:infoHash', JWT, (req, res) => {
-    rtorrent.torrent(req.params.infoHash, 'erase')
-      .then(() => res.json({ success: true }))
-      .catch(_error => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        error: 'no such torrent',
-      }));
+  api.delete('/downloads/:infoHash', JWT, guard.check('download'), (req, res) => {
+    downloads.getDownload(req.params.infoHash)
+      .then(download => {
+        // * anyone with download:control can delete any download
+        // * the original uploader can delete the download if it has no locks
+        if (!req.user.permissions.includes('download:control') &&
+            !(req.user.id === download.uploader && download.locks.length === 0)) {
+          res.sendStatus(HttpStatus.UNAUTHORIZED);
+
+          return;
+        }
+
+        return rtorrent.torrent(req.params.infoHash, 'erase')
+          .then(() => res.sendStatus(HttpStatus.OK))
+          .catch(_error => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+            error: 'no such torrent',
+          }));
+      });
   });
 
   app.use('/api', api);

@@ -576,11 +576,7 @@ export function eraseDownload(infoHash, callback) {
   return (_dispatch) => {
     return request.delete(`/api/downloads/${infoHash}`)
       .accept('json')
-      .then(res => {
-        if (res.body.error) {
-          return Promise.resolve();
-        }
-
+      .then(() => {
         callback();
 
         return Promise.resolve();
