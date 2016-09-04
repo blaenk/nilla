@@ -187,6 +187,19 @@ function authenticate(username, password) {
     });
 }
 
+function setToken(res, user) {
+  const token = createJWT(user);
+  const expiration = moment().utc().add(1, 'month').toDate();
+
+  // Save the JWT as a cookie as well. It's only ever used to authenticate file
+  // downloads since it's much more convenient that way.
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: Boolean(USE_SSL),
+    expires: expiration,
+  });
+}
+
 function attachAuthentication(app, options) {
   app.get('/login', CSRF, setCSRFTokenCookie, (req, res) => {
     res.render('login', {
@@ -213,16 +226,7 @@ function attachAuthentication(app, options) {
 
     options.authenticator(username, password)
       .then(user => {
-        const token = createJWT(user);
-        const expiration = moment().utc().add(1, 'month').toDate();
-
-        // Save the JWT as a cookie as well. It's only ever used to authenticate file
-        // downloads since it's much more convenient that way.
-        res.cookie('token', token, {
-          httpOnly: true,
-          secure: Boolean(USE_SSL),
-          expires: expiration,
-        });
+        setToken(res, user);
 
         res.redirect(_ref || '/');
       })
@@ -307,20 +311,10 @@ function attachAuthentication(app, options) {
         return users.deleteInvitationByToken(db, _invitationToken).then(() => lastID);
       })
       .then(userId => {
-        // TODO
-        // DRY things up. this is repeated in POST /session
-        const token = createJWT({
+        setToken(res, {
           id: userId,
           username,
           permissions,
-        });
-
-        const expiration = moment().utc().add(1, 'month').toDate();
-
-        res.cookie('token', token, {
-          httpOnly: true,
-          secure: Boolean(USE_SSL),
-          expires: expiration,
         });
 
         res.redirect('/');
