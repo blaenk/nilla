@@ -97,7 +97,6 @@ function CSRFValidationError(err, req, res, next) {
     },
     json: () => {
       res.status(HttpStatus.BAD_REQUEST).json({
-        success: false,
         message: 'invalid CSRF token',
       });
     },
