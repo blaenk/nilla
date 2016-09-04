@@ -392,7 +392,7 @@ function attachAPI(app) {
 
   // TODO
   // authorization: only allow for admins
-  api.get('/users', JWT, (req, res) => {
+  api.get('/users', JWT, guard.check('users:read'), (req, res) => {
     users.getUsers(db)
       .then(users => {
         const filteredUsers = users.map(splitPermissions);

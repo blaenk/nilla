@@ -3,16 +3,21 @@ import { LinkContainer } from 'react-router-bootstrap';
 import CSSModules from 'react-css-modules';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 
+import { userCan } from 'common';
+
 import styles from './header.module.less';
 
 function Header(props) {
-  const notAdmin = !props.currentUser || !props.currentUser.permissions.includes('admin');
 
-  const usersButton = notAdmin ? null : (
-    <LinkContainer to='/users'>
-      <NavItem eventKey={4}>Users</NavItem>
-    </LinkContainer>
-  );
+  let usersButton;
+
+  if (props.currentUser && userCan(props.currentUser, 'users:read')) {
+    usersButton = (
+      <LinkContainer to='/users'>
+        <NavItem eventKey={4}>Users</NavItem>
+      </LinkContainer>
+    );
+  }
 
   return (
     <Navbar styleName={props.isDragging ? 'dragging' : 'navbar'}>
