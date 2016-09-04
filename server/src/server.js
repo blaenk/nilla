@@ -402,7 +402,7 @@ function attachAPI(app) {
       .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
-  api.put('/users/:id', JWT, guard.check('admin'), (req, res) => {
+  api.put('/users/:id', JWT, guard.check('users:write'), (req, res) => {
     const user = req.body;
 
     user.permissions = user.permissions.join(',');
@@ -426,7 +426,7 @@ function attachAPI(app) {
       });
   });
 
-  api.delete('/users/:id', JWT, (req, res) => {
+  api.delete('/users/:id', JWT, guard.check('users:write'), (req, res) => {
     users.deleteUserById(db, req.params.id)
       .then(() => res.sendStatus(HttpStatus.OK))
       .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
