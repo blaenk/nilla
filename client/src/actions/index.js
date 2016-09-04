@@ -61,13 +61,7 @@ export function getInvitations() {
 
     return request.get('/api/invitations')
       .accept('json')
-      .then(res => {
-        if (res.body.error) {
-          return;
-        }
-
-        dispatch(receiveInvitations(res.body));
-      });
+      .then(res => dispatch(receiveInvitations(res.body)));
   };
 }
 
@@ -102,13 +96,7 @@ export function getTrackers() {
 
     return request.get('/api/trackers')
       .accept('json')
-      .then(res => {
-        if (res.body.error) {
-          return;
-        }
-
-        dispatch(receiveTrackers(res.body));
-      });
+      .then(res => dispatch(receiveTrackers(res.body)));
   };
 }
 
@@ -121,10 +109,6 @@ export function putTracker(tracker, callback) {
       .send(tracker)
       .accept('json')
       .then(res => {
-        if (res.body.error) {
-          return;
-        }
-
         dispatch(receiveTrackers(res.body));
         callback();
       });
@@ -137,10 +121,6 @@ export function requestCreateTracker(tracker, callback) {
       .send(tracker)
       .accept('json')
       .then(res => {
-        if (res.body.error) {
-          return;
-        }
-
         dispatch(receiveTrackers(res.body));
         callback();
       });
@@ -199,10 +179,6 @@ export function putUser(user, callback) {
       .send(user)
       .accept('json')
       .then(res => {
-        if (res.body.error) {
-          return;
-        }
-
         dispatch(receiveUsers(res.body));
         callback();
       });
@@ -466,13 +442,7 @@ export function getUsers() {
 
     return request.get('/api/users')
       .accept('json')
-      .then(res => {
-        if (res.body.error) {
-          return;
-        }
-
-        dispatch(receiveUsers(res.body));
-      });
+      .then(res => dispatch(receiveUsers(res.body)));
   };
 }
 
@@ -483,10 +453,6 @@ export function getDownloads() {
     return request.get('/api/downloads')
       .accept('json')
       .then(res => {
-        if (res.body.error) {
-          return;
-        }
-
         const normalized = normalizeDownloads(res.body);
 
         dispatch(receiveDownloads(normalized));
@@ -542,11 +508,7 @@ function patchDownload(infoHash, action) {
     return request.patch(`/api/downloads/${infoHash}`)
       .accept('json')
       .send({ action })
-      .then(res => {
-        if (res.body.error) {
-          return Promise.resolve();
-        }
-
+      .then(() => {
         // TODO
         // save the round-trip
         // dispatch(setDownloadLock(infoHash, true));
@@ -747,13 +709,7 @@ export function applyEditFiles(infoHash, filePriorities) {
         action: 'setFilePriorities',
         params: filePriorities,
       })
-      .then(res => {
-        if (res.body.error) {
-          return;
-        }
-
-        dispatch(getDownload(infoHash));
-      });
+      .then(() => dispatch(getDownload(infoHash)));
   };
 }
 

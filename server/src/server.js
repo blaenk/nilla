@@ -495,43 +495,53 @@ function attachAPI(app) {
       }));
   });
 
-  api.patch('/downloads/:infoHash', JWT, (req, res) => {
+  api.patch('/downloads/:infoHash', JWT, guard.check('download'), (req, res) => {
     const { infoHash } = req.params;
 
-    switch (req.body.action) {
-      case 'start': {
-        rtorrent.torrent(infoHash, 'start')
-          .then(() => res.json({ success: true }));
-        break;
-      }
-      case 'stop': {
-        rtorrent.torrent(infoHash, 'stop')
-          .then(() => res.json({ success: true }));
-        break;
-      }
-      case 'acquireLock': {
-        downloads.addLock(infoHash, req.user.id)
-          .then(() => res.json({ success: true }))
-          .catch(error => console.log(error));
+    downloads.getDownload(infoHash)
+      .then(download => {
+        const isUploader = req.user.id === download.uploader;
+        const canControl = req.user.permissions.includes('download:control');
+        const canDownload = req.user.permissions.includes('download');
 
-        break;
-      }
-      case 'releaseLock': {
-        downloads.removeLock(infoHash, req.user.id)
-          .then(() => res.json({ success: true }))
-          .catch(error => console.log(error));
+        switch (req.body.action) {
+          case 'start':
+          case 'stop': {
+            if (!isUploader && !canControl) {
+              res.sendStatus(HttpStatus.UNAUTHORIZED);
 
-        break;
-      }
-      case 'setFilePriorities': {
-        const priorities = req.body.params;
+              return;
+            }
 
-        downloads.setFilePriorities(infoHash, priorities)
-          .then(() => res.json({ success: true }));
+            return rtorrent.torrent(infoHash, req.body.action);
+          }
+          case 'acquireLock':
+          case 'releaseLock': {
+            if (!canDownload) {
+              res.sendStatus(HttpStatus.UNAUTHORIZED);
 
-        break;
-      }
-    }
+              return;
+            }
+
+            return downloads[req.body.action](infoHash, req.user.id);
+          }
+          case 'setFilePriorities': {
+            if (!canDownload) {
+              res.sendStatus(HttpStatus.UNAUTHORIZED);
+
+              return;
+            }
+
+            const priorities = req.body.params;
+
+            return downloads.setFilePriorities(infoHash, priorities);
+          }
+          default:
+            throw new Error('unknown method');
+        }
+      })
+      .then(() => res.sendStatus(HttpStatus.OK))
+      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
   api.delete('/downloads/:infoHash', JWT, guard.check('download'), (req, res) => {

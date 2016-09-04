@@ -294,7 +294,7 @@ function setLocks(infoHash, locks) {
   });
 }
 
-function addLock(infoHash, userID) {
+function acquireLock(infoHash, userID) {
   return getLocks(infoHash)
     .then(locks => {
       if (!locks.includes(userID)) {
@@ -307,7 +307,7 @@ function addLock(infoHash, userID) {
     });
 }
 
-function removeLock(infoHash, userID) {
+function releaseLock(infoHash, userID) {
   return getLocks(infoHash)
     .then(locks => {
       const index = locks.indexOf(userID);
@@ -332,6 +332,6 @@ module.exports = {
   getAllFiles,
   decodeRatio,
   setFilePriorities,
-  addLock,
-  removeLock,
+  acquireLock,
+  releaseLock,
 };

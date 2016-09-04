@@ -9,6 +9,8 @@ import {
 
 import styles from './download.module.less';
 
+import { userCan } from 'common';
+
 class CommandBar extends React.Component {
   constructor(props) {
     super(props);
@@ -56,12 +58,10 @@ class CommandBar extends React.Component {
     const isLockedByCurrentUser = this.props.download.locks.includes(this.props.user.id);
 
     const currentUserIsUploader = this.props.user.id === this.props.download.uploader;
-    const currentUserIsAdmin = this.props.user.permissions.includes('admin');
-
-    const canControl = this.props.user && (currentUserIsUploader || currentUserIsAdmin);
     const userCanControl = userCan(this.props.user, 'download:control');
+    const canStartStop = this.props.user && (currentUserIsUploader || userCanControl);
 
-    const stopStartButton = canControl ? (
+    const stopStartButton = canStartStop ? (
       <Button bsSize='xsmall'
               styleName='command-button'
               title={isDownloading ? 'stop' : 'start'}
