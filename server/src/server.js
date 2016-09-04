@@ -54,6 +54,16 @@ function refererUrl(referer) {
   return `/login?ref=${referer}`;
 }
 
+function catchAllErrors(err, req, res, next) {
+  console.log(err.stack);
+
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+}
+
 function JWTErrorHandler(err, req, res, next) {
   if (err.code === 'permission_denied') {
     res.sendStatus(HttpStatus.UNAUTHORIZED);
@@ -616,6 +626,8 @@ function createServer(options) {
   attachAPI(app);
 
   reactRoutes(app);
+
+  app.use(catchAllErrors);
 
   return app;
 }
