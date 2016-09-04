@@ -322,8 +322,6 @@ function attachAuthentication(app, options) {
       .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
   });
 
-  // TODO
-  // move out of here?
   app.get(/^\/file\/(.+)/, JWT, guard.check('download'), (req, res) => {
     const filePath = req.params[0];
     const name = path.basename(filePath);
