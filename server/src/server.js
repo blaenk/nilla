@@ -263,7 +263,7 @@ function attachAuthentication(app, options) {
       .catch(() => res.sendStatus(HttpStatus.NOT_FOUND));
   });
 
-  app.post('/users/:id/reset/:token', CSRF, (req, res) => {
+  app.post('/users/:id/reset/:token', CSRF, (req, res, next) => {
     const { id, token } = req.params;
     const { newPassword, confirmNewPassword } = req.body;
 
@@ -284,10 +284,10 @@ function attachAuthentication(app, options) {
       })
       .then(passwordHash => users.setUserPassword(db, id, passwordHash))
       .then(() => res.redirect('/login'))
-      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+      .catch(next);
   });
 
-  app.post('/users', CSRF, (req, res) => {
+  app.post('/users', CSRF, (req, res, next) => {
     const { _invitationToken, username, password, email } = req.body;
 
     const permissions = ['member'].join(',');
@@ -319,7 +319,7 @@ function attachAuthentication(app, options) {
 
         res.redirect('/');
       })
-      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+      .catch(next);
   });
 
   app.get(/^\/file\/(.+)/, JWT, guard.check('download'), (req, res) => {
@@ -347,7 +347,8 @@ function attachAPI(app) {
 
   api.use(rejectPlainTextRequest);
 
-  api.post('/downloads', CSRF, JWT, guard.check('upload'), upload.single('torrent'), (req, res) => {
+  api.post('/downloads', CSRF, JWT, guard.check('upload'), upload.single('torrent'),
+           (req, res, next) => {
     let torrent, start;
 
     if (req.is('multipart/form-data')) {
@@ -357,27 +358,14 @@ function attachAPI(app) {
       torrent = req.body.uri;
       start = req.body.start;
     } else {
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
-        error: 'An unknown error occurred',
-      });
-
-      return;
+      throw new Error('an unknown error occurred');
     }
 
     const commands = [downloads.onLoadSetUploader(req.user.id)];
 
-    rtorrent.load(torrent, {
-      start,
-      commands,
-    }).then(infoHash => {
-      res.send({ success: true, infoHash });
-    }).catch(error => {
-      console.log(error);
-
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
-        error: 'An unknown error occurred',
-      });
-    });
+    rtorrent.load(torrent, { start, commands })
+      .then(infoHash => res.send({ infoHash }))
+      .catch(next);
   });
 
   api.get('/users/current', JWT, (req, res) => {
@@ -392,19 +380,17 @@ function attachAPI(app) {
     return row;
   };
 
-  // TODO
-  // authorization: only allow for admins
-  api.get('/users', JWT, guard.check('users:read'), (req, res) => {
+  api.get('/users', JWT, guard.check('users:read'), (req, res, next) => {
     users.getUsers(db)
       .then(users => {
         const filteredUsers = users.map(splitPermissions);
 
         res.status(HttpStatus.OK).json(filteredUsers);
       })
-      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+      .catch(next);
   });
 
-  api.put('/users/:id', JWT, guard.check('users:write'), (req, res) => {
+  api.put('/users/:id', JWT, guard.check('users:write'), (req, res, next) => {
     const user = req.body;
 
     user.permissions = user.permissions.join(',');
@@ -416,88 +402,91 @@ function attachAPI(app) {
 
         res.json(filteredUsers);
       })
-      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+      .catch(next);
   });
 
-  api.get('/users/:id', JWT, guard.check('users:resolve'), (req, res) => {
+  api.get('/users/:id', JWT, guard.check('users:resolve'), (req, res, next) => {
     users.getUserById(db, req.params.id)
       .then(row => {
         const filteredObject = _(row).pick('id', 'username');
 
         res.status(HttpStatus.OK).json(filteredObject);
-      });
+      })
+      .catch(next);
   });
 
-  api.delete('/users/:id', JWT, guard.check('users:write'), (req, res) => {
+  api.delete('/users/:id', JWT, guard.check('users:write'), (req, res, next) => {
     users.deleteUserById(db, req.params.id)
       .then(() => res.sendStatus(HttpStatus.OK))
-      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+      .catch(next);
   });
 
-  api.get('/trackers', JWT, guard.check('trackers:read'), (req, res) => {
+  api.get('/trackers', JWT, guard.check('trackers:read'), (req, res, next) => {
     trackers.getTrackers(db)
       .then(trackers => res.json(trackers))
-      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+      .catch(next);
   });
 
-  api.post('/trackers', JWT, guard.check('trackers:write'), (req, res) => {
+  api.post('/trackers', JWT, guard.check('trackers:write'), (req, res, next) => {
     const tracker = req.body;
 
     trackers.insertTracker(db, tracker)
       .then(() => trackers.getTrackers(db))
       .then(trackers => res.json(trackers))
-      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+      .catch(next);
   });
 
-  api.put('/trackers/:id', JWT, guard.check('trackers:write'), (req, res) => {
+  api.put('/trackers/:id', JWT, guard.check('trackers:write'), (req, res, next) => {
     const tracker = req.body;
 
     trackers.putTracker(db, req.params.id, tracker)
       .then(() => trackers.getTrackers(db))
       .then(trackers => res.json(trackers))
-      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+      .catch(next);
   });
 
-  api.delete('/trackers/:id', JWT, guard.check('trackers:write'), (req, res) => {
+  api.delete('/trackers/:id', JWT, guard.check('trackers:write'), (req, res, next) => {
     trackers.deleteTrackerById(db, req.params.id)
       .then(() => trackers.getTrackers(db))
       .then(trackers => res.json(trackers))
-      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+      .catch(next);
   });
 
-  api.get('/invitations', JWT, guard.check('invitations:read'), (req, res) => {
+  api.get('/invitations', JWT, guard.check('invitations:read'), (req, res, next) => {
     users.getInvitations(db)
-      .then(invitations => res.json(invitations));
+      .then(invitations => res.json(invitations))
+      .catch(next);
   });
 
-  api.post('/invitations', JWT, guard.check('invitations:write'), (req, res) => {
+  api.post('/invitations', JWT, guard.check('invitations:write'), (req, res, next) => {
     users.createInvitation(db)
       .then(() => users.getInvitations(db))
       .then(invitations => res.json(invitations))
-      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+      .catch(next);
   });
 
-  api.delete('/invitations/:token', JWT, guard.check('invitations:write'), (req, res) => {
+  api.delete('/invitations/:token', JWT, guard.check('invitations:write'), (req, res, next) => {
     users.deleteInvitationByToken(db, req.params.token)
       .then(() => users.getInvitations(db))
       .then(invitations => res.json(invitations))
-      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+      .catch(next);
   });
 
-  api.get('/downloads', JWT, (req, res) => {
+  api.get('/downloads', JWT, (req, res, next) => {
     downloads.getDownloads()
-      .then(downloads => res.json(downloads));
+      .then(downloads => res.json(downloads))
+      .catch(next);
   });
 
   api.get('/downloads/:infoHash', JWT, (req, res) => {
     downloads.getCompleteDownload(req.params.infoHash)
       .then(downloads => res.json(downloads))
-      .catch(_error => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         error: 'no such torrent',
       }));
   });
 
-  api.patch('/downloads/:infoHash', JWT, guard.check('download'), (req, res) => {
+  api.patch('/downloads/:infoHash', JWT, guard.check('download'), (req, res, next) => {
     const { infoHash } = req.params;
 
     downloads.getDownload(infoHash)
@@ -543,7 +532,7 @@ function attachAPI(app) {
         }
       })
       .then(() => res.sendStatus(HttpStatus.OK))
-      .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+      .catch(next);
   });
 
   api.delete('/downloads/:infoHash', JWT, guard.check('download'), (req, res) => {
@@ -558,12 +547,12 @@ function attachAPI(app) {
           return;
         }
 
-        return rtorrent.torrent(req.params.infoHash, 'erase')
-          .then(() => res.sendStatus(HttpStatus.OK))
-          .catch(_error => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-            error: 'no such torrent',
-          }));
-      });
+        return rtorrent.torrent(req.params.infoHash, 'erase');
+      })
+      .then(() => res.sendStatus(HttpStatus.OK))
+      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        error: 'no such torrent',
+      }));
   });
 
   app.use('/api', api);
