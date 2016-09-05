@@ -5,6 +5,7 @@ require('dotenv').config({
 });
 
 const path = require('path');
+const util = require('util');
 
 const Bluebird = require('bluebird');
 const csurf = require('csurf');
@@ -35,6 +36,7 @@ const {
   JWT_SECRET,
   NODE_ENV,
   RTORRENT_DOWNLOADS_DIRECTORY,
+  RTORRENT_SOCKET,
   SERVE_ASSETS,
   SERVE_DOWNLOADS,
   USE_SSL,
@@ -55,13 +57,34 @@ function refererUrl(referer) {
 }
 
 function catchAllErrors(err, req, res, next) {
-  console.error(err.stack);
-
   if (res.headersSent) {
     return next(err);
   }
 
+  if (err.code === 'ECONNREFUSED' && err.address === RTORRENT_SOCKET) {
+    console.error('Error: rtorrent is unavailable');
+    res.sendStatus(HttpStatus.SERVICE_UNAVAILABLE);
+
+    return;
+  }
+
+  console.error(err.stack);
   res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+}
+
+function handleRtorrentError(error, res, next) {
+  if (Array.isArray(error) &&
+      error.every(e => e.error && e.error.faultCode && e.error.faultString)) {
+    for (const e of error) {
+      console.error(
+        `XML-RPC: ${e.error.faultString}: ${e.methodName} ${util.inspect(e.params)}`
+      );
+    }
+
+    res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+  } else {
+    return next(error);
+  }
 }
 
 function JWTErrorHandler(err, req, res, next) {
@@ -478,12 +501,10 @@ function attachAPI(app) {
       .catch(next);
   });
 
-  api.get('/downloads/:infoHash', JWT, (req, res) => {
+  api.get('/downloads/:infoHash', JWT, (req, res, next) => {
     downloads.getCompleteDownload(req.params.infoHash)
       .then(downloads => res.json(downloads))
-      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        error: 'no such torrent',
-      }));
+      .catch(error => handleRtorrentError(error, res, next));
   });
 
   api.patch('/downloads/:infoHash', JWT, guard.check('download'), (req, res, next) => {
@@ -535,7 +556,7 @@ function attachAPI(app) {
       .catch(next);
   });
 
-  api.delete('/downloads/:infoHash', JWT, guard.check('download'), (req, res) => {
+  api.delete('/downloads/:infoHash', JWT, guard.check('download'), (req, res, next) => {
     downloads.getDownload(req.params.infoHash)
       .then(download => {
         // * anyone with download:control can delete any download
@@ -550,9 +571,7 @@ function attachAPI(app) {
         return rtorrent.torrent(req.params.infoHash, 'erase');
       })
       .then(() => res.sendStatus(HttpStatus.OK))
-      .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        error: 'no such torrent',
-      }));
+      .catch(error => handleRtorrentError(error, res, next));
   });
 
   app.use('/api', api);

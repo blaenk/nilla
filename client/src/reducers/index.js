@@ -5,6 +5,7 @@ import users from './users';
 import invitations from './invitations';
 import trackers from './trackers';
 
+import global from './ui/global';
 import upload from './ui/upload';
 import downloadsUI from './ui/downloads';
 import downloadUI from './ui/download';
@@ -20,5 +21,6 @@ export default combineReducers({
     upload,
     downloads: downloadsUI,
     download: downloadUI,
+    global,
   }),
 });

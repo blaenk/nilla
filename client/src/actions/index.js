@@ -10,13 +10,36 @@ export function logout() {
   };
 }
 
+export const SET_RTORRENT_AVAILABILITY = 'SET_RTORRENT_AVAILABILITY';
+
+export function setRtorrentAvailability(isAvailable) {
+  return {
+    type: SET_RTORRENT_AVAILABILITY,
+    isAvailable,
+  };
+}
+
+function setRtorrentAvailable(dispatch) {
+  return function() {
+    dispatch(setRtorrentAvailability(true));
+  };
+}
+
+function setRtorrentUnavailable(dispatch) {
+  const SERVICE_UNAVAILABLE = 503;
+
+  return function(error) {
+    if (error.status === SERVICE_UNAVAILABLE) {
+      dispatch(setRtorrentAvailability(false));
+    }
+  };
+}
+
 export function requestLogout() {
   return dispatch => {
     return request.delete('/session')
       .accept('json')
-      .then(() => {
-        dispatch(logout());
-      });
+      .then(() => dispatch(logout()));
   };
 }
 
@@ -41,9 +64,7 @@ export function requestCreateInvitation() {
   return dispatch => {
     return request.post('/api/invitations')
       .accept('json')
-      .then(res => {
-        dispatch(receiveInvitations(res.body));
-      });
+      .then(res => dispatch(receiveInvitations(res.body)));
   };
 }
 
@@ -191,9 +212,7 @@ export function getUser(userID) {
 
     return request.get(`/api/users/${userID}`)
       .accept('json')
-      .then(res => {
-        dispatch(receiveUser(res.body.id, res.body));
-      });
+      .then(res => dispatch(receiveUser(res.body.id, res.body)));
   };
 }
 
@@ -456,7 +475,9 @@ export function getDownloads() {
         const normalized = normalizeDownloads(res.body);
 
         dispatch(receiveDownloads(normalized));
-      });
+      })
+      .then(setRtorrentAvailable(dispatch))
+      .catch(setRtorrentUnavailable(dispatch));
   };
 }
 
@@ -489,7 +510,9 @@ export function getDownload(infoHash) {
             dispatch(getUser(userId));
           }
         }
-      });
+      })
+      .then(setRtorrentAvailable(dispatch))
+      .catch(setRtorrentUnavailable(dispatch));
   };
 }
 
@@ -508,13 +531,9 @@ function patchDownload(infoHash, action) {
     return request.patch(`/api/downloads/${infoHash}`)
       .accept('json')
       .send({ action })
-      .then(() => {
-        // TODO
-        // save the round-trip
-        // dispatch(setDownloadLock(infoHash, true));
-
-        return dispatch(getDownload(infoHash));
-      });
+      .then(() => dispatch(getDownload(infoHash)))
+      .then(setRtorrentAvailable(dispatch))
+      .catch(setRtorrentUnavailable(dispatch));
   };
 }
 
@@ -535,14 +554,16 @@ export function stopDownload(infoHash) {
 }
 
 export function eraseDownload(infoHash, callback) {
-  return (_dispatch) => {
+  return dispatch => {
     return request.delete(`/api/downloads/${infoHash}`)
       .accept('json')
       .then(() => {
         callback();
 
         return Promise.resolve();
-      });
+      })
+      .then(setRtorrentAvailable(dispatch))
+      .catch(setRtorrentUnavailable(dispatch));
   };
 }
 
@@ -634,10 +655,10 @@ export function submitFile(file) {
     };
 
     return request.post('/api/downloads')
-      .accept('json')
-      .set('X-CSRF-TOKEN', Cookies.get('csrf-token'))
       .attach('torrent', fileObject.backingFile)
       .field('start', fileObject.start)
+      .accept('json')
+      .set('X-CSRF-TOKEN', Cookies.get('csrf-token'))
       .on('progress', event => {
         dispatch(setFileProgress(fileObject, event.percent));
         fileObject = getFileObject();
@@ -656,7 +677,11 @@ export function submitFile(file) {
 
         dispatch(getDownloads());
       })
-      .catch(_error => dispatch(removeFile(fileObject)));
+      .then(setRtorrentAvailable(dispatch))
+      .catch(error => {
+        dispatch(removeFile(fileObject));
+        setRtorrentUnavailable(dispatch)(error);
+      });
   };
 }
 
@@ -709,7 +734,9 @@ export function applyEditFiles(infoHash, filePriorities) {
         action: 'setFilePriorities',
         params: filePriorities,
       })
-      .then(() => dispatch(getDownload(infoHash)));
+      .then(() => dispatch(getDownload(infoHash)))
+      .then(setRtorrentAvailable(dispatch))
+      .catch(setRtorrentUnavailable(dispatch));
   };
 }
 
