@@ -16,8 +16,12 @@ const instance = app.listen(SERVER_PORT, SERVER_HOST, () => {
   console.log('Express server listening on port ' + instance.address().port);
 });
 
-// eslint-disable-next-line no-unused-vars
-const pruneJob = schedule.scheduleJob('10 * * * *', tasks.prune);
+const EVERY_10_MINUTES = '10 * * * *';
 
 // eslint-disable-next-line no-unused-vars
-const staleJob = schedule.scheduleJob('30 * * * *', tasks.stale);
+const pruneJob = schedule.scheduleJob(EVERY_10_MINUTES, tasks.prune);
+
+const EVERY_30_MINUTES = '30 * * * *';
+
+// eslint-disable-next-line no-unused-vars
+const staleJob = schedule.scheduleJob(EVERY_30_MINUTES, tasks.stale);
