@@ -55,7 +55,7 @@ function refererUrl(referer) {
 }
 
 function catchAllErrors(err, req, res, next) {
-  console.log(err.stack);
+  console.error(err.stack);
 
   if (res.headersSent) {
     return next(err);

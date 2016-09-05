@@ -46,7 +46,7 @@ function prune() {
           }
         });
     })
-    .catch(console.err);
+    .catch(console.error);
 }
 
 function stale() {
@@ -77,7 +77,7 @@ function stale() {
     .mapSeries((file, index, length) => {
       console.log(`${index + 1}/${length} removed stale entry: ${file}`);
     })
-    .catch(console.err);
+    .catch(console.error);
 }
 
 module.exports = {
