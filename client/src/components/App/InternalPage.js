@@ -3,6 +3,7 @@ import { Grid } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 
 import HeaderContainer from 'containers/App/HeaderContainer';
+import RtorrentUnavailableErrorContainer from 'containers/App/RtorrentUnavailableErrorContainer';
 import CollapseContainer from 'containers/Upload/CollapseContainer';
 import UploadContainer from 'containers/Upload/UploadContainer';
 import DropzoneContainer from 'containers/Upload/DropzoneContainer';
@@ -38,6 +39,8 @@ class App extends React.Component {
         accept='application/x-bittorrent'>
         <Grid>
           <HeaderContainer />
+
+          <RtorrentUnavailableErrorContainer />
 
           <CollapseContainer>
             <div>
