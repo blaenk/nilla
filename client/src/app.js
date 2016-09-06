@@ -42,6 +42,7 @@ function saveLocalStorage() {
 
   _.unset(state, 'ui.upload');
   _.unset(state, 'data.users');
+  _.unset(state, 'data.invitations');
   _.unset(state, 'data.trackers');
 
   window.localStorage.setItem('redux', JSON.stringify(state));
