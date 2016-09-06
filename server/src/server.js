@@ -290,8 +290,10 @@ function attachAuthentication(app, options) {
     const { id, token } = req.params;
     const { newPassword, confirmNewPassword } = req.body;
 
-    if (newPassword !== confirmNewPassword) {
-      res.redirect(req.originalUrl);
+    if (!newPassword || !confirmNewPassword || newPassword !== confirmNewPassword) {
+      res.redirect(req.header('referer'));
+
+      return;
     }
 
     const p = users.getUserToken(db, id)
@@ -314,6 +316,12 @@ function attachAuthentication(app, options) {
     const { _invitationToken, username, password, email } = req.body;
 
     const permissions = ['download'].join(',');
+    if (!username || !password || !email) {
+      res.redirect(req.header('referer'));
+
+      return;
+    }
+
 
     const p = users.getInvitationByToken(db, _invitationToken)
       .catch(() => {
