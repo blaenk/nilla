@@ -10,8 +10,6 @@ import Reducer from './reducers';
 
 import { getCurrentUser } from 'actions';
 
-let defaultState;
-
 function loadLocalStorage() {
   const localState = window.localStorage.getItem('redux');
 
@@ -33,9 +31,7 @@ function loadLocalStorage() {
   }
 }
 
-if (__NODE_ENV__ === 'production') {
-  defaultState = loadLocalStorage();
-}
+const defaultState = loadLocalStorage();
 
 function saveLocalStorage() {
   const state = window.store.getState();
