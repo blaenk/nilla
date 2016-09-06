@@ -315,13 +315,13 @@ function attachAuthentication(app, options) {
   app.post('/users', CSRF, (req, res, next) => {
     const { _invitationToken, username, password, email } = req.body;
 
-    const permissions = ['download'].join(',');
     if (!username || !password || !email) {
       res.redirect(req.header('referer'));
 
       return;
     }
 
+    const permissions = ['download', 'users:resolve'].join(',');
 
     const p = users.getInvitationByToken(db, _invitationToken)
       .catch(() => {
