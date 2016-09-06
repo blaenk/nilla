@@ -23,12 +23,37 @@ class Download extends React.Component {
     dispatch(getDownload(this.props.infoHash));
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.pollTimeout);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.download !== nextProps.download) {
+      clearTimeout(this.pollTimeout);
+
+      if (!nextProps.ui.isFetching) {
+        this.startPoll();
+      }
+    }
+  }
+
   shouldComponentUpdate(nextProps, _nextState) {
     return true;
     // return this.props.download !== nextProps.download ||
     //   this.props.files !== nextProps.files ||
     //   this.props.users !== nextProps.users ||
     //   this.props.ui.isCollapsed !== nextProps.ui.isCollapsed;
+  }
+
+  startPoll() {
+    const { dispatch } = this.props;
+
+    // eslint-disable-next-line no-magic-numbers
+    const POLL_RATE = this.props.download.state === 'downloading' ? 3000 : 10000;
+
+    this.pollTimeout = setTimeout(() => {
+      dispatch(getDownload(this.props.infoHash));
+    }, POLL_RATE);
   }
 
   render() {
