@@ -447,7 +447,43 @@ function attachAPI(app) {
   });
 
   api.delete('/users/:id', JWT, guard.check('users:write'), (req, res, next) => {
+    const userId = parseInt(req.params.id);
+
     users.deleteUserById(db, req.params.id)
+      .then(() => downloads.getDownloads())
+      .then(downloads => {
+        // move any of user's downloads to system
+        const relinquishDownloads = downloads
+              .filter(d => d.uploader === userId)
+              .map(d => {
+                return {
+                  methodName: 'd.set_custom',
+                  params: [d.infoHash, 'nilla-uploader', '-1'],
+                };
+              });
+
+        // release any locks
+        const releaseLocks = downloads
+              .filter(d => d.locks.includes(userId))
+              .map(d => {
+                const index = d.locks.indexOf(userId);
+
+                d.locks.splice(index, 1);
+
+                return {
+                  methodName: 'd.set_custom',
+                  params: [d.infoHash, 'nilla-locks', JSON.stringify(d.locks)],
+                };
+              });
+
+        const calls = relinquishDownloads.concat(releaseLocks);
+
+        if (calls.length === 0) {
+          return Bluebird.resolve();
+        }
+
+        return rtorrent.multicall(calls);
+      })
       .then(() => res.sendStatus(HttpStatus.OK))
       .catch(next);
   });
