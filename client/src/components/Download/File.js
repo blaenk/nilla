@@ -22,6 +22,10 @@ class File extends React.Component {
   }
 
   render() {
+    if (!this.props.canDownload || !this.props.ui) {
+      return null;
+    }
+
     const basename = this.props.pathComponents[this.props.pathComponents.length - 1];
     const size = filesize(this.props.size);
 

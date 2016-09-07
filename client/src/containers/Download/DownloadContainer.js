@@ -12,7 +12,9 @@ function makeMapStateToProps() {
 
     if (!(infoHash in state.data.downloads) ||
         !(infoHash in state.ui.download) ||
-        !('files' in state.data.downloads[infoHash])) {
+        !('files' in state.data.downloads[infoHash]) ||
+        !('users' in state.data) ||
+        !('current' in state.data.users)) {
       return { infoHash };
     }
 

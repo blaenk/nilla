@@ -12,14 +12,16 @@ import File from 'components/Download/File';
 function mapStateToProps(state, props) {
   const { infoHash } = props;
 
+  if (!(infoHash in state.ui.download) ||
+      !('users' in state.data) ||
+      !('current' in state.data.users)) {
+    return {};
+  }
+
   const ui = state.ui.download[infoHash];
 
   const currentUser = state.data.users.current;
   const canDownload = currentUser && userCan(currentUser, 'download');
-
-  if (!ui) {
-    return {};
-  }
 
   return { ui, canDownload };
 }

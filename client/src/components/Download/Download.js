@@ -6,7 +6,6 @@ import { getDownload } from 'actions';
 import { userCan } from 'common';
 
 import Header from './Header';
-import File from './File';
 import FilesSection from './FilesSection';
 import Statistics from './Statistics';
 
@@ -27,6 +26,19 @@ class Download extends React.Component {
     clearTimeout(this.pollTimeout);
   }
 
+  startPoll() {
+    const { dispatch } = this.props;
+
+    const isDownloading = this.props.download && this.props.download.state === 'downloading';
+
+    // eslint-disable-next-line no-magic-numbers
+    const POLL_RATE = isDownloading ? 3000 : 10000;
+
+    this.pollTimeout = setTimeout(() => {
+      dispatch(getDownload(this.props.infoHash));
+    }, POLL_RATE);
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.download !== nextProps.download) {
       clearTimeout(this.pollTimeout);
@@ -45,21 +57,10 @@ class Download extends React.Component {
     //   this.props.ui.isCollapsed !== nextProps.ui.isCollapsed;
   }
 
-  startPoll() {
-    const { dispatch } = this.props;
-
-    // eslint-disable-next-line no-magic-numbers
-    const POLL_RATE = this.props.download.state === 'downloading' ? 3000 : 10000;
-
-    this.pollTimeout = setTimeout(() => {
-      dispatch(getDownload(this.props.infoHash));
-    }, POLL_RATE);
-  }
-
   render() {
     const { download, ui, files, users, currentUser } = this.props;
 
-    if (!download || !ui.isAugmented) {
+    if (!download || !ui || !users || !currentUser) {
       return null;
     }
 
@@ -152,29 +153,26 @@ class Download extends React.Component {
   }
 }
 
-const filesProps = File.propTypes;
-
 Download.propTypes = {
   currentUser: React.PropTypes.object.isRequired,
   dispatch: React.PropTypes.func.isRequired,
   download: React.PropTypes.shape({
-    dateAdded: React.PropTypes.string.isRequired,
+    dateAdded: React.PropTypes.object.isRequired,
     files: React.PropTypes.shape({
-      downloaded: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
-      extracted: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
+      downloaded: React.PropTypes.array.isRequired,
+      extracted: React.PropTypes.array.isRequired,
     }),
     infoHash: React.PropTypes.string.isRequired,
     isMultiFile: React.PropTypes.bool.isRequired,
     locks: React.PropTypes.array.isRequired,
     name: React.PropTypes.string.isRequired,
-    params: React.PropTypes.object.isRequired,
     progress: React.PropTypes.number.isRequired,
     state: React.PropTypes.string.isRequired,
     uploader: React.PropTypes.string.isRequired,
   }),
   files: React.PropTypes.shape({
-    downloaded: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
-    extracted: React.PropTypes.arrayOf(React.PropTypes.shape(filesProps)),
+    downloaded: React.PropTypes.array.isRequired,
+    extracted: React.PropTypes.array.isRequired,
   }),
   infoHash: React.PropTypes.string.isRequired,
   params: React.PropTypes.object.isRequired,
