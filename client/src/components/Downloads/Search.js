@@ -14,19 +14,21 @@ import OrderDropDownContainer from 'containers/Downloads/OrderDropDownContainer'
 
 import DownloadCount from 'components/Downloads/DownloadCount';
 
-function Search(props) {
-  return (
-    <Row styleName='search'>
-      <Col lg={12}>
-        <InputGroup>
-          <ScopeDropDownContainer />
-          <SearchFilterContainer />
-          <OrderDropDownContainer />
-          <DownloadCount count={props.count} />
-        </InputGroup>
-      </Col>
-    </Row>
-  );
+class Search extends React.PureComponent {
+  render() {
+    return (
+      <Row styleName='search'>
+        <Col lg={12}>
+          <InputGroup>
+            <ScopeDropDownContainer />
+            <SearchFilterContainer />
+            <OrderDropDownContainer />
+            <DownloadCount count={this.props.count} />
+          </InputGroup>
+        </Col>
+      </Row>
+    );
+  }
 }
 
 Search.propTypes = {
