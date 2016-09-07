@@ -11,7 +11,7 @@ import styles from './download.module.less';
 
 import { userCan } from 'common';
 
-class CommandBar extends React.Component {
+class CommandBar extends React.PureComponent {
   constructor(props) {
     super(props);
 
