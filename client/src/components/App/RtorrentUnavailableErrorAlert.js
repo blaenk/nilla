@@ -18,7 +18,6 @@ class RtorrentUnavailableErrorAlert extends React.PureComponent {
 
 RtorrentUnavailableErrorAlert.propTypes = {
   isRtorrentAvailable: React.PropTypes.bool.isRequired,
-  onDismiss: React.PropTypes.func.isRequired,
 };
 
 export default RtorrentUnavailableErrorAlert;
