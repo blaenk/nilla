@@ -12,6 +12,9 @@ class FileTree extends React.Component {
   constructor(props) {
     super(props);
 
+    // TODO
+    // move this to redux
+    // perhaps use data-based rendering instead, as in react-treebeard
     this.state = {
       isCollapsed: this.props.initialCollapse,
     };
@@ -28,11 +31,12 @@ class FileTree extends React.Component {
     }
   }
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   return this.props.files !== nextProps.files ||
-  //     this.state.isCollapsed !== nextState.isCollapsed ||
-  //     this.props.isEditing !== nextProps.isEditing;
-  // }
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.files !== nextProps.files ||
+      this.state.isCollapsed !== nextState.isCollapsed ||
+      this.props.initialCollapse !== nextProps.initialCollapse ||
+      this.props.isEditing !== nextProps.isEditing;
+  }
 
   handleTabClick(_event) {
     this.setState({ isCollapsed: !this.state.isCollapsed });
