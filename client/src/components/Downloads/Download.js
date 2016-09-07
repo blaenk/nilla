@@ -5,51 +5,54 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import styles from './styles.module.less';
 
-function Download(props) {
-  const lockedTooltip = (
-    <Tooltip id='tooltip_locked'>locked</Tooltip>
-  );
+class Download extends React.PureComponent {
+  render() {
+    const lockedTooltip = (
+      <Tooltip id='tooltip_locked'>locked</Tooltip>
+    );
 
-  const progressTooltip = (
-    <Tooltip id='tooltip_state'>{props.state}</Tooltip>
-  );
+    const progressTooltip = (
+      <Tooltip id='tooltip_state'>{this.props.state}</Tooltip>
+    );
 
-  const lockStatus = () => {
-    if (!props.user) {
+    const lockStatus = () => {
+      if (!this.props.user) {
+        return null;
+      }
+
+      if (this.props.locks.includes(this.props.user.id)) {
+        return (
+          <OverlayTrigger placement='left' overlay={lockedTooltip}>
+            <div styleName='lock-status' />
+          </OverlayTrigger>
+        );
+      }
+
       return null;
-    }
+    };
 
-    if (props.locks.includes(props.user.id)) {
-      return (
-        <OverlayTrigger placement='left' overlay={lockedTooltip}>
-          <div styleName='lock-status' />
+    const maybeHide = this.props.isHidden ? { display: 'none' } : {};
+    const isUnseen = this.props.lastSeen && this.props.lastSeen < this.props.dateAdded;
+    const nameStyle = isUnseen ? 'unseen' : 'name';
+
+    const encodedName = encodeURIComponent(this.props.name).replace(/%20/g, '+');
+
+    return (
+      <li styleName='download' style={maybeHide}>
+        <OverlayTrigger placement='right' overlay={progressTooltip}>
+          <div styleName='progress'>
+            <div styleName={`progress-${this.props.state}`}
+                 style={{ height: this.props.progress + '%' }}
+                 aria-valuenow={this.props.progress} />
+          </div>
         </OverlayTrigger>
-      );
-    }
-
-    return null;
-  };
-
-  const maybeHide = props.isHidden ? { display: 'none' } : {};
-  const nameStyle = props.lastSeen && props.lastSeen < props.dateAdded ? 'unseen' : 'name';
-
-  const encodedName = encodeURIComponent(props.name).replace(/%20/g, '+');
-
-  return (
-    <li styleName='download' style={maybeHide}>
-      <OverlayTrigger placement='right' overlay={progressTooltip}>
-        <div styleName='progress'>
-          <div styleName={`progress-${props.state}`}
-               style={{ height: props.progress + '%' }}
-               aria-valuenow={props.progress} />
-        </div>
-      </OverlayTrigger>
-      <Link to={`/downloads/${props.infoHash}/${encodedName}`} styleName={nameStyle}>
-        {props.name}
-      </Link>
-      {lockStatus()}
-    </li>
-  );
+        <Link to={`/downloads/${this.props.infoHash}/${encodedName}`} styleName={nameStyle}>
+          {this.props.name}
+        </Link>
+        {lockStatus()}
+      </li>
+    );
+  }
 }
 
 Download.propTypes = {
