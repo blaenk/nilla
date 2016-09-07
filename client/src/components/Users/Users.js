@@ -12,7 +12,7 @@ import Invitation from './Invitation';
 import User from './User';
 
 class Users extends React.Component {
-  componentDidMount() {
+  componentWillMount() {
     this.props.dispatch(getUsers());
     this.props.dispatch(getInvitations());
   }
