@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 
 import styles from './upload.module.less';
 
-class MagnetURI extends React.Component {
+class MagnetURI extends React.PureComponent {
   constructor(props) {
     super(props);
 
