@@ -6,7 +6,7 @@ import ErrorAlert from 'components/App/ErrorAlert';
 
 function RejectedFilesErrorAlert(props) {
   if (props.rejectedFiles.length > 0) {
-    let files = props.rejectedFiles.map(file => {
+    const files = props.rejectedFiles.map(file => {
       return (
         <tr key={file.name}>
           <td>{file.name}</td>

@@ -8,7 +8,7 @@ import Download from './Download';
 import DownloadContainer from 'containers/Downloads/DownloadContainer';
 
 function DownloadList(props) {
-  let downloads = props.downloads.map(download => {
+  const downloads = props.downloads.map(download => {
     return (
       <DownloadContainer key={download.infoHash}
                          isHidden={download.isHidden}

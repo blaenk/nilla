@@ -52,7 +52,7 @@ class Downloads extends React.Component {
   }
 
   render() {
-    let visibleCount = this.props.downloads.reduce((acc, next) => {
+    const visibleCount = this.props.downloads.reduce((acc, next) => {
       return acc + (next.isHidden ? 0 : 1);
     }, 0);
 

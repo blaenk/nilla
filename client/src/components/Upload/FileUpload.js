@@ -140,7 +140,7 @@ class FileUpload extends React.Component {
       );
     }
 
-    let fileInfo = (
+    const fileInfo = (
       <div styleName='file-section'>
         <div styleName='file-info' onClick={this.handleCollapse}>
           <Glyphicon className={this.props.styles['collapse-mark']}

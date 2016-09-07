@@ -69,7 +69,7 @@ class Download extends React.Component {
 
     const canDownload = currentUser && userCan(currentUser, 'download');
 
-    let commandBar = canDownload ? (
+    const commandBar = canDownload ? (
       <CommandBarContainer infoHash={this.props.infoHash} />
     ) : null;
 

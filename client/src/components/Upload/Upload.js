@@ -24,7 +24,7 @@ const UploadAllButton = connect(
 )(Button);
 
 function Upload(props) {
-  let files = props.files.map(file => (
+  const files = props.files.map(file => (
     <FileUploadContainer file={file} key={file.backingFile.preview} />
   ));
 
