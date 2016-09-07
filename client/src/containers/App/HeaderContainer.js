@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { setUploading, requestLogout } from 'actions';
 
@@ -36,6 +35,6 @@ const HeaderContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
   mergeProps
-)(withRouter(Header));
+)(Header);
 
 export default HeaderContainer;
