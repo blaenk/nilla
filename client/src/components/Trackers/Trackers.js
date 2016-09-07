@@ -7,7 +7,7 @@ import { userCan } from 'common';
 
 import Tracker from './Tracker';
 
-class Trackers extends React.Component {
+class Trackers extends React.PureComponent {
   componentWillMount() {
     this.props.dispatch(getTrackers());
   }
