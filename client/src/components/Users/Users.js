@@ -11,7 +11,7 @@ import {
 import Invitation from './Invitation';
 import User from './User';
 
-class Users extends React.Component {
+class Users extends React.PureComponent {
   componentWillMount() {
     this.props.dispatch(getUsers());
     this.props.dispatch(getInvitations());
