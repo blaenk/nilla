@@ -449,8 +449,7 @@ function attachAPI(app) {
   api.delete('/users/:id', JWT, guard.check('users:write'), (req, res, next) => {
     const userId = parseInt(req.params.id);
 
-    users.deleteUserById(db, req.params.id)
-      .then(() => downloads.getDownloads())
+    downloads.getDownloads()
       .then(downloads => {
         // move any of user's downloads to system
         const relinquishDownloads = downloads
@@ -484,6 +483,7 @@ function attachAPI(app) {
 
         return rtorrent.multicall(calls);
       })
+      .then(() => users.deleteUserById(db, userId))
       .then(() => res.sendStatus(HttpStatus.OK))
       .catch(next);
   });
