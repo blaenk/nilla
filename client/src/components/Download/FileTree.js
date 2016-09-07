@@ -184,7 +184,7 @@ FileTree.propTypes = {
   disable: React.PropTypes.func.isRequired,
   downloadName: React.PropTypes.string.isRequired,
   enable: React.PropTypes.func.isRequired,
-  files: React.PropTypes.arrayOf(React.PropTypes.shape(File.propTypes)),
+  files: React.PropTypes.array.isRequired,
   infoHash: React.PropTypes.string.isRequired,
   initialCollapse: React.PropTypes.bool,
   isEditing: React.PropTypes.bool,

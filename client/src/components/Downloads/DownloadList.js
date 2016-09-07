@@ -4,7 +4,6 @@ import { Row, Col } from 'react-bootstrap';
 
 import styles from './styles.module.less';
 
-import Download from './Download';
 import DownloadContainer from 'containers/Downloads/DownloadContainer';
 
 class DownloadList extends React.PureComponent {
@@ -35,7 +34,7 @@ class DownloadList extends React.PureComponent {
 }
 
 DownloadList.propTypes = {
-  downloads: React.PropTypes.arrayOf(React.PropTypes.shape(Download.propTypes)),
+  downloads: React.PropTypes.array.isRequired,
 };
 
 export default CSSModules(DownloadList, styles);

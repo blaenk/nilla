@@ -3,7 +3,6 @@ import CSSModules from 'react-css-modules';
 import { Row, Col, Glyphicon } from 'react-bootstrap';
 
 import Search from './Search';
-import Download from 'components/Downloads/Download';
 import DownloadList from 'components/Downloads/DownloadList';
 
 import styles from './styles.module.less';
@@ -83,7 +82,7 @@ class Downloads extends React.PureComponent {
 
 Downloads.propTypes = {
   dispatch: React.PropTypes.func.isRequired,
-  downloads: React.PropTypes.arrayOf(React.PropTypes.shape(Download.propTypes)),
+  downloads: React.PropTypes.array.isRequired,
 };
 
 export default CSSModules(Downloads, styles);

@@ -94,7 +94,7 @@ File.propTypes = {
   isEditing: React.PropTypes.bool.isRequired,
   isEnabled: React.PropTypes.bool.isRequired,
   isMultiFile: React.PropTypes.bool.isRequired,
-  pathComponents: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+  pathComponents: React.PropTypes.array.isRequired,
   progress: React.PropTypes.number.isRequired,
   size: React.PropTypes.number.isRequired,
   ui: React.PropTypes.object.isRequired,
