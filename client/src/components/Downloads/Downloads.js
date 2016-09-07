@@ -10,7 +10,7 @@ import styles from './styles.module.less';
 
 import { getDownloads, setDownloadsLastSeen } from 'actions';
 
-class Downloads extends React.Component {
+class Downloads extends React.PureComponent {
   componentWillMount() {
     this.props.dispatch(getDownloads());
 
