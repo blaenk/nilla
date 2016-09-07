@@ -5,36 +5,38 @@ import { LinkContainer } from 'react-router-bootstrap';
 
 import { requestDeleteUser } from 'actions';
 
-function User(props) {
-  const permissions = props.permissions.map(p => {
-    return (
-      <li key={p}>{p}</li>
-    );
-  });
+class User extends React.PureComponent {
+  render() {
+    const permissions = this.props.permissions.map(p => {
+      return (
+        <li key={p}>{p}</li>
+      );
+    });
 
-  return (
-    <tr>
-      <td>{props.username}</td>
-      <td>{props.email}</td>
-      <td>
-        <ul>
-          {permissions}
-        </ul>
-      </td>
-      <td style={{ textAlign: 'center' }}>
-        <LinkContainer to={`/users/${props.id}`}>
-          <Button bsStyle='primary' bsSize='xsmall' title='edit'>
-            <Glyphicon glyph='edit' />
+    return (
+      <tr>
+        <td>{this.props.username}</td>
+        <td>{this.props.email}</td>
+        <td>
+          <ul>
+            {permissions}
+          </ul>
+        </td>
+        <td style={{ textAlign: 'center' }}>
+          <LinkContainer to={`/users/${this.props.id}`}>
+            <Button bsStyle='primary' bsSize='xsmall' title='edit'>
+              <Glyphicon glyph='edit' />
+            </Button>
+          </LinkContainer>
+        </td>
+        <td style={{ textAlign: 'center' }}>
+          <Button onClick={this.props.onRemove} bsStyle='danger' bsSize='xsmall' title='delete'>
+            <Glyphicon glyph='remove' />
           </Button>
-        </LinkContainer>
-      </td>
-      <td style={{ textAlign: 'center' }}>
-        <Button onClick={props.onRemove} bsStyle='danger' bsSize='xsmall' title='delete'>
-          <Glyphicon glyph='remove' />
-        </Button>
-      </td>
-    </tr>
-  );
+        </td>
+      </tr>
+    );
+  }
 }
 
 User.propTypes = {
