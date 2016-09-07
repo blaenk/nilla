@@ -10,7 +10,7 @@ import {
 
 import styles from './search.module.less';
 
-class Search extends React.Component {
+class Search extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -19,13 +19,6 @@ class Search extends React.Component {
 
   handleCollapse(_event) {
     this.props.collapse(this.props.infoHash, !this.props.isCollapsed);
-  }
-
-  shouldComponentUpdate(nextProps, _nextState) {
-    return true;
-    // return this.props.isCollapsed !== nextProps.isCollapsed ||
-    //   this.props.count !== nextProps.count ||
-    //   this.props.filter !== nextProps.filter;
   }
 
   render() {
