@@ -4,18 +4,20 @@ import { Button, Glyphicon } from 'react-bootstrap';
 
 import { requestDeleteInvitation } from 'actions';
 
-function Invitation(props) {
-  return (
-    <tr>
-      <td><a href={`/invitations/${props.token}`}>{props.token}</a></td>
-      <td>{props.created_at.toISOString()}</td>
-      <td style={{ textAlign: 'center' }}>
-        <Button onClick={props.onRemove} bsStyle='danger' bsSize='xsmall' title='delete'>
-          <Glyphicon glyph='remove' />
-        </Button>
-      </td>
-    </tr>
-  );
+class Invitation extends React.PureComponent {
+  render() {
+    return (
+      <tr>
+        <td><a href={`/invitations/${this.props.token}`}>{this.props.token}</a></td>
+        <td>{this.props.created_at.toISOString()}</td>
+        <td style={{ textAlign: 'center' }}>
+          <Button onClick={this.props.onRemove} bsStyle='danger' bsSize='xsmall' title='delete'>
+            <Glyphicon glyph='remove' />
+          </Button>
+        </td>
+      </tr>
+    );
+  }
 }
 
 Invitation.propTypes = {
