@@ -7,29 +7,31 @@ import styles from './styles.module.less';
 import Download from './Download';
 import DownloadContainer from 'containers/Downloads/DownloadContainer';
 
-function DownloadList(props) {
-  const downloads = props.downloads.map(download => {
-    return (
-      <DownloadContainer key={download.infoHash}
-                         isHidden={download.isHidden}
-                         infoHash={download.infoHash}
-                         dateAdded={download.dateAdded}
-                         state={download.state}
-                         progress={download.progress}
-                         name={download.name}
-                         locks={download.locks} />
-    );
-  });
+class DownloadList extends React.PureComponent {
+  render() {
+    const downloads = this.props.downloads.map(download => {
+      return (
+        <DownloadContainer key={download.infoHash}
+                           isHidden={download.isHidden}
+                           infoHash={download.infoHash}
+                           dateAdded={download.dateAdded}
+                           state={download.state}
+                           progress={download.progress}
+                           name={download.name}
+                           locks={download.locks} />
+      );
+    });
 
-  return (
-    <Row>
-      <Col lg={12}>
-        <ul styleName='downloads'>
-          {downloads}
-        </ul>
-      </Col>
-    </Row>
-  );
+    return (
+      <Row>
+        <Col lg={12}>
+          <ul styleName='downloads'>
+            {downloads}
+          </ul>
+        </Col>
+      </Row>
+    );
+  }
 }
 
 DownloadList.propTypes = {
