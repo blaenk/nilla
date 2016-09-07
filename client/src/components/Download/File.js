@@ -5,7 +5,7 @@ import filesize from 'filesize';
 
 import styles from './filetree.module.less';
 
-class File extends React.Component {
+class File extends React.PureComponent {
   constructor(props) {
     super(props);
 
