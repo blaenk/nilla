@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 import styles from './download.module.less';
 
-class EditFiles extends React.Component {
+class EditFiles extends React.PureComponent {
   constructor(props) {
     super(props);
 
