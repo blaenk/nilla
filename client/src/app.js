@@ -17,6 +17,14 @@ function loadLocalStorage() {
     try {
       const parsed = JSON.parse(localState);
 
+      if (parsed.data.downloads) {
+        parsed.data.download = parsed.data.downloads.map(d => {
+          d.dateAdded = new Date(d.dateAdded);
+
+          return d;
+        });
+      }
+
       if (parsed.ui && parsed.ui.downloads && parsed.ui.downloads.lastSeen) {
         parsed.ui.downloads.lastSeen = new Date(parsed.ui.downloads.lastSeen);
       }
