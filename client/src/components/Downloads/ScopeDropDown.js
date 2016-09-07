@@ -6,24 +6,26 @@ import styles from './search.module.less';
 
 import MarkedMenuItem from './MarkedMenuItem';
 
-function ScopeDropDown(props) {
-  const item = (name) => {
-    return (
-      <MarkedMenuItem eventKey={name} selected={props.scope}
-                      onSelect={props.onChangeScope} key={name}>
-        {name}
-      </MarkedMenuItem>
-    );
-  };
+class ScopeDropDown extends React.PureComponent {
+  render() {
+    const item = (name) => {
+      return (
+        <MarkedMenuItem eventKey={name} selected={this.props.scope}
+                        onSelect={this.props.onChangeScope} key={name}>
+          {name}
+        </MarkedMenuItem>
+      );
+    };
 
-  return (
-    <InputGroup.Button>
-      <DropdownButton id='downloads_scope' title={props.scope} styleName='scope'>
-        <MenuItem header>Search Scope</MenuItem>
-        {['ALL', 'MINE', 'SYSTEM', 'LOCKED', 'EXPIRING'].map(item)}
-      </DropdownButton>
-    </InputGroup.Button>
-  );
+    return (
+      <InputGroup.Button>
+        <DropdownButton id='downloads_scope' title={this.props.scope} styleName='scope'>
+          <MenuItem header>Search Scope</MenuItem>
+          {['ALL', 'MINE', 'SYSTEM', 'LOCKED', 'EXPIRING'].map(item)}
+        </DropdownButton>
+      </InputGroup.Button>
+    );
+  }
 }
 
 ScopeDropDown.propTypes = {
