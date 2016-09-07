@@ -16,7 +16,7 @@ import { getTrackers } from 'actions';
 
 import styles from 'styles/app.module.less';
 
-class Tracker extends React.Component {
+class Tracker extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -33,10 +33,6 @@ class Tracker extends React.Component {
     const { dispatch } = this.props;
 
     dispatch(getTrackers());
-  }
-
-  shouldComponentUpdate() {
-    return true;
   }
 
   handleSubmit(event) {
