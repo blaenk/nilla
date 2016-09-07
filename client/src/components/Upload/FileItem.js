@@ -4,20 +4,22 @@ import filesize from 'filesize';
 
 import styles from './upload.module.less';
 
-function FileItem(props) {
-  const name = props.pathComponents[props.pathComponents.length - 1];
+class FileItem extends React.PureComponent {
+  render() {
+    const name = this.props.pathComponents[this.props.pathComponents.length - 1];
 
-  return (
-    <li key={props.path}>
-      {name}
+    return (
+      <li key={this.props.path}>
+        {name}
 
-      <span styleName='torrent-separator'>—</span>
+        <span styleName='torrent-separator'>—</span>
 
-      <span styleName='torrent-size'>
-        {filesize(props.size)}
-      </span>
-    </li>
-  );
+        <span styleName='torrent-size'>
+          {filesize(this.props.size)}
+        </span>
+      </li>
+    );
+  }
 }
 
 FileItem.propTypes = {
