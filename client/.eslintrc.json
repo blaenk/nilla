@@ -51,7 +51,7 @@
     "react/no-string-refs": ["error"],
     "react/no-unknown-property": ["error"],
     "react/prefer-es6-class": ["error"],
-    "react/prefer-stateless-function": ["error"],
+    "react/prefer-stateless-function": ["error", {"ignorePureComponents": true}],
     "react/require-optimization": ["error"],
     "react/self-closing-comp": ["error"],
     "react/sort-prop-types": ["error"],
