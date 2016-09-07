@@ -10,7 +10,7 @@ import DropzoneContainer from 'containers/Upload/DropzoneContainer';
 
 import styles from 'styles/app.module.less';
 
-class App extends React.Component {
+class App extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -24,10 +24,6 @@ class App extends React.Component {
 
   handleOpenFileDialog() {
     this.dropzoneRef.getWrappedInstance().open();
-  }
-
-  shouldComponentUpdate(nextProps, _nextState) {
-    return this.props.children !== nextProps.children;
   }
 
   render() {
