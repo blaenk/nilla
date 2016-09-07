@@ -15,7 +15,7 @@ import CommandBarContainer from 'containers/Download/CommandBarContainer';
 
 import styles from './download.module.less';
 
-class Download extends React.Component {
+class Download extends React.PureComponent {
   componentWillMount() {
     const { dispatch } = this.props;
 
@@ -47,14 +47,6 @@ class Download extends React.Component {
         this.startPoll();
       }
     }
-  }
-
-  shouldComponentUpdate(nextProps, _nextState) {
-    return true;
-    // return this.props.download !== nextProps.download ||
-    //   this.props.files !== nextProps.files ||
-    //   this.props.users !== nextProps.users ||
-    //   this.props.ui.isCollapsed !== nextProps.ui.isCollapsed;
   }
 
   render() {
