@@ -4,45 +4,47 @@ import filesize from 'filesize';
 
 import ErrorAlert from 'components/App/ErrorAlert';
 
-function RejectedFilesErrorAlert(props) {
-  if (props.rejectedFiles.length > 0) {
-    const files = props.rejectedFiles.map(file => {
+class RejectedFilesErrorAlert extends React.PureComponent {
+  render() {
+    if (this.props.rejectedFiles.length > 0) {
+      const files = this.props.rejectedFiles.map(file => {
+        return (
+          <tr key={file.name}>
+            <td>{file.name}</td>
+            <td>{filesize(file.size)}</td>
+            <td>{file.type || 'unknown'}</td>
+          </tr>
+        );
+      });
+
       return (
-        <tr key={file.name}>
-          <td>{file.name}</td>
-          <td>{filesize(file.size)}</td>
-          <td>{file.type || 'unknown'}</td>
-        </tr>
+        <ErrorAlert title='Unrecognized File!'
+                    onDismiss={this.props.onDismiss}>
+          <p>
+            One or more of the files you chose is not a torrent! Please try
+            again without those files.
+          </p>
+
+          <p>Here are the files you attempted to upload:</p>
+
+          <Table striped responsive>
+            <thead>
+              <tr>
+                <th>name</th>
+                <th>size</th>
+                <th>type</th>
+              </tr>
+            </thead>
+            <tbody>
+              {files}
+            </tbody>
+          </Table>
+        </ErrorAlert>
       );
-    });
+    }
 
-    return (
-      <ErrorAlert title='Unrecognized File!'
-                  onDismiss={props.onDismiss}>
-        <p>
-          One or more of the files you chose is not a torrent! Please try
-          again without those files.
-        </p>
-
-        <p>Here are the files you attempted to upload:</p>
-
-        <Table striped responsive>
-          <thead>
-            <tr>
-              <th>name</th>
-              <th>size</th>
-              <th>type</th>
-            </tr>
-          </thead>
-          <tbody>
-            {files}
-          </tbody>
-        </Table>
-      </ErrorAlert>
-    );
+    return null;
   }
-
-  return null;
 }
 
 RejectedFilesErrorAlert.propTypes = {
