@@ -4,14 +4,19 @@ import { MenuItem } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 import styles from './search.module.less';
 
-function MarkedMenuItem(props) {
-  return (
-    <MenuItem eventKey={props.eventKey}
-              className={props.eventKey === props.selected ? 'dropdown-menu-selected' : ''}
-              onSelect={props.onSelect}>
-      {props.children}
-    </MenuItem>
-  );
+class MarkedMenuItem extends React.PureComponent {
+  render() {
+    const className = this.props.eventKey === this.props.selected
+          ? 'dropdown-menu-selected' : '';
+
+    return (
+      <MenuItem eventKey={this.props.eventKey}
+                className={className}
+                onSelect={this.props.onSelect}>
+        {this.props.children}
+      </MenuItem>
+    );
+  }
 }
 
 MarkedMenuItem.propTypes = {
