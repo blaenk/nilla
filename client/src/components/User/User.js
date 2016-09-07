@@ -16,7 +16,7 @@ import { getUsers } from 'actions';
 
 import styles from 'styles/app.module.less';
 
-class User extends React.Component {
+class User extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -32,10 +32,6 @@ class User extends React.Component {
     const { dispatch } = this.props;
 
     dispatch(getUsers());
-  }
-
-  shouldComponentUpdate() {
-    return true;
   }
 
   handleSubmit(event) {
