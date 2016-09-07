@@ -24,9 +24,31 @@ class Downloads extends React.Component {
   }
 
   componentWillUnmount() {
+    clearTimeout(this.pollTimeout);
+
     this.updateLastSeen();
 
     window.removeEventListener('beforeunload', this.updateLastSeen);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.downloads !== nextProps.downloads) {
+      clearTimeout(this.pollTimeout);
+
+      if (!nextProps.ui.isFetching) {
+        this.startPoll();
+      }
+    }
+  }
+
+  startPoll() {
+    const { dispatch } = this.props;
+
+    const POLL_RATE = 5000;
+
+    this.pollTimeout = setTimeout(() => {
+      dispatch(getDownloads());
+    }, POLL_RATE);
   }
 
   render() {
