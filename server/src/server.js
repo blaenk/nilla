@@ -1,7 +1,7 @@
 'use strict';
 
 require('dotenv').config({
-  silent: Boolean(process.env.TRAVIS),
+  silent: Boolean(process.env.TRAVIS) || process.env.NODE_ENV === 'production',
 });
 
 const path = require('path');
