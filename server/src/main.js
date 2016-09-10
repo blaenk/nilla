@@ -8,11 +8,11 @@ const tasks = require('./tasks');
 const app = server.createServer();
 
 const {
-  SERVER_HOST,
-  SERVER_PORT,
+  HOST,
+  PORT,
 } = process.env;
 
-const instance = app.listen(SERVER_PORT, SERVER_HOST, () => {
+const instance = app.listen(PORT, HOST, () => {
   console.log('Express server listening on port ' + instance.address().port);
 });
 
