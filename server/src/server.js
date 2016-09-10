@@ -30,8 +30,6 @@ const downloads = require('./models/downloads');
 const users = require('./models/users');
 const trackers = require('./models/trackers');
 
-const db = new sqlite3.cached.Database('./db/nilla.db');
-
 const {
   JWT_SECRET,
   NODE_ENV,
@@ -40,7 +38,10 @@ const {
   SERVE_ASSETS,
   SERVE_DOWNLOADS,
   USE_SSL,
+  DATABASE = './db/nilla.db',
 } = process.env;
+
+const db = new sqlite3.cached.Database(DATABASE);
 
 const PASSWORD_SALT_ROUNDS = 10;
 
