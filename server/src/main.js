@@ -7,12 +7,12 @@ const tasks = require('./tasks');
 
 const app = server.createServer();
 
-const {
-  HOST,
-  PORT,
-} = process.env;
+// eslint-disable-next-line no-magic-numbers
+const { HOST = '0.0.0.0', PORT = 3000, NODE_APP_INSTANCE = 0 } = process.env;
 
-const instance = app.listen(PORT, HOST, () => {
+const port = PORT + NODE_APP_INSTANCE;
+
+const instance = app.listen(port, HOST, () => {
   console.log('Express server listening on port ' + instance.address().port);
 });
 
