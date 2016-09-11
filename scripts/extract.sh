@@ -26,17 +26,22 @@ cd "$target" || exit
 
 touch .extracting
 
-while IFS= read -r -d '' archive
+while IFS= read -d $'\0' -r archive
 do
   dir_name=$(basename "${archive%.*}")
   7z x "$archive" "-oextract/$dir_name" -y
-done < <(find .
-         -name '*.rar'
-           -a \! \( -name '*.part??.rar' -a \! -name '*.part01.rar' \)
-           -a \! \( -name '*.part?.rar' -a \! -name '*.part1.rar' \)
-         -o -name '*.7z'
-         -o -name '*.zip'
-         -o -name '*.001'
+done < <(find . \
+         -type f \
+         \( \
+           \( \
+           -name '*.rar' \
+             -a \! \( -name '*.part??.rar' -a \! -name '*.part01.rar' \) \
+             -a \! \( -name '*.part?.rar' -a \! -name '*.part1.rar' \) \
+           \) \
+           -o -name '*.7z' \
+           -o -name '*.zip' \
+           -o -name '*.001' \
+         \) \
          -print0)
 
 rm .extracting
