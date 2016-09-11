@@ -34,7 +34,7 @@ rtorrent.call = function call(method, args, options) {
   const client = Bluebird.promisifyAll(xmlrpc.createClient(options));
 
   // If a socket path was specified, infer SCGI transport.
-  if (options.path) {
+  if (options.path || (options.host && options.port)) {
     return client.methodCallWithTransportAsync(scgi.Transport, method, args);
   }
 
