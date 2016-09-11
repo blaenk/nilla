@@ -366,7 +366,7 @@ function attachAuthentication(app, options) {
       return;
     }
 
-    const sendFilePath = path.join('sendfile', filePath);
+    const sendFilePath = '/sendfile/' + filePath;
 
     res.attachment(name);
     res.header('X-Accel-Redirect', sendFilePath);
