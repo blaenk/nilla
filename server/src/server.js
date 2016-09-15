@@ -73,6 +73,10 @@ function catchAllErrors(err, req, res, next) {
   res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 }
 
+function notFoundHandler(req, res, _next) {
+  res.status(HttpStatus.NOT_FOUND).send('Not found');
+}
+
 function handleRtorrentError(error, res, next) {
   if (Array.isArray(error) &&
       error.every(e => e.error && e.error.faultCode && e.error.faultString)) {
@@ -641,7 +645,8 @@ function serveApp(req, res) {
 }
 
 function reactRoutes(app) {
-  app.use(['/', '/downloads', '/trackers', '/users'], JWT, CSRF, serveApp);
+  app.get('/', JWT, CSRF, serveApp);
+  app.use(['/downloads', '/trackers', '/users'], JWT, CSRF, serveApp);
 }
 
 function createServer(options) {
@@ -671,6 +676,7 @@ function createServer(options) {
 
   reactRoutes(app);
 
+  app.use(notFoundHandler);
   app.use(catchAllErrors);
 
   return app;
