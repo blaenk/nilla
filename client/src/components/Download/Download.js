@@ -43,7 +43,7 @@ class Download extends React.PureComponent {
     if (this.props.download !== nextProps.download) {
       clearTimeout(this.pollTimeout);
 
-      if (!nextProps.ui.isFetching) {
+      if (nextProps.ui && !nextProps.ui.isFetching) {
         this.startPoll();
       }
     }
