@@ -31,8 +31,7 @@ class App extends React.PureComponent {
       <DropzoneContainer
         style={{}}
         disableClick
-        ref={this.setDropzoneRef}
-        accept='application/x-bittorrent'>
+        ref={this.setDropzoneRef}>
         <Grid>
           <HeaderContainer />
 
