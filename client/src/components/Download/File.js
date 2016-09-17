@@ -34,10 +34,8 @@ class File extends React.PureComponent {
     const isFinished = this.props.progress === PROGRESS_COMPLETE;
     const isDisabled = !this.props.isEnabled;
 
-    const encodedName = encodeURIComponent(this.props.downloadName).replace(/%20/g, '+');
-    const encodedPath = this.props.pathComponents.map(c => {
-      return encodeURIComponent(c).replace(/%20/g, '+');
-    }).join('/');
+    const encodedName = encodeURIComponent(this.props.downloadName);
+    const encodedPath = this.props.pathComponents.map(encodeURIComponent).join('/');
 
     let url;
 
