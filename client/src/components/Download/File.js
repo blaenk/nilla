@@ -52,7 +52,11 @@ class File extends React.PureComponent {
     let nameTag, badge;
 
     if (isFinished && this.props.canDownload) {
-      nameTag = <a href={url} styleName='file-name' download>{basename}</a>;
+      nameTag = (
+        <a href={url} styleName='file-name' target='_blank' rel='noopener noreferrer'>
+          {basename}
+        </a>
+      );
     } else {
       nameTag = <span styleName='file-name-incomplete'>{basename}</span>;
     }
