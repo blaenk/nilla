@@ -372,7 +372,7 @@ function attachAuthentication(app, options) {
 
     const sendFilePath = '/sendfile/' + filePath;
 
-    res.header('X-Accel-Redirect', sendFilePath);
+    res.header('X-Accel-Redirect', encodeURI(sendFilePath));
 
     // let the web server determine the content type
     res.header('Content-Type', '');
