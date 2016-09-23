@@ -71,7 +71,10 @@ class Download extends React.PureComponent {
 
     if (ui.isEditing) {
       editFiles = (
-        <EditFilesContainer infoHash={this.props.infoHash} files={files.downloaded} />
+        <EditFilesContainer
+          infoHash={this.props.infoHash}
+          files={download.files.downloaded}
+          filteredFiles={files.downloaded} />
       );
     }
 

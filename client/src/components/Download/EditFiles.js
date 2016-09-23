@@ -25,19 +25,19 @@ class EditFiles extends React.PureComponent {
   }
 
   handleEnableAll() {
-    for (const file of this.props.files) {
+    for (const file of this.props.filteredFiles) {
       this.props.enable(file.id);
     }
   }
 
   handleDisableAll() {
-    for (const file of this.props.files) {
+    for (const file of this.props.filteredFiles) {
       this.props.disable(file.id);
     }
   }
 
   handleInvertAll() {
-    for (const file of this.props.files) {
+    for (const file of this.props.filteredFiles) {
       this.props.invert(file.id);
     }
   }
@@ -111,6 +111,7 @@ EditFiles.propTypes = {
   disable: React.PropTypes.func.isRequired,
   enable: React.PropTypes.func.isRequired,
   files: React.PropTypes.array.isRequired,
+  filteredFiles: React.PropTypes.array.isRequired,
   handleCancel: React.PropTypes.func.isRequired,
   invert: React.PropTypes.func.isRequired,
   ui: React.PropTypes.object.isRequired,
