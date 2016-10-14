@@ -53,7 +53,7 @@ class File extends React.PureComponent {
 
     if (isFinished && this.props.canDownload) {
       nameTag = (
-        <a href={url} styleName='file-name' target='_blank' rel='noopener noreferrer'>
+        <a href={url} styleName='file-name' target='_blank' rel='noopener'>
           {basename}
         </a>
       );
