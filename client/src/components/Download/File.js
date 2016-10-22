@@ -22,7 +22,7 @@ class File extends React.PureComponent {
   }
 
   render() {
-    if (!this.props.canDownload || !this.props.ui) {
+    if (!this.props.ui) {
       return null;
     }
 
@@ -51,7 +51,7 @@ class File extends React.PureComponent {
 
     let nameTag, badge;
 
-    if (isFinished && this.props.canDownload) {
+    if (isFinished) {
       nameTag = (
         <a href={url} styleName='file-name' target='_blank' rel='noopener'>
           {basename}
