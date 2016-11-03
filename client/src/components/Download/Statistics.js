@@ -23,7 +23,7 @@ function Statistics(props) {
   }
 
   const trackers = props.download.trackers.map(t => {
-    return (<li key={t}>t</li>);
+    return (<li key={t}>{t}</li>);
   });
 
   return (
