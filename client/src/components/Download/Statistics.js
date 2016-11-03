@@ -50,7 +50,7 @@ function Statistics(props) {
 
               <tr>
                 <td>Total Uploaded</td>
-                <td>{props.download.totalUploaded}</td>
+                <td>{filesize(props.download.totalUploaded)}</td>
               </tr>
 
               <tr>
