@@ -22,6 +22,10 @@ function Statistics(props) {
     countdownString = countdown(etaDate).toString();
   }
 
+  const trackers = props.download.trackers.map(t => {
+    return (<li key={t}>t</li>);
+  });
+
   return (
     <Row>
       <Col lg={12}>
@@ -61,6 +65,15 @@ function Statistics(props) {
               <tr>
                 <td>Leechers</td>
                 <td>{props.download.leeches}</td>
+              </tr>
+
+              <tr>
+                <td>Trackers</td>
+                <td>
+                  <ul>
+                    {trackers}
+                  </ul>
+                </td>
               </tr>
             </tbody>
           </Table>
