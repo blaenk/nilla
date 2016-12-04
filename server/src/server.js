@@ -106,6 +106,12 @@ function JWTErrorHandler(err, req, res, next) {
   next(err);
 }
 
+function deleteSession(res) {
+  res.clearCookie('_csrf');
+  res.clearCookie('csrf-token');
+  res.clearCookie('token');
+}
+
 function CSRFValidationError(err, req, res, next) {
   console.log('csrfvalidationError');
 
@@ -115,7 +121,9 @@ function CSRFValidationError(err, req, res, next) {
     return;
   }
 
-  console.log('CSRF token tampered');
+  console.log('CSRF token tampered; deleting session if one existed');
+
+  deleteSession(res);
 
   res.format({
     html: () => {
@@ -132,10 +140,12 @@ function CSRFValidationError(err, req, res, next) {
 }
 
 function setCSRFTokenCookie(req, res, next) {
+  const expiration = moment().utc().add(1, 'month').toDate();
+
   res.cookie('csrf-token', req.csrfToken(), {
     httpOnly: false,
     secure: Boolean(USE_SSL),
-    expires: 0,
+    expires: expiration,
   });
 
   next();
@@ -237,9 +247,7 @@ function attachAuthentication(app, options) {
   });
 
   app.delete('/session', JWT, (req, res) => {
-    res.clearCookie('_csrf');
-    res.clearCookie('csrf-token');
-    res.clearCookie('token');
+    deleteSession(res);
     res.sendStatus(HttpStatus.OK);
   });
 
