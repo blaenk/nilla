@@ -23,6 +23,8 @@ class Download extends React.PureComponent {
   }
 
   componentWillUnmount() {
+    document.title = 'NILLA';
+
     clearTimeout(this.pollTimeout);
   }
 
@@ -41,6 +43,8 @@ class Download extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.download !== nextProps.download) {
+      document.title = nextProps.download.name;
+
       clearTimeout(this.pollTimeout);
 
       if (nextProps.ui && !nextProps.ui.isFetching) {
