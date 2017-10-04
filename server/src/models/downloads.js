@@ -114,6 +114,11 @@ const DOWNLOADS_METHODS = [
     as: 'dateAdded',
     map: data => new Date(data),
   },
+  {
+    methodName: 'get_custom5',
+    as: 'ttl',
+    map: parseInt,
+  },
 ];
 
 function getDownload(infoHash) {

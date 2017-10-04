@@ -13,13 +13,10 @@ const rtorrent = require('./rtorrent');
 Bluebird.promisifyAll(fs);
 Bluebird.promisifyAll(fse);
 
-// eslint-disable-next-line no-magic-numbers
-const EXPIRATION_DURATION = moment.duration(2, 'weeks');
-
 function getExpiredTorrents() {
   return downloads.getDownloads()
     .filter(download => {
-      const expirationDate = moment(download.dateAdded).add(EXPIRATION_DURATION);
+      const expirationDate = moment(download.dateAdded).add(download.ttl);
 
       return moment().isAfter(expirationDate) && download.locks.length === 0;
     });
