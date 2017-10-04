@@ -38,7 +38,7 @@
     "react/jsx-no-duplicate-props": ["error"],
     "react/jsx-no-undef": ["error"],
     "react/jsx-pascal-case": ["error"],
-    "react/jsx-space-before-closing": ["error"],
+    "react/jsx-tag-spacing": ["error", {"beforeSelfClosing": "always"}],
     "react/jsx-uses-react": ["error"],
     "react/jsx-no-comment-textnodes": ["error"],
     "react/no-deprecated": ["error"],
