@@ -60,7 +60,10 @@ class FileUpload extends React.Component {
       });
 
       const files = this.props.file.parsed.files.map((f, index) => {
-        f.path = f.path.replace(new RegExp(`^${this.props.file.parsed.name}/`), '');
+        if (f.path.startsWith(this.props.file.parsed.name + '/')) {
+          f.path = f.path.slice(this.props.file.parsed.name.length + 1);
+        }
+
         f.pathComponents = f.path.split('/');
         f.index = index;
 
