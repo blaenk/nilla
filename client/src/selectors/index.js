@@ -123,7 +123,7 @@ export const getScopedDownloads = createSelector(
       case 'EXPIRING':
         // get downloads expiring within the next 24 hours
         return downloads.map(download => {
-          const expirationDate = expiresAt(download.dateAdded).subtract(1, 'day');
+          const expirationDate = expiresAt(download).subtract(1, 'day');
 
           return Object.assign({}, download, {
             isHidden: moment().isBefore(expirationDate),
