@@ -44,7 +44,7 @@ class CommandBar extends React.PureComponent {
   handleErase() {
     if (confirm('are you sure you want to erase this?')) {
       this.props.erase(() => {
-        this.props.router.push('/downloads');
+        this.props.history.push('/downloads');
       });
     }
   }
@@ -118,10 +118,10 @@ CommandBar.propTypes = {
   download: PropTypes.object.isRequired,
   edit: PropTypes.func.isRequired,
   erase: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
   lock: PropTypes.func.isRequired,
   onStart: PropTypes.func.isRequired,
   onStop: PropTypes.func.isRequired,
-  router: PropTypes.object.isRequired,
   stats: PropTypes.func.isRequired,
   ui: PropTypes.object.isRequired,
   unlock: PropTypes.func.isRequired,

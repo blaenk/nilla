@@ -46,7 +46,7 @@ class User extends React.PureComponent {
     };
 
     this.props.onSubmit(user, () => {
-      this.props.router.push('/users');
+      this.props.history.push('/users');
     });
   }
 
@@ -145,10 +145,10 @@ class User extends React.PureComponent {
 User.propTypes = {
   dispatch: PropTypes.func.isRequired,
   email: PropTypes.string.isRequired,
+  history: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,
   onSubmit: PropTypes.func.isRequired,
   roles: PropTypes.string.isRequired,
-  router: PropTypes.object.isRequired,
   token: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
 };

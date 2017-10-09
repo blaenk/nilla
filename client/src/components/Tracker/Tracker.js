@@ -48,7 +48,7 @@ class Tracker extends React.PureComponent {
     };
 
     this.props.onSubmit(tracker, () => {
-      this.props.router.push('/trackers');
+      this.props.history.push('/trackers');
     });
   }
 
@@ -154,11 +154,11 @@ class Tracker extends React.PureComponent {
 Tracker.propTypes = {
   category: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
   password: PropTypes.string.isRequired,
-  router: PropTypes.object.isRequired,
   url: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
 };
