@@ -5,8 +5,9 @@
   "scripts": {
     "lint": "eslint src/ test/",
     "lint-fix": "eslint --fix src/ test/",
-    "webpack": "NODE_ENV=production webpack -p",
-    "webpack-watch": "NODE_ENV=development webpack --progress --colors --watch -d",
+    "build": "NODE_ENV=production webpack --progress --colors",
+    "build-dev": "NODE_ENV=development webpack --progress --colors",
+    "build-watch": "NODE_ENV=development webpack --progress --colors --watch",
     "test": "NODE_ENV=test karma start karma.conf.js"
   },
   "repository": {
