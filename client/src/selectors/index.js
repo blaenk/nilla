@@ -105,25 +105,25 @@ export const getScopedDownloads = createSelector(
       case 'MINE':
         return downloads.map(download => {
           return Object.assign({}, download, {
-            isHidden: download.uploader !== user.id,
+            isHidden: download.isCrossSeeding || download.uploader !== user.id,
           });
         });
       case 'SYSTEM':
         return downloads.map(download => {
           return Object.assign({}, download, {
-            isHidden: download.uploader !== -1,
+            isHidden: download.isCrossSeeding || download.uploader !== -1,
           });
         });
       case 'MY LOCKED':
         return downloads.map(download => {
           return Object.assign({}, download, {
-            isHidden: !download.locks.includes(user.id),
+            isHidden: download.isCrossSeeding || !download.locks.includes(user.id),
           });
         });
       case 'LOCKED':
         return downloads.map(download => {
           return Object.assign({}, download, {
-            isHidden: !download.locks,
+            isHidden: download.isCrossSeeding || download.locks.length === 0,
           });
         });
       case 'EXPIRING':
@@ -132,7 +132,7 @@ export const getScopedDownloads = createSelector(
           const expirationDate = expiresAt(download).subtract(1, 'day');
 
           return Object.assign({}, download, {
-            isHidden: moment().isBefore(expirationDate),
+            isHidden: download.isCrossSeeding || moment().isBefore(expirationDate),
           });
         });
       case 'CROSS-SEEDING':
@@ -143,7 +143,11 @@ export const getScopedDownloads = createSelector(
         });
       case 'ALL':
       default:
-        return downloads;
+        return downloads.map(download => {
+          return Object.assign({}, download, {
+            isHidden: download.isCrossSeeding,
+          });
+        });
     }
   }
 );
