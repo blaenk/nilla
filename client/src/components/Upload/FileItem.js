@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import filesize from 'filesize';
 
@@ -23,9 +24,9 @@ class FileItem extends React.PureComponent {
 }
 
 FileItem.propTypes = {
-  path: React.PropTypes.string,
-  pathComponents: React.PropTypes.array,
-  size: React.PropTypes.number,
+  path: PropTypes.string,
+  pathComponents: PropTypes.array,
+  size: PropTypes.number,
 };
 
 export default CSSModules(FileItem, styles);

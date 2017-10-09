@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import moment from 'moment';
 
@@ -73,14 +74,14 @@ function Header(props) {
 }
 
 Header.propTypes = {
-  dateAdded: React.PropTypes.string.isRequired,
-  infoHash: React.PropTypes.string.isRequired,
-  locks: React.PropTypes.array.isRequired,
-  name: React.PropTypes.string.isRequired,
-  progress: React.PropTypes.number.isRequired,
-  state: React.PropTypes.string.isRequired,
-  uploader: React.PropTypes.string.isRequired,
-  users: React.PropTypes.array.isRequired,
+  dateAdded: PropTypes.string.isRequired,
+  infoHash: PropTypes.string.isRequired,
+  locks: PropTypes.array.isRequired,
+  name: PropTypes.string.isRequired,
+  progress: PropTypes.number.isRequired,
+  state: PropTypes.string.isRequired,
+  uploader: PropTypes.string.isRequired,
+  users: PropTypes.array.isRequired,
 };
 
 export default CSSModules(Header, styles);

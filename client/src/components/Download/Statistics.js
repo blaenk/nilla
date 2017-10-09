@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Row, Col, Table } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 import filesize from 'filesize';
@@ -84,7 +85,7 @@ function Statistics(props) {
 }
 
 Statistics.propTypes = {
-  download: React.PropTypes.object.isRequired,
+  download: PropTypes.object.isRequired,
 };
 
 export default CSSModules(Statistics, styles);

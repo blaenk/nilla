@@ -1,5 +1,6 @@
 import React from 'react';
 import { Grid } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 
 import HeaderContainer from 'containers/App/HeaderContainer';
@@ -51,7 +52,7 @@ class App extends React.PureComponent {
 }
 
 App.propTypes = {
-  children: React.PropTypes.node.isRequired,
+  location: PropTypes.object,
 };
 
 export default CSSModules(App, styles);

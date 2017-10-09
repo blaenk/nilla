@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import { Row, Col, Glyphicon } from 'react-bootstrap';
 
@@ -81,8 +82,9 @@ class Downloads extends React.PureComponent {
 }
 
 Downloads.propTypes = {
-  dispatch: React.PropTypes.func.isRequired,
-  downloads: React.PropTypes.array.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  downloads: PropTypes.array.isRequired,
+  ui: PropTypes.object.isRequired,
 };
 
 export default CSSModules(Downloads, styles);

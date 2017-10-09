@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { InputGroup, Badge } from 'react-bootstrap';
 
 import CSSModules from 'react-css-modules';
@@ -15,7 +16,7 @@ class DownloadCount extends React.PureComponent {
 }
 
 DownloadCount.propTypes = {
-  count: React.PropTypes.number.isRequired,
+  count: PropTypes.number.isRequired,
 };
 
 export default CSSModules(DownloadCount, styles);

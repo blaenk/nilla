@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import {
   Row,
@@ -32,7 +33,7 @@ class Search extends React.PureComponent {
 }
 
 Search.propTypes = {
-  count: React.PropTypes.number.isRequired,
+  count: PropTypes.number.isRequired,
 };
 
 export default CSSModules(Search, styles);

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 
 import FileTreeContainer from 'containers/Download/FileTreeContainer';
@@ -41,16 +42,16 @@ FilesSection.defaultProps = {
 };
 
 FilesSection.propTypes = {
-  depth: React.PropTypes.number.isRequired,
-  downloadName: React.PropTypes.string.isRequired,
-  files: React.PropTypes.array.isRequired,
-  infoHash: React.PropTypes.string.isRequired,
-  initialCollapse: React.PropTypes.bool.isRequired,
-  isEditing: React.PropTypes.bool.isRequired,
-  isMultiFile: React.PropTypes.bool.isRequired,
-  label: React.PropTypes.string.isRequired,
-  showLabelIf: React.PropTypes.bool.isRequired,
-  visibleCount: React.PropTypes.bool.isRequired,
+  depth: PropTypes.number.isRequired,
+  downloadName: PropTypes.string.isRequired,
+  files: PropTypes.array.isRequired,
+  infoHash: PropTypes.string.isRequired,
+  initialCollapse: PropTypes.bool.isRequired,
+  isEditing: PropTypes.bool.isRequired,
+  isMultiFile: PropTypes.bool.isRequired,
+  label: PropTypes.string.isRequired,
+  showLabelIf: PropTypes.bool.isRequired,
+  visibleCount: PropTypes.bool.isRequired,
 };
 
 export default CSSModules(FilesSection, styles);

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import {
   Button,
@@ -151,15 +152,15 @@ class Tracker extends React.PureComponent {
 }
 
 Tracker.propTypes = {
-  category: React.PropTypes.string.isRequired,
-  dispatch: React.PropTypes.func.isRequired,
-  id: React.PropTypes.number.isRequired,
-  name: React.PropTypes.string.isRequired,
-  onSubmit: React.PropTypes.func.isRequired,
-  password: React.PropTypes.string.isRequired,
-  router: React.PropTypes.object.isRequired,
-  url: React.PropTypes.string.isRequired,
-  username: React.PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  password: PropTypes.string.isRequired,
+  router: PropTypes.object.isRequired,
+  url: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
 };
 
 export default withRouter(CSSModules(Tracker, styles));

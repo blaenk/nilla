@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router';
 import {
@@ -142,14 +143,14 @@ class User extends React.PureComponent {
 }
 
 User.propTypes = {
-  dispatch: React.PropTypes.func.isRequired,
-  email: React.PropTypes.string.isRequired,
-  id: React.PropTypes.number.isRequired,
-  onSubmit: React.PropTypes.func.isRequired,
-  roles: React.PropTypes.string.isRequired,
-  router: React.PropTypes.object.isRequired,
-  token: React.PropTypes.string.isRequired,
-  username: React.PropTypes.string.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  email: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  roles: PropTypes.string.isRequired,
+  router: PropTypes.object.isRequired,
+  token: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
 };
 
 export default withRouter(CSSModules(User, styles));

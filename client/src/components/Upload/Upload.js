@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Col, Row } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
@@ -69,10 +70,10 @@ class Upload extends React.PureComponent {
 }
 
 Upload.propTypes = {
-  files: React.PropTypes.array,
-  onClickFiles: React.PropTypes.func.isRequired,
-  onDismissRejectionAlert: React.PropTypes.func.isRequired,
-  rejectedFiles: React.PropTypes.array,
+  files: PropTypes.array,
+  onClickFiles: PropTypes.func.isRequired,
+  onDismissRejectionAlert: PropTypes.func.isRequired,
+  rejectedFiles: PropTypes.array,
 };
 
 export default CSSModules(Upload, styles);

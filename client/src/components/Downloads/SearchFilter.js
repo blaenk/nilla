@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import { FormControl } from 'react-bootstrap';
 
@@ -18,8 +19,8 @@ class SearchFilter extends React.PureComponent {
 }
 
 SearchFilter.propTypes = {
-  filter: React.PropTypes.string.isRequired,
-  onChangeFilter: React.PropTypes.func.isRequired,
+  filter: PropTypes.string.isRequired,
+  onChangeFilter: PropTypes.func.isRequired,
 };
 
 export default CSSModules(SearchFilter, styles);

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { MenuItem } from 'react-bootstrap';
 
 import CSSModules from 'react-css-modules';
@@ -20,10 +21,10 @@ class MarkedMenuItem extends React.PureComponent {
 }
 
 MarkedMenuItem.propTypes = {
-  children: React.PropTypes.node.isRequired,
-  eventKey: React.PropTypes.string.isRequired,
-  onSelect: React.PropTypes.func.isRequired,
-  selected: React.PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  eventKey: PropTypes.string.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  selected: PropTypes.string.isRequired,
 };
 
 export default CSSModules(MarkedMenuItem, styles);

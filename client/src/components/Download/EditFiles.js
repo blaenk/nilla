@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import { Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 
@@ -107,14 +108,14 @@ class EditFiles extends React.PureComponent {
 }
 
 EditFiles.propTypes = {
-  apply: React.PropTypes.func.isRequired,
-  disable: React.PropTypes.func.isRequired,
-  enable: React.PropTypes.func.isRequired,
-  files: React.PropTypes.array.isRequired,
-  filteredFiles: React.PropTypes.array.isRequired,
-  handleCancel: React.PropTypes.func.isRequired,
-  invert: React.PropTypes.func.isRequired,
-  ui: React.PropTypes.object.isRequired,
+  apply: PropTypes.func.isRequired,
+  disable: PropTypes.func.isRequired,
+  enable: PropTypes.func.isRequired,
+  files: PropTypes.array.isRequired,
+  filteredFiles: PropTypes.array.isRequired,
+  handleCancel: PropTypes.func.isRequired,
+  invert: PropTypes.func.isRequired,
+  ui: PropTypes.object.isRequired,
 };
 
 export default CSSModules(EditFiles, styles);

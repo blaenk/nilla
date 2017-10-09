@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import ErrorAlert from './ErrorAlert';
 
@@ -17,7 +18,7 @@ class RtorrentUnavailableErrorAlert extends React.PureComponent {
 }
 
 RtorrentUnavailableErrorAlert.propTypes = {
-  isRtorrentAvailable: React.PropTypes.bool.isRequired,
+  isRtorrentAvailable: PropTypes.bool.isRequired,
 };
 
 export default RtorrentUnavailableErrorAlert;

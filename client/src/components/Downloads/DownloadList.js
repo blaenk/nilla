@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import { Row, Col } from 'react-bootstrap';
 
@@ -34,7 +35,7 @@ class DownloadList extends React.PureComponent {
 }
 
 DownloadList.propTypes = {
-  downloads: React.PropTypes.array.isRequired,
+  downloads: PropTypes.array.isRequired,
 };
 
 export default CSSModules(DownloadList, styles);

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import { Row, Col } from 'react-bootstrap';
 
@@ -153,33 +154,33 @@ class Download extends React.PureComponent {
 }
 
 Download.propTypes = {
-  currentUser: React.PropTypes.object.isRequired,
-  dispatch: React.PropTypes.func.isRequired,
-  download: React.PropTypes.shape({
-    dateAdded: React.PropTypes.object.isRequired,
-    files: React.PropTypes.shape({
-      downloaded: React.PropTypes.array.isRequired,
-      extracted: React.PropTypes.array.isRequired,
+  currentUser: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  download: PropTypes.shape({
+    dateAdded: PropTypes.object.isRequired,
+    files: PropTypes.shape({
+      downloaded: PropTypes.array.isRequired,
+      extracted: PropTypes.array.isRequired,
     }),
-    infoHash: React.PropTypes.string.isRequired,
-    isMultiFile: React.PropTypes.bool.isRequired,
-    locks: React.PropTypes.array.isRequired,
-    name: React.PropTypes.string.isRequired,
-    progress: React.PropTypes.number.isRequired,
-    state: React.PropTypes.string.isRequired,
-    uploader: React.PropTypes.string.isRequired,
+    infoHash: PropTypes.string.isRequired,
+    isMultiFile: PropTypes.bool.isRequired,
+    locks: PropTypes.array.isRequired,
+    name: PropTypes.string.isRequired,
+    progress: PropTypes.number.isRequired,
+    state: PropTypes.string.isRequired,
+    uploader: PropTypes.string.isRequired,
   }),
-  files: React.PropTypes.shape({
-    downloaded: React.PropTypes.array.isRequired,
-    extracted: React.PropTypes.array.isRequired,
+  files: PropTypes.shape({
+    downloaded: PropTypes.array.isRequired,
+    extracted: PropTypes.array.isRequired,
   }),
-  infoHash: React.PropTypes.string.isRequired,
-  params: React.PropTypes.object.isRequired,
-  ui: React.PropTypes.shape({
-    isFetching: React.PropTypes.bool.isRequired,
-    isCollapsed: React.PropTypes.bool.isRequired,
+  infoHash: PropTypes.string.isRequired,
+  params: PropTypes.object.isRequired,
+  ui: PropTypes.shape({
+    isFetching: PropTypes.bool.isRequired,
+    isCollapsed: PropTypes.bool.isRequired,
   }),
-  users: React.PropTypes.object.isRequired,
+  users: PropTypes.object.isRequired,
 };
 
 export default CSSModules(Download, styles);

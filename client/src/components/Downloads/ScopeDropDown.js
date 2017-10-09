@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { MenuItem, InputGroup, DropdownButton } from 'react-bootstrap';
 
 import CSSModules from 'react-css-modules';
@@ -29,8 +30,8 @@ class ScopeDropDown extends React.PureComponent {
 }
 
 ScopeDropDown.propTypes = {
-  onChangeScope: React.PropTypes.func.isRequired,
-  scope: React.PropTypes.string.isRequired,
+  onChangeScope: PropTypes.func.isRequired,
+  scope: PropTypes.string.isRequired,
 };
 
 export default CSSModules(ScopeDropDown, styles);

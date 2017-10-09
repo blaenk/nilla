@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Dropdown,
   Glyphicon,
@@ -40,8 +41,8 @@ class OrderDropDown extends React.PureComponent {
 }
 
 OrderDropDown.propTypes = {
-  onChangeOrder: React.PropTypes.func.isRequired,
-  order: React.PropTypes.string.isRequired,
+  onChangeOrder: PropTypes.func.isRequired,
+  order: PropTypes.string.isRequired,
 };
 
 export default CSSModules(OrderDropDown, styles);

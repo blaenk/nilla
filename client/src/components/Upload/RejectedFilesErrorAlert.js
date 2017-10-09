@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
 import filesize from 'filesize';
 
@@ -48,8 +49,8 @@ class RejectedFilesErrorAlert extends React.PureComponent {
 }
 
 RejectedFilesErrorAlert.propTypes = {
-  onDismiss: React.PropTypes.func.isRequired,
-  rejectedFiles: React.PropTypes.array,
+  onDismiss: PropTypes.func.isRequired,
+  rejectedFiles: PropTypes.array,
 };
 
 export default RejectedFilesErrorAlert;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import CSSModules from 'react-css-modules';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
@@ -70,10 +71,10 @@ class Header extends React.PureComponent {
 }
 
 Header.propTypes = {
-  currentUser: React.PropTypes.object.isRequired,
-  isDragging: React.PropTypes.bool.isRequired,
-  onLogout: React.PropTypes.func.isRequired,
-  onUpload: React.PropTypes.func.isRequired,
+  currentUser: PropTypes.object,
+  isDragging: PropTypes.bool.isRequired,
+  onLogout: PropTypes.func.isRequired,
+  onUpload: PropTypes.func.isRequired,
 };
 
 export default CSSModules(Header, styles);

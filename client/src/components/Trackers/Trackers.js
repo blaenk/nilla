@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Button, Table } from 'react-bootstrap';
 
@@ -67,10 +68,9 @@ class Trackers extends React.PureComponent {
 }
 
 Trackers.propTypes = {
-  currentUser: React.PropTypes.object.isRequired,
-  dispatch: React.PropTypes.object.isRequired,
-  handleCreateTracker: React.PropTypes.func.isRequired,
-  trackers: React.PropTypes.array.isRequired,
+  currentUser: PropTypes.object,
+  dispatch: PropTypes.func.isRequired,
+  trackers: PropTypes.array.isRequired,
 };
 
 export default Trackers;

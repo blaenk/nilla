@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Button,
@@ -179,11 +180,11 @@ class FileUpload extends React.Component {
 }
 
 FileUpload.propTypes = {
-  file: React.PropTypes.object.isRequired,
-  onRemove: React.PropTypes.func.isRequired,
-  onSubmit: React.PropTypes.func.isRequired,
-  parseFile: React.PropTypes.func.isRequired,
-  styles: React.PropTypes.object,
+  file: PropTypes.object.isRequired,
+  onRemove: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  parseFile: PropTypes.func.isRequired,
+  styles: PropTypes.object,
 };
 
 export default CSSModules(FileUpload, styles);

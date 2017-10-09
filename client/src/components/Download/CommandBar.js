@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import CSSModules from 'react-css-modules';
 import {
@@ -113,18 +114,18 @@ class CommandBar extends React.PureComponent {
 }
 
 CommandBar.propTypes = {
-  cancelEdit: React.PropTypes.func.isRequired,
-  download: React.PropTypes.object.isRequired,
-  edit: React.PropTypes.func.isRequired,
-  erase: React.PropTypes.func.isRequired,
-  lock: React.PropTypes.func.isRequired,
-  onStart: React.PropTypes.func.isRequired,
-  onStop: React.PropTypes.func.isRequired,
-  router: React.PropTypes.object.isRequired,
-  stats: React.PropTypes.func.isRequired,
-  ui: React.PropTypes.object.isRequired,
-  unlock: React.PropTypes.func.isRequired,
-  user: React.PropTypes.object.isRequired,
+  cancelEdit: PropTypes.func.isRequired,
+  download: PropTypes.object.isRequired,
+  edit: PropTypes.func.isRequired,
+  erase: PropTypes.func.isRequired,
+  lock: PropTypes.func.isRequired,
+  onStart: PropTypes.func.isRequired,
+  onStop: PropTypes.func.isRequired,
+  router: PropTypes.object.isRequired,
+  stats: PropTypes.func.isRequired,
+  ui: PropTypes.object.isRequired,
+  unlock: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 export default withRouter(CSSModules(CommandBar, styles));

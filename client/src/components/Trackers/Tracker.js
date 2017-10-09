@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Button, Glyphicon } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -58,14 +59,14 @@ class Tracker extends React.PureComponent {
 }
 
 Tracker.propTypes = {
-  category: React.PropTypes.string.isRequired,
-  currentUser: React.PropTypes.object.isRequired,
-  id: React.PropTypes.number.isRequired,
-  name: React.PropTypes.string.isRequired,
-  onRemove: React.PropTypes.func.isRequired,
-  password: React.PropTypes.string.isRequired,
-  url: React.PropTypes.string.isRequired,
-  username: React.PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
+  currentUser: PropTypes.object.isRequired,
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  onRemove: PropTypes.func.isRequired,
+  password: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
 };
 
 function mapDispatchToTrackerProps(dispatch, ownProps) {

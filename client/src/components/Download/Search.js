@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import {
   Badge,
@@ -54,14 +55,14 @@ class Search extends React.PureComponent {
 }
 
 Search.propTypes = {
-  collapse: React.PropTypes.func.isRequired,
-  containsFolders: React.PropTypes.bool,
-  count: React.PropTypes.number.isRequired,
-  filter: React.PropTypes.string.isRequired,
-  infoHash: React.PropTypes.string.isRequired,
-  isCollapsed: React.PropTypes.bool,
-  onChangeFilter: React.PropTypes.func.isRequired,
-  onCollapse: React.PropTypes.func.isRequired,
+  collapse: PropTypes.func.isRequired,
+  containsFolders: PropTypes.bool,
+  count: PropTypes.number.isRequired,
+  filter: PropTypes.string.isRequired,
+  infoHash: PropTypes.string.isRequired,
+  isCollapsed: PropTypes.bool,
+  onChangeFilter: PropTypes.func.isRequired,
+  onCollapse: PropTypes.func.isRequired,
 };
 
 export default CSSModules(Search, styles);

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Col, Row } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 
@@ -31,9 +32,9 @@ class ErrorAlert extends React.PureComponent {
 }
 
 ErrorAlert.propTypes = {
-  children: React.PropTypes.node.isRequired,
-  onDismiss: React.PropTypes.func.isRequired,
-  title: React.PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  onDismiss: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default CSSModules(ErrorAlert, styles);

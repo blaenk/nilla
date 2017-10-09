@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Table } from 'react-bootstrap';
 
@@ -86,10 +87,10 @@ class Users extends React.PureComponent {
 }
 
 Users.propTypes = {
-  dispatch: React.PropTypes.object.isRequired,
-  handleCreateInvitation: React.PropTypes.func.isRequired,
-  invitations: React.PropTypes.array.isRequired,
-  users: React.PropTypes.array.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  handleCreateInvitation: PropTypes.func.isRequired,
+  invitations: PropTypes.array.isRequired,
+  users: PropTypes.array.isRequired,
 };
 
 function mapDispatchToUsersProps(dispatch) {

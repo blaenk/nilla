@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Glyphicon } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 
@@ -72,11 +73,11 @@ class FolderItem extends React.Component {
 }
 
 FolderItem.propTypes = {
-  depth: React.PropTypes.number,
-  files: React.PropTypes.array,
-  isRoot: React.PropTypes.bool,
-  name: React.PropTypes.string,
-  styles: React.PropTypes.object,
+  depth: PropTypes.number,
+  files: PropTypes.array,
+  isRoot: PropTypes.bool,
+  name: PropTypes.string,
+  styles: PropTypes.object,
 };
 
 export default CSSModules(FolderItem, styles);

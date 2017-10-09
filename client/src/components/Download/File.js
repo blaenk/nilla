@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Badge } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 import filesize from 'filesize';
@@ -88,18 +89,18 @@ class File extends React.PureComponent {
 }
 
 File.propTypes = {
-  canDownload: React.PropTypes.bool.isRequired,
-  disable: React.PropTypes.func.isRequired,
-  downloadName: React.PropTypes.string.isRequired,
-  enable: React.PropTypes.func.isRequired,
-  id: React.PropTypes.number.isRequired,
-  isEditing: React.PropTypes.bool.isRequired,
-  isEnabled: React.PropTypes.bool.isRequired,
-  isMultiFile: React.PropTypes.bool.isRequired,
-  pathComponents: React.PropTypes.array.isRequired,
-  progress: React.PropTypes.number.isRequired,
-  size: React.PropTypes.number.isRequired,
-  ui: React.PropTypes.object.isRequired,
+  canDownload: PropTypes.bool.isRequired,
+  disable: PropTypes.func.isRequired,
+  downloadName: PropTypes.string.isRequired,
+  enable: PropTypes.func.isRequired,
+  id: PropTypes.number.isRequired,
+  isEditing: PropTypes.bool.isRequired,
+  isEnabled: PropTypes.bool.isRequired,
+  isMultiFile: PropTypes.bool.isRequired,
+  pathComponents: PropTypes.array.isRequired,
+  progress: PropTypes.number.isRequired,
+  size: PropTypes.number.isRequired,
+  ui: PropTypes.object.isRequired,
 };
 
 export default CSSModules(File, styles);

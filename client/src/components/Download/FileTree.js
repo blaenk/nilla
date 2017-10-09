@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Badge, Glyphicon, Checkbox } from 'react-bootstrap';
 import CSSModules from 'react-css-modules';
 import { partitionFiles } from 'common';
@@ -180,20 +181,20 @@ FileTree.defaultProps = {
 };
 
 FileTree.propTypes = {
-  depth: React.PropTypes.number,
-  disable: React.PropTypes.func.isRequired,
-  downloadName: React.PropTypes.string.isRequired,
-  enable: React.PropTypes.func.isRequired,
-  files: React.PropTypes.array.isRequired,
-  infoHash: React.PropTypes.string.isRequired,
-  initialCollapse: React.PropTypes.bool,
-  isEditing: React.PropTypes.bool,
-  isEnabled: React.PropTypes.bool,
-  isMultiFile: React.PropTypes.bool.isRequired,
-  isRoot: React.PropTypes.bool,
-  name: React.PropTypes.string,
-  styles: React.PropTypes.object,
-  ui: React.PropTypes.object.isRequired,
+  depth: PropTypes.number,
+  disable: PropTypes.func.isRequired,
+  downloadName: PropTypes.string.isRequired,
+  enable: PropTypes.func.isRequired,
+  files: PropTypes.array.isRequired,
+  infoHash: PropTypes.string.isRequired,
+  initialCollapse: PropTypes.bool,
+  isEditing: PropTypes.bool,
+  isEnabled: PropTypes.bool,
+  isMultiFile: PropTypes.bool.isRequired,
+  isRoot: PropTypes.bool,
+  name: PropTypes.string,
+  styles: PropTypes.object,
+  ui: PropTypes.object.isRequired,
 };
 
 export default CSSModules(FileTree, styles);

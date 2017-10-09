@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
@@ -56,21 +57,21 @@ class Download extends React.PureComponent {
 }
 
 Download.propTypes = {
-  dateAdded: React.PropTypes.object.isRequired,
-  infoHash: React.PropTypes.string.isRequired,
-  isHidden: React.PropTypes.bool.isRequired,
-  lastSeen: React.PropTypes.object.isRequired,
-  locks: React.PropTypes.array.isRequired,
-  name: React.PropTypes.string.isRequired,
-  progress: React.PropTypes.number.isRequired,
-  state: React.PropTypes.oneOf([
+  dateAdded: PropTypes.object.isRequired,
+  infoHash: PropTypes.string.isRequired,
+  isHidden: PropTypes.bool.isRequired,
+  lastSeen: PropTypes.object.isRequired,
+  locks: PropTypes.array.isRequired,
+  name: PropTypes.string.isRequired,
+  progress: PropTypes.number.isRequired,
+  state: PropTypes.oneOf([
     'seeding',
     'closed',
     'downloading',
     'hashing',
     'stopped',
   ]).isRequired,
-  user: React.PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 export default CSSModules(Download, styles);

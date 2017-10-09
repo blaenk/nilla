@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Glyphicon } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -40,11 +41,11 @@ class User extends React.PureComponent {
 }
 
 User.propTypes = {
-  email: React.PropTypes.string.isRequired,
-  id: React.PropTypes.number.isRequired,
-  onRemove: React.PropTypes.func.isRequired,
-  permissions: React.PropTypes.array.isRequired,
-  username: React.PropTypes.string.isRequired,
+  email: PropTypes.string,
+  id: PropTypes.number.isRequired,
+  onRemove: PropTypes.func.isRequired,
+  permissions: PropTypes.array.isRequired,
+  username: PropTypes.string.isRequired,
 };
 
 function mapDispatchToUserProps(dispatch, ownProps) {

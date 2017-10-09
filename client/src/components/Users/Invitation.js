@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Glyphicon } from 'react-bootstrap';
 
@@ -21,10 +22,10 @@ class Invitation extends React.PureComponent {
 }
 
 Invitation.propTypes = {
-  created_at: React.PropTypes.object.isRequired,
-  id: React.PropTypes.number.isRequired,
-  onRemove: React.PropTypes.func.isRequired,
-  token: React.PropTypes.string.isRequired,
+  created_at: PropTypes.object.isRequired,
+  id: PropTypes.number.isRequired,
+  onRemove: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired,
 };
 
 function mapDispatchToInvitationProps(dispatch, ownProps) {
