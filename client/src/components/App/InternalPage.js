@@ -58,14 +58,14 @@ class App extends React.PureComponent {
           <Switch>
             <Redirect exact from='/' to='/downloads' />
 
-            <Route path='/downloads' component={FilteredDownloads} />
             <Route path='/downloads/:infoHash(/:name)' component={DownloadContainer} />
+            <Route exact path='/downloads' component={FilteredDownloads} />
 
-            <Route path='/users' component={UsersContainer} />
+            <Route exact path='/users' component={UsersContainer} />
             <Route path='/users/:id' component={EditUserContainer} />
 
-            <Route path='/trackers' component={TrackersContainer} />
-            <Route path='/trackers/new' component={NewTrackerContainer} />
+            <Route exact path='/trackers' component={TrackersContainer} />
+            <Route exact path='/trackers/new' component={NewTrackerContainer} />
             <Route path='/trackers/:id' component={EditTrackerContainer} />
           </Switch>
         </Grid>
