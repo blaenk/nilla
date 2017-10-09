@@ -120,6 +120,12 @@ export const getScopedDownloads = createSelector(
             isHidden: !download.locks.includes(user.id),
           });
         });
+      case 'LOCKED':
+        return downloads.map(download => {
+          return Object.assign({}, download, {
+            isHidden: !download.locks,
+          });
+        });
       case 'EXPIRING':
         // get downloads expiring within the next 24 hours
         return downloads.map(download => {
