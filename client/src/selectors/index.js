@@ -135,6 +135,12 @@ export const getScopedDownloads = createSelector(
             isHidden: moment().isBefore(expirationDate),
           });
         });
+      case 'CROSS-SEEDING':
+        return downloads.map(download => {
+          return Object.assign({}, download, {
+            isHidden: !download.isCrossSeeding,
+          });
+        });
       case 'ALL':
       default:
         return downloads;
