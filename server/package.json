@@ -48,7 +48,7 @@
     "supertest": "^2.0.0"
   },
   "dependencies": {
-    "bcrypt": "^0.8.7",
+    "bcrypt": "^1.0.3",
     "bluebird": "^3.4.0",
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
@@ -71,7 +71,7 @@
     "parse-torrent": "^5.8.0",
     "recursive-readdir": "^2.0.0",
     "semver": "^5.1.0",
-    "sqlite3": "^3.1.4",
+    "sqlite3": "^3.1.13",
     "superagent": "^2.0.0",
     "xmlrpc": "blaenk/node-xmlrpc#custom-transport"
   }
