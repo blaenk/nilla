@@ -58,8 +58,8 @@ class App extends React.PureComponent {
           <Switch>
             <Redirect exact from='/' to='/downloads' />
 
-            <Route path='/downloads/:infoHash(/:name)' component={DownloadContainer} />
             <Route exact path='/downloads' component={FilteredDownloads} />
+            <Route path='/downloads/:infoHash/:name?' component={DownloadContainer} />
 
             <Route exact path='/users' component={UsersContainer} />
             <Route path='/users/:id' component={EditUserContainer} />
