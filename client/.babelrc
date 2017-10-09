@@ -1,5 +1,14 @@
 {
-  "presets": ["es2015", "react"],
+  "presets": [
+    [
+      "env", {
+        "useBuiltIns": true,
+        "debug": false,
+        "modules": false
+      }
+    ],
+    "react"
+  ],
   "env": {
     "test": {
       "plugins": [["__coverage__", {"only": "client/src/"}]]
