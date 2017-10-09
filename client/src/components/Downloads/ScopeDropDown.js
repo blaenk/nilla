@@ -22,7 +22,7 @@ class ScopeDropDown extends React.PureComponent {
       <InputGroup.Button>
         <DropdownButton id='downloads_scope' title={this.props.scope} styleName='scope'>
           <MenuItem header>Search Scope</MenuItem>
-          {['ALL', 'MINE', 'SYSTEM', 'LOCKED', 'EXPIRING'].map(item)}
+          {['ALL', 'MINE', 'SYSTEM', 'MY LOCKED', 'EXPIRING'].map(item)}
         </DropdownButton>
       </InputGroup.Button>
     );

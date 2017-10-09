@@ -114,7 +114,7 @@ export const getScopedDownloads = createSelector(
             isHidden: download.uploader !== -1,
           });
         });
-      case 'LOCKED':
+      case 'MY LOCKED':
         return downloads.map(download => {
           return Object.assign({}, download, {
             isHidden: !download.locks.includes(user.id),
