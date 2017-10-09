@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { putUser } from 'actions';
 
@@ -41,9 +42,6 @@ function mapDispatchToProps(dispatch, ownProps) {
   };
 }
 
-const EditUserContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(User);
+const EditUserContainer = withRouter(connect(mapStateToProps, mapDispatchToProps)(User));
 
 export default EditUserContainer;

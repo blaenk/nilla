@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { getUsersSortedByName } from 'selectors';
 
@@ -11,8 +12,6 @@ function mapStateToProps(state) {
   return { users, invitations };
 }
 
-const UsersContainer = connect(
-  mapStateToProps
-)(Users);
+const UsersContainer = withRouter(connect(mapStateToProps)(Users));
 
 export default UsersContainer;

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import CSSModules from 'react-css-modules';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 

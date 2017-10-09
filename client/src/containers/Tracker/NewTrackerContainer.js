@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { requestCreateTracker } from 'actions';
 
@@ -19,9 +20,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const NewTrackerContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Tracker);
+const NewTrackerContainer = withRouter(connect(mapStateToProps, mapDispatchToProps)(Tracker));
 
 export default NewTrackerContainer;

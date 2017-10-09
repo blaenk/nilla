@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { getTrackersSortedByName } from 'selectors';
 
@@ -11,8 +12,6 @@ function mapStateToProps(state) {
   return { trackers, currentUser };
 }
 
-const TrackersContainer = connect(
-  mapStateToProps
-)(Trackers);
+const TrackersContainer = withRouter(connect(mapStateToProps)(Trackers));
 
 export default TrackersContainer;

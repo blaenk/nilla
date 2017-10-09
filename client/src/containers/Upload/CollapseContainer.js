@@ -8,8 +8,6 @@ function mapStateToProps(state) {
   };
 }
 
-const CollapseContainer = connect(
-  mapStateToProps
-)(Collapse);
+const CollapseContainer = connect(mapStateToProps, {})(Collapse);
 
 export default CollapseContainer;

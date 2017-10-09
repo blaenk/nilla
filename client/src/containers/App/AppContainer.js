@@ -1,48 +1,26 @@
-import { Router, Route, Redirect } from 'react-router';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Route } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
 import CSSModules from 'react-css-modules';
 
 import { Provider } from 'react-redux';
 
 import InternalPage from 'components/App/InternalPage';
 
-import FilteredDownloads from 'containers/Downloads/FilteredDownloads';
-import DownloadContainer from 'containers/Download/DownloadContainer';
-
-import UsersContainer from 'containers/Users/UsersContainer';
-import EditUserContainer from 'containers/User/EditUserContainer';
-
-import TrackersContainer from 'containers/Trackers/TrackersContainer';
-import EditTrackerContainer from 'containers/Tracker/EditTrackerContainer';
-import NewTrackerContainer from 'containers/Tracker/NewTrackerContainer';
-
 import styles from 'styles/app.module.less';
 
 function AppContainer(props) {
   return (
     <Provider store={props.store}>
-      <Router history={props.history}>
-        <Redirect from='/' to='/downloads' />
-
-        <Route path='/' component={InternalPage}>
-          <Route path='downloads' component={FilteredDownloads} />
-          <Route path='downloads/:infoHash(/:name)' component={DownloadContainer} />
-
-          <Route path='users' component={UsersContainer} />
-          <Route path='users/:id' component={EditUserContainer} />
-
-          <Route path='trackers' component={TrackersContainer} />
-          <Route path='trackers/new' component={NewTrackerContainer} />
-          <Route path='trackers/:id' component={EditTrackerContainer} />
-        </Route>
-      </Router>
+      <BrowserRouter>
+        <Route component={InternalPage} />
+      </BrowserRouter>
     </Provider>
   );
 }
 
 AppContainer.propTypes = {
-  history: PropTypes.object.isRequired,
   store: PropTypes.object.isRequired,
 };
 

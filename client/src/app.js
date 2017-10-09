@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { browserHistory } from 'react-router';
 import _ from 'lodash';
 
 import AppContainer from 'containers/App/AppContainer';
@@ -81,6 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const mountNode = document.querySelector('#root');
 
   ReactDOM.render(
-    <AppContainer history={browserHistory} store={window.store} />,
+    <AppContainer store={window.store} />,
     mountNode);
 });

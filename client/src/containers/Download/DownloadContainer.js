@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import Download from 'components/Download/Download';
 
@@ -28,8 +29,6 @@ function makeMapStateToProps() {
   };
 }
 
-const DownloadContainer = connect(
-  makeMapStateToProps
-)(Download);
+const DownloadContainer = withRouter(connect(makeMapStateToProps)(Download));
 
 export default DownloadContainer;

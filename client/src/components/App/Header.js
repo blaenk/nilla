@@ -3,13 +3,10 @@ import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import CSSModules from 'react-css-modules';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
-import { withRouter } from 'react-router';
 
 import { userCan } from 'common';
 
 import styles from './header.module.less';
-
-const LinkContainerWithRouter = withRouter(LinkContainer);
 
 class Header extends React.PureComponent {
   render() {
@@ -25,9 +22,9 @@ class Header extends React.PureComponent {
 
     if (this.props.currentUser && userCan(this.props.currentUser, 'trackers:read')) {
       trackersButton = (
-        <LinkContainerWithRouter to='/trackers'>
+        <LinkContainer to='/trackers'>
           <NavItem eventKey={3}>Trackers</NavItem>
-        </LinkContainerWithRouter>
+        </LinkContainer>
       );
     }
 
@@ -35,9 +32,9 @@ class Header extends React.PureComponent {
 
     if (this.props.currentUser && userCan(this.props.currentUser, 'users:read')) {
       usersButton = (
-        <LinkContainerWithRouter to='/users'>
+        <LinkContainer to='/users'>
           <NavItem eventKey={4}>Users</NavItem>
-        </LinkContainerWithRouter>
+        </LinkContainer>
       );
     }
 
@@ -51,9 +48,9 @@ class Header extends React.PureComponent {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav>
-            <LinkContainerWithRouter to='/downloads'>
+            <LinkContainer to='/downloads'>
               <NavItem eventKey={1}>Download</NavItem>
-            </LinkContainerWithRouter>
+            </LinkContainer>
 
             {uploadButton}
             {trackersButton}

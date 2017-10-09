@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { getFilteredDownloads } from 'selectors';
 
 import Downloads from 'components/Downloads/Downloads';
@@ -10,8 +11,6 @@ function mapStateToProps(state) {
   };
 }
 
-const FilteredDownloads = connect(
-  mapStateToProps
-)(Downloads);
+const FilteredDownloads = withRouter(connect(mapStateToProps)(Downloads));
 
 export default FilteredDownloads;

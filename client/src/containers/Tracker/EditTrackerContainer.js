@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { putTracker } from 'actions';
 
@@ -42,9 +43,6 @@ function mapDispatchToProps(dispatch, ownProps) {
   };
 }
 
-const EditTrackerContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Tracker);
+const EditTrackerContainer = withRouter(connect(mapStateToProps, mapDispatchToProps)(Tracker));
 
 export default EditTrackerContainer;

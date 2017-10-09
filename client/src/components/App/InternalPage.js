@@ -2,12 +2,23 @@ import React from 'react';
 import { Grid } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
+import { Route, Switch, Redirect } from 'react-router';
 
 import HeaderContainer from 'containers/App/HeaderContainer';
 import RtorrentUnavailableErrorContainer from 'containers/App/RtorrentUnavailableErrorContainer';
 import CollapseContainer from 'containers/Upload/CollapseContainer';
 import UploadContainer from 'containers/Upload/UploadContainer';
 import DropzoneContainer from 'containers/Upload/DropzoneContainer';
+
+import FilteredDownloads from 'containers/Downloads/FilteredDownloads';
+import DownloadContainer from 'containers/Download/DownloadContainer';
+
+import UsersContainer from 'containers/Users/UsersContainer';
+import EditUserContainer from 'containers/User/EditUserContainer';
+
+import TrackersContainer from 'containers/Trackers/TrackersContainer';
+import EditTrackerContainer from 'containers/Tracker/EditTrackerContainer';
+import NewTrackerContainer from 'containers/Tracker/NewTrackerContainer';
 
 import styles from 'styles/app.module.less';
 
@@ -34,7 +45,7 @@ class App extends React.PureComponent {
         disableClick
         ref={this.setDropzoneRef}>
         <Grid>
-          <HeaderContainer />
+          <HeaderContainer location={this.props.location} />
 
           <RtorrentUnavailableErrorContainer />
 
@@ -44,7 +55,19 @@ class App extends React.PureComponent {
             </div>
           </CollapseContainer>
 
-          {this.props.children}
+          <Switch>
+            <Redirect exact from='/' to='/downloads' />
+
+            <Route path='/downloads' component={FilteredDownloads} />
+            <Route path='/downloads/:infoHash(/:name)' component={DownloadContainer} />
+
+            <Route path='/users' component={UsersContainer} />
+            <Route path='/users/:id' component={EditUserContainer} />
+
+            <Route path='/trackers' component={TrackersContainer} />
+            <Route path='/trackers/new' component={NewTrackerContainer} />
+            <Route path='/trackers/:id' component={EditTrackerContainer} />
+          </Switch>
         </Grid>
       </DropzoneContainer>
     );
