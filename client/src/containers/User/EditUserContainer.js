@@ -8,7 +8,7 @@ import User from 'components/User/User';
 function mapStateToProps(state, props) {
   const currentUser = state.data.users.current;
 
-  if (!(props.params.id in state.data.users)) {
+  if (!(props.match.params.id in state.data.users)) {
     return { currentUser };
   }
 
@@ -18,7 +18,7 @@ function mapStateToProps(state, props) {
     email,
     permissions,
     refresh_token,
-  } = state.data.users[props.params.id];
+  } = state.data.users[props.match.params.id];
 
   return {
     currentUser,
@@ -34,7 +34,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   return {
     dispatch,
     onSubmit(user, callback) {
-      user.id = ownProps.params.id;
+      user.id = ownprops.match.params.id;
       user.permissions = user.permissions.split(',');
 
       dispatch(putUser(user, callback));

@@ -5,11 +5,11 @@ import _ from 'lodash';
 import { fuzzyPattern, expiresAt } from 'common';
 
 function getDownload(state, props) {
-  return state.data.downloads[props.params.infoHash];
+  return state.data.downloads[props.match.params.infoHash];
 }
 
 function getDownloadUI(state, props) {
-  return state.ui.download[props.params.infoHash];
+  return state.ui.download[props.match.params.infoHash];
 }
 
 export function makeGetFiles() {

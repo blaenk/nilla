@@ -8,7 +8,7 @@ import Tracker from 'components/Tracker/Tracker';
 function mapStateToProps(state, props) {
   const currentUser = state.data.users.current;
 
-  if (!(props.params.id in state.data.trackers)) {
+  if (!(props.match.params.id in state.data.trackers)) {
     return { currentUser };
   }
 
@@ -19,7 +19,7 @@ function mapStateToProps(state, props) {
     category,
     username,
     password,
-  } = state.data.trackers[props.params.id];
+  } = state.data.trackers[props.match.params.id];
 
   return {
     currentUser,
@@ -36,7 +36,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   return {
     dispatch,
     onSubmit(tracker, callback) {
-      tracker.id = ownProps.params.id;
+      tracker.id = ownprops.match.params.id;
 
       dispatch(putTracker(tracker, callback));
     },

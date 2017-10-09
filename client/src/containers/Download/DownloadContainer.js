@@ -9,7 +9,7 @@ function makeMapStateToProps() {
   const getFilteredFiles = makeGetFilteredFiles();
 
   return function mapStateToProps(state, props) {
-    const infoHash = props.params.infoHash;
+    const infoHash = props.match.params.infoHash;
 
     if (!(infoHash in state.data.downloads) ||
         !(infoHash in state.ui.download) ||
