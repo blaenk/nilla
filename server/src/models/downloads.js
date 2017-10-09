@@ -119,6 +119,11 @@ const DOWNLOADS_METHODS = [
     as: 'ttl',
     map: parseInt,
   },
+  {
+    methodName: 'get_custom1',
+    as: 'isCrossSeeding',
+    map: (label) => label === 'cross-seeding',
+  },
 ];
 
 function getDownload(infoHash) {
