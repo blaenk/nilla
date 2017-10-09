@@ -17,6 +17,10 @@ config.node = {
   fs: 'empty',
 };
 
+if (NODE_ENV === 'development') {
+  config.devtool = 'cheap-module-source-map';
+}
+
 config.plugins = [];
 
 config.bail = true;
