@@ -83,19 +83,19 @@ class EditFiles extends React.PureComponent {
             <div styleName='edit-help'>
               <ul>
                 <li>{"Click on files to toggle whether they're enabled or not."}</li>
-                <li>{"Click on folder checkboxes to toggle all contained files."}</li>
+                <li>{'Click on folder checkboxes to toggle all contained files.'}</li>
                 <li>
-                  <strong>{"Enable all"}</strong>
-                  {" "}
+                  <strong>{'Enable all'}</strong>
+                  {' '}
                   {"enables all files that aren't filtered out by a search filter. "}
                   This means you can filter the files and then use this button to only enable those.
-                  {" "}
+                  {' '}
                   The same goes for
-                  {" "}
+                  {' '}
                   <strong>Disable all</strong>
-                  {" and "}
+                  {' and '}
                   <strong>Invert all</strong>
-                  {"."}
+                  {'.'}
                 </li>
                 <li>Click <strong>apply</strong> when done.</li>
               </ul>
