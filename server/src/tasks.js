@@ -23,10 +23,12 @@ function getExpiredTorrents() {
 }
 
 function prune() {
+  console.log('Pruning …');
+
   getExpiredTorrents()
     .then(torrents => {
       if (torrents.length === 0) {
-        return;
+        return Bluebird.resolve();
       }
 
       const calls = torrents.map(torrent => {
@@ -43,10 +45,13 @@ function prune() {
           }
         });
     })
+    .then(() => console.log('Done pruning.'))
     .catch(console.error);
 }
 
 function stale() {
+  console.log('Removing stale…');
+
   rtorrent.call('get_directory')
     .then(basePath => {
       return fs.readdirAsync(basePath)
@@ -74,6 +79,7 @@ function stale() {
     .mapSeries((file, index, length) => {
       console.log(`${index + 1}/${length} removed stale entry: ${file}`);
     })
+    .then(() => console.log('Done removing stale'))
     .catch(console.error);
 }
 
