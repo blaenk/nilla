@@ -105,14 +105,7 @@ class Download extends React.PureComponent {
       <div>
         <Row>
           <Col lg={12}>
-            <Header infoHash={download.infoHash}
-                    dateAdded={download.dateAdded}
-                    name={download.name}
-                    state={download.state}
-                    progress={download.progress}
-                    uploader={download.uploader}
-                    locks={download.locks}
-                    users={users} />
+            <Header download={download} users={users} />
           </Col>
         </Row>
 

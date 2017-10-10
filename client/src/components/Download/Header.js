@@ -10,18 +10,18 @@ import { expiresAt } from 'common';
 function Header(props) {
   const LONG_DATE_FORMAT = 'dddd, MMMM Do YYYY [at] h:mm:ss A';
 
-  const dateAdded = moment(props.dateAdded).utc().local();
+  const dateAdded = moment(props.download.dateAdded).utc().local();
   const dateAddedShortFormat = moment(dateAdded).format('l');
   const dateAddedLongFormat = moment(dateAdded).format(LONG_DATE_FORMAT);
 
-  const expiresDate = expiresAt(dateAdded);
+  const expiresDate = expiresAt(props.download);
   const expiresShortFormat = moment(expiresDate).fromNow();
   const expiresLongFormat = moment(expiresDate).format(LONG_DATE_FORMAT);
 
   let expiresOrLocks;
 
-  if (props.locks.length) {
-    const lockedBy = props.locks.filter(id => id in props.users)
+  if (props.download.locks.length) {
+    const lockedBy = props.download.locks.filter(id => id in props.users)
       .map(id => props.users[id].username)
       .join(', ');
 
@@ -36,14 +36,16 @@ function Header(props) {
     );
   }
 
-  const wrappedName = props.name.replace(/\./g, '\u200b.');
+  const wrappedName = props.download.name.replace(/\./g, '\u200b.');
 
   let uploaderName;
 
-  if (props.uploader === -1) {
+  if (props.download.uploader === -1) {
     uploaderName = 'system';
   } else {
-    uploaderName = props.users[props.uploader] && props.users[props.uploader].username;
+    const uploader = props.users[props.download.uploader];
+
+    uploaderName = uploader && uploader.username;
   }
 
   return (
@@ -54,9 +56,9 @@ function Header(props) {
         </h4>
 
         <div styleName='progress'>
-          <div styleName={`progress-${props.state}`}
-               style={{ width: `${props.progress}%` }}
-               aria-valuenow={props.progress} />
+          <div styleName={`progress-${props.download.state}`}
+               style={{ width: `${props.download.progress}%` }}
+               aria-valuenow={props.download.progress} />
         </div>
 
         <div styleName='meta'>
@@ -74,13 +76,7 @@ function Header(props) {
 }
 
 Header.propTypes = {
-  dateAdded: PropTypes.string.isRequired,
-  infoHash: PropTypes.string.isRequired,
-  locks: PropTypes.array.isRequired,
-  name: PropTypes.string.isRequired,
-  progress: PropTypes.number.isRequired,
-  state: PropTypes.string.isRequired,
-  uploader: PropTypes.string.isRequired,
+  download: PropTypes.object.isRequired,
   users: PropTypes.array.isRequired,
 };
 
