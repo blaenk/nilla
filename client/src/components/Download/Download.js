@@ -127,18 +127,20 @@ class Download extends React.PureComponent {
                           depth={1}
                           infoHash={this.props.infoHash}
                           files={files.extracted}
+                          isCrossSeeding={download.isCrossSeeding}
                           isMultiFile={download.isMultiFile}
                           initialCollapse={ui.isCollapsed}
-                          downloadName={download.name} />
+                          directory={download.directory} />
 
             <FilesSection label='DOWNLOADED'
                           showLabelIf={download.files.extracted.length > 0}
                           infoHash={this.props.infoHash}
                           files={files.downloaded}
+                          isCrossSeeding={download.isCrossSeeding}
                           isMultiFile={download.isMultiFile}
                           initialCollapse={ui.isCollapsed}
                           isEditing={ui.isEditing}
-                          downloadName={download.name} />
+                          directory={download.directory} />
           </Col>
         </Row>
       </div>

@@ -26,11 +26,12 @@ function FilesSection(props) {
       {sectionLabel}
       <FileTreeContainer isRoot
                          infoHash={props.infoHash}
+                         isCrossSeeding={props.isCrossSeeding}
                          isEditing={props.isEditing}
                          isMultiFile={props.isMultiFile}
                          depth={props.depth}
                          initialCollapse={props.initialCollapse}
-                         downloadName={props.downloadName}
+                         directory={props.directory}
                          files={props.files} />
     </div>
   );
@@ -43,10 +44,11 @@ FilesSection.defaultProps = {
 
 FilesSection.propTypes = {
   depth: PropTypes.number.isRequired,
-  downloadName: PropTypes.string.isRequired,
+  directory: PropTypes.string.isRequired,
   files: PropTypes.array.isRequired,
   infoHash: PropTypes.string.isRequired,
   initialCollapse: PropTypes.bool.isRequired,
+  isCrossSeeding: PropTypes.bool.isRequired,
   isEditing: PropTypes.bool.isRequired,
   isMultiFile: PropTypes.bool.isRequired,
   label: PropTypes.string.isRequired,

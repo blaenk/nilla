@@ -82,8 +82,9 @@ class FileTree extends React.Component {
                            styles={this.props.styles}
                            depth={this.props.depth + 1}
                            initialCollapse={this.props.initialCollapse}
+                           isCrossSeeding={this.props.isCrossSeeding}
                            isMultiFile={this.props.isMultiFile}
-                           downloadName={this.props.downloadName}
+                           directory={this.props.directory}
                            files={folder.files} />
       );
     });
@@ -106,8 +107,9 @@ class FileTree extends React.Component {
                        infoHash={this.props.infoHash}
                        isEditing={this.props.isEditing}
                        styles={this.props.styles}
+                       isCrossSeeding={this.props.isCrossSeeding}
                        isMultiFile={this.props.isMultiFile}
-                       downloadName={this.props.downloadName}
+                       directory={this.props.directory}
                        progress={file.progress}
                        isEnabled={file.isEnabled}
                        pathComponents={file.pathComponents}
@@ -182,12 +184,13 @@ FileTree.defaultProps = {
 
 FileTree.propTypes = {
   depth: PropTypes.number,
+  directory: PropTypes.string.isRequired,
   disable: PropTypes.func.isRequired,
-  downloadName: PropTypes.string.isRequired,
   enable: PropTypes.func.isRequired,
   files: PropTypes.array.isRequired,
   infoHash: PropTypes.string.isRequired,
   initialCollapse: PropTypes.bool,
+  isCrossSeeding: PropTypes.bool,
   isEditing: PropTypes.bool,
   isEnabled: PropTypes.bool,
   isMultiFile: PropTypes.bool.isRequired,

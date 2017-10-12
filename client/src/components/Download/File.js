@@ -35,12 +35,12 @@ class File extends React.PureComponent {
     const isFinished = this.props.progress === PROGRESS_COMPLETE;
     const isDisabled = !this.props.isEnabled;
 
-    const encodedName = encodeURIComponent(this.props.downloadName);
+    const encodedName = encodeURIComponent(this.props.directory);
     const encodedPath = this.props.pathComponents.map(encodeURIComponent).join('/');
 
     let url;
 
-    if (this.props.isMultiFile) {
+    if (this.props.isCrossSeeding || this.props.isMultiFile) {
       url = `/file/${encodedName}/${encodedPath}`;
     } else {
       url = `/file/${encodedPath}`;
@@ -90,10 +90,11 @@ class File extends React.PureComponent {
 
 File.propTypes = {
   canDownload: PropTypes.bool.isRequired,
+  directory: PropTypes.string.isRequired,
   disable: PropTypes.func.isRequired,
-  downloadName: PropTypes.string.isRequired,
   enable: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,
+  isCrossSeeding: PropTypes.bool.isRequired,
   isEditing: PropTypes.bool.isRequired,
   isEnabled: PropTypes.bool.isRequired,
   isMultiFile: PropTypes.bool.isRequired,

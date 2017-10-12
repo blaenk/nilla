@@ -124,6 +124,11 @@ const DOWNLOADS_METHODS = [
     as: 'isCrossSeeding',
     map: (label) => label === 'cross-seeding',
   },
+  {
+    methodName: 'get_directory',
+    as: 'directory',
+    map: path.basename,
+  },
 ];
 
 function getDownload(infoHash) {
